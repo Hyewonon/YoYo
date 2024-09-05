@@ -1,6 +1,6 @@
 package com.yoyo.member.application.service;
 
-import com.yoyo.common.UseCase;
+import com.yoyo.common.annotation.UseCase;
 import com.yoyo.member.application.port.in.UpdateMemberCommand;
 import com.yoyo.member.application.port.in.UpdateMemberUseCase;
 import com.yoyo.member.application.port.out.UpdateMemberPort;

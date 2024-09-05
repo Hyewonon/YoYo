@@ -1,4 +1,4 @@
-package com.yoyo.common;
+package com.yoyo.common.annotation;
 
 
 import jakarta.validation.ConstraintViolation;

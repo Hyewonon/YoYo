@@ -1,6 +1,6 @@
 package com.yoyo.member.application.port.in;
 
-import com.yoyo.common.SelfValidating;
+import com.yoyo.common.annotation.SelfValidating;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;

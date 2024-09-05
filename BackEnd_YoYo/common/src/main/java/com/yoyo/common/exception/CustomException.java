@@ -1,4 +1,5 @@
-package com.yoyo.banking.exception;
+package com.yoyo.common.exception;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

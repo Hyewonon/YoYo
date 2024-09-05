@@ -1,6 +1,6 @@
 package com.yoyo.member.application.service;
 
-import com.yoyo.common.UseCase;
+import com.yoyo.common.annotation.UseCase;
 import com.yoyo.member.adapter.out.persistence.MemberJpaEntity;
 import com.yoyo.member.adapter.out.persistence.MemberMapper;
 import com.yoyo.member.application.port.in.RegisterMemberCommand;

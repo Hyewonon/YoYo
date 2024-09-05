@@ -52,10 +52,8 @@ ext{
 
 docker {
     println(tasks.bootJar.outputs.files)
-
     // 이미지 이름
     name rootProject.name+'-'+project.name+":"+version
-
     // 어떤 Dockerfile
     dockerfile file('../Dockerfile')
     // 어떤 파일들을 Dockerfile에 복사할 것인가

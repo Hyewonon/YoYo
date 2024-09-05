@@ -1,4 +1,4 @@
-package com.yoyo.transaction.global.exception;
+package com.yoyo.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

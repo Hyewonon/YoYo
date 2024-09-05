@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.3'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.palantir.docker' version '0.35.0'
 }
 
 group = 'com.yoyo.banking'
@@ -33,8 +34,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.4.10'
     implementation project(path: ':common')
     compileOnly 'org.projectlombok:lombok'
-//	runtimeOnly 'com.mysql:mysql-connector-j'
-    runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -43,4 +43,19 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+
+docker {
+    println(tasks.bootJar.outputs.files)
+
+    // 이미지 이름
+    name rootProject.name+'-'+project.name+":"+version
+
+    // 어떤 Dockerfile
+    dockerfile file('../Dockerfile')
+    // 어떤 파일들을 Dockerfile에 복사할 것인가
+    files tasks.bootJar.outputs.files
+    // Dockerfile에 전달할 인자
+    buildArgs(['JAR_FILE':tasks.bootJar.outputs.files.singleFile.name])
 }
