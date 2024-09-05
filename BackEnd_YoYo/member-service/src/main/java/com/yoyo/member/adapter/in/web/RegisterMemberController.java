@@ -1,6 +1,6 @@
 package com.yoyo.member.adapter.in.web;
 
-import com.yoyo.common.WebAdapter;
+import com.yoyo.common.annotation.WebAdapter;
 import com.yoyo.member.application.port.in.RegisterMemberCommand;
 import com.yoyo.member.application.port.in.RegisterMemberUseCase;
 import com.yoyo.member.domain.Member;

@@ -1,6 +1,6 @@
 package com.yoyo.member.adapter.out.persistence;
 
-import com.yoyo.common.PersistenceAdapter;
+import com.yoyo.common.annotation.PersistenceAdapter;
 import com.yoyo.member.application.port.out.FindMemberPort;
 import com.yoyo.member.application.port.out.RegisterMemberPort;
 import com.yoyo.member.application.port.out.UpdateMemberPort;

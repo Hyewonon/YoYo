@@ -1,6 +1,6 @@
 package com.yoyo.member.adapter.in.web;
 
-import com.yoyo.common.WebAdapter;
+import com.yoyo.common.annotation.WebAdapter;
 import com.yoyo.member.application.port.in.UpdateMemberCommand;
 import com.yoyo.member.application.port.in.UpdateMemberUseCase;
 import lombok.RequiredArgsConstructor;
