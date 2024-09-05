@@ -2,4 +2,6 @@ rootProject.name = 'yoyo'
 include 'member'
 include 'smsauth'
 include 'common'
+include 'banking-service'
+include 'transaction-service'
 
