@@ -1,6 +1,7 @@
 package com.yoyo.common.exception;
 
 import com.yoyo.common.exception.exceptionType.BankingException;
+import com.yoyo.common.exception.exceptionType.NotificationException;
 import com.yoyo.common.exception.exceptionType.TransactionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +29,9 @@ public class GlobalExceptionHandler {
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
 
-
+    @ExceptionHandler(NotificationException.class)
+    public ResponseEntity<ErrorResponse> handleTransactionalException(NotificationException e) {
+        log.error("[NotificationException] : {} is occurred", e.getErrorCode());
+        return ErrorResponse.toResponseEntity(e.getErrorCode());
+    }
 }
