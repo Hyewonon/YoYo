@@ -1,4 +1,4 @@
-HELP.md
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -36,4 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 
-application-local.properties
+application-local.yml
+
+.env
+
+
+db/data/

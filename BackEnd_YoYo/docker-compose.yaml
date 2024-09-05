@@ -1,0 +1,53 @@
+version : '3'
+services:
+  mysql:
+    image: mysql:8.0
+    networks:
+      - yoyo_network
+    volumes:
+      - ./db/conf.d:/etc/mysql/conf.d
+      - ./db/data:/var/lib/mysql
+      - ./db/initdb.d:/docker-entrypoint-initdb.d
+    env_file: .env
+    ports:
+      - "3306:3306"
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=ssafy
+      - MYSQL_DATABASE=yoyo
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  redis:
+    image: redis:alpine
+    restart: always
+    container_name: redis_boot
+    command: redis-server --port 6379
+    hostname: redis
+    ports:
+      - "6379:6379"
+
+  member-service:
+    image: yoyo-member-service:1.0.0
+    networks:
+      - yoyo_network
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/yoyo
+      - SPRING_DATASOURCE_USERNAME=ssafy
+      - SPRING_DATASOURCE_PASSWORD=ssafy
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+networks:
+  yoyo_network:
+    driver: bridge

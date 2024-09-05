@@ -40,3 +40,6 @@ application-local.yml
 
 .env
 .env.local
+
+
+BackEnd_YoYo/db/data/

@@ -1,6 +1,6 @@
 rootProject.name = 'yoyo'
-include 'member'
-include 'smsauth'
+include 'member-service'
+include 'sms-service'
 include 'common'
 include 'banking-service'
 include 'transaction-service'
