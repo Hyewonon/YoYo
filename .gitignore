@@ -41,5 +41,5 @@ application-local.yml
 .env
 .env.local
 
-
+node_modules
 BackEnd_YoYo/db/data/

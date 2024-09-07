@@ -6,4 +6,5 @@ include 'notification-service'
 include 'event-service'
 include 'banking-service'
 include 'transaction-service'
+include 'payment-service'
 

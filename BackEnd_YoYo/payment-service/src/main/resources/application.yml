@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: local
+    include: local
+  devtools:
+    livereload:
+      enabled: true
+  freemarker:
+    cache: false
+  thymeleaf:
+    cache: false
+
+logging:
+  level:
+    root: info
+
+payment:
+  secret: ${payment.secret}
+  url: ${payment.url}
