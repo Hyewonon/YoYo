@@ -1,0 +1,1281 @@
+[20240907 19:28:55:087][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:28:55:121][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 27576 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:28:55:122][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:28:55:161][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:28:55:161][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:28:56:005][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:28:56:007][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+[20240907 19:28:56:020][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 10 ms. Found 0 JDBC repository interfaces.
+[20240907 19:28:56:031][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:28:56:032][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[20240907 19:28:56:036][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 1 ms. Found 0 JPA repository interfaces.
+[20240907 19:28:56:051][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:28:56:052][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:28:56:061][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 1 ms. Found 0 Redis repository interfaces.
+[20240907 19:28:56:405][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:28:56:436][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:28:56:978][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:28:56:995][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:28:57:001][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:28:57:001][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:28:57:075][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:28:57:075][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1913 ms
+[20240907 19:28:57:172][WARN ][o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Unsatisfied dependency expressed through method 'dataSourceScriptDatabaseInitializer' parameter 0: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception with message: Failed to determine a suitable driver class
+[20240907 19:28:57:176][INFO ][o.apache.catalina.core.StandardService] Stopping service [Tomcat]
+[20240907 19:28:57:196][INFO ][o.s.b.a.l.ConditionEvaluationReportLogger] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[20240907 19:28:57:238][ERROR][o.s.b.d.LoggingFailureAnalysisReporter] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (no profiles are currently active).
+
+[20240907 19:30:12:816][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:30:12:851][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 27348 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:30:12:852][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:30:12:890][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:30:12:891][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:30:13:763][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:30:13:764][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+[20240907 19:30:13:779][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 11 ms. Found 0 JDBC repository interfaces.
+[20240907 19:30:13:790][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:30:13:791][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[20240907 19:30:13:798][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 1 ms. Found 0 JPA repository interfaces.
+[20240907 19:30:13:816][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:30:13:817][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:30:13:828][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 2 ms. Found 0 Redis repository interfaces.
+[20240907 19:30:14:196][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:30:14:225][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:30:14:753][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:30:14:766][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:30:14:770][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:30:14:771][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:30:14:842][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:30:14:843][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1952 ms
+[20240907 19:30:14:938][WARN ][o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Unsatisfied dependency expressed through method 'dataSourceScriptDatabaseInitializer' parameter 0: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception with message: Failed to determine a suitable driver class
+[20240907 19:30:14:943][INFO ][o.apache.catalina.core.StandardService] Stopping service [Tomcat]
+[20240907 19:30:14:970][INFO ][o.s.b.a.l.ConditionEvaluationReportLogger] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[20240907 19:30:15:015][ERROR][o.s.b.d.LoggingFailureAnalysisReporter] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (no profiles are currently active).
+
+[20240907 19:30:44:338][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:30:44:375][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 26876 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:30:44:376][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:30:44:419][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:30:44:419][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:30:45:324][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:30:45:325][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+[20240907 19:30:45:340][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 10 ms. Found 0 JDBC repository interfaces.
+[20240907 19:30:45:350][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:30:45:351][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[20240907 19:30:45:357][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 1 ms. Found 0 JPA repository interfaces.
+[20240907 19:30:45:373][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:30:45:375][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:30:45:384][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 1 ms. Found 0 Redis repository interfaces.
+[20240907 19:30:45:792][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:30:45:812][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:30:46:444][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:30:46:461][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:30:46:466][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:30:46:466][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:30:46:563][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:30:46:564][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 2144 ms
+[20240907 19:30:46:678][WARN ][o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Unsatisfied dependency expressed through method 'dataSourceScriptDatabaseInitializer' parameter 0: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception with message: Failed to determine a suitable driver class
+[20240907 19:30:46:681][INFO ][o.apache.catalina.core.StandardService] Stopping service [Tomcat]
+[20240907 19:30:46:703][INFO ][o.s.b.a.l.ConditionEvaluationReportLogger] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[20240907 19:30:46:739][ERROR][o.s.b.d.LoggingFailureAnalysisReporter] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (no profiles are currently active).
+
+[20240907 19:30:53:304][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:30:53:343][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 26872 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:30:53:343][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:30:53:387][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:30:53:387][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:30:54:273][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:30:54:274][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+[20240907 19:30:54:289][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 11 ms. Found 0 JDBC repository interfaces.
+[20240907 19:30:54:301][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:30:54:302][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[20240907 19:30:54:308][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 2 ms. Found 0 JPA repository interfaces.
+[20240907 19:30:54:326][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:30:54:328][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:30:54:337][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 1 ms. Found 0 Redis repository interfaces.
+[20240907 19:30:54:698][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:30:54:721][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:30:55:303][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:30:55:317][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:30:55:320][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:30:55:321][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:30:55:397][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:30:55:397][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 2009 ms
+[20240907 19:30:55:493][WARN ][o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Failed to initialize dependency 'dataSourceScriptDatabaseInitializer' of LoadTimeWeaverAware bean 'entityManagerFactory': Error creating bean with name 'dataSourceScriptDatabaseInitializer' defined in class path resource [org/springframework/boot/autoconfigure/sql/init/DataSourceInitializationConfiguration.class]: Unsatisfied dependency expressed through method 'dataSourceScriptDatabaseInitializer' parameter 0: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception with message: Failed to determine a suitable driver class
+[20240907 19:30:55:497][INFO ][o.apache.catalina.core.StandardService] Stopping service [Tomcat]
+[20240907 19:30:55:522][INFO ][o.s.b.a.l.ConditionEvaluationReportLogger] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[20240907 19:30:55:566][ERROR][o.s.b.d.LoggingFailureAnalysisReporter] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (no profiles are currently active).
+
+[20240907 19:31:10:148][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:31:10:188][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 28056 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:31:10:189][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:31:10:235][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:31:10:235][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:31:11:333][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:31:11:335][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+[20240907 19:31:11:353][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 13 ms. Found 0 JDBC repository interfaces.
+[20240907 19:31:11:374][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:31:11:375][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:31:11:387][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 2 ms. Found 0 Redis repository interfaces.
+[20240907 19:31:11:823][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:31:11:852][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:31:12:530][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:31:12:548][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:31:12:556][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:31:12:557][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:31:12:634][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:31:12:635][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 2399 ms
+[20240907 19:31:13:277][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 19:31:13:713][WARN ][o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception with message: Failed to determine a suitable driver class
+[20240907 19:31:13:753][INFO ][o.apache.catalina.core.StandardService] Stopping service [Tomcat]
+[20240907 19:31:13:777][INFO ][o.s.b.a.l.ConditionEvaluationReportLogger] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[20240907 19:31:13:822][ERROR][o.s.b.d.LoggingFailureAnalysisReporter] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (no profiles are currently active).
+
+[20240907 19:31:54:557][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:31:54:593][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 3016 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:31:54:594][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:31:54:638][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:31:54:638][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:31:55:436][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:31:55:439][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:31:55:464][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+[20240907 19:31:55:756][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:31:55:777][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:31:56:142][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:31:56:158][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:31:56:166][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:31:56:166][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:31:56:231][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:31:56:231][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1593 ms
+[20240907 19:31:56:968][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 19:31:57:638][WARN ][o.s.b.a.s.s.UserDetailsServiceAutoConfiguration] 
+
+Using generated security password: 490e4bdd-a365-493e-994c-368a9cbad2a8
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+[20240907 19:31:57:678][INFO ][o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer] Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+[20240907 19:31:57:872][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 19:31:57:884][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 19:31:57:907][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 19:31:57:917][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.807 seconds (process running for 4.243)
+[20240907 19:32:40:059][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:32:40:116][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 28636 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:32:40:118][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:32:40:194][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:32:40:195][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:32:41:412][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:32:41:420][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:32:41:463][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 19 ms. Found 0 Redis repository interfaces.
+[20240907 19:32:41:851][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:32:41:876][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:32:42:390][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:32:42:408][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:32:42:413][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:32:42:414][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:32:42:521][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:32:42:522][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 2326 ms
+[20240907 19:32:43:526][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 19:32:44:521][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 19:32:44:557][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 19:32:44:597][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 19:32:44:609][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 5.115 seconds (process running for 5.606)
+[20240907 19:34:19:567][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:34:19:600][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 26112 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:34:19:601][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:34:19:644][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:34:19:644][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:34:20:401][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:34:20:404][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:34:20:429][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+[20240907 19:34:20:686][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:34:20:702][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:34:21:052][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:34:21:070][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:34:21:074][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:34:21:075][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:34:21:145][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:34:21:145][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1500 ms
+[20240907 19:34:21:211][WARN ][o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'memberApi' defined in class path resource [com/yoyo/payment/config/SwaggerConfig.class]: Failed to instantiate [org.springdoc.core.models.GroupedOpenApi]: Factory method 'memberApi' threw exception with message: Group name can not be null or empty
+[20240907 19:34:21:213][INFO ][o.apache.catalina.core.StandardService] Stopping service [Tomcat]
+[20240907 19:34:21:224][INFO ][o.s.b.a.l.ConditionEvaluationReportLogger] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[20240907 19:34:21:244][ERROR][o.springframework.boot.SpringApplication] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'memberApi' defined in class path resource [com/yoyo/payment/config/SwaggerConfig.class]: Failed to instantiate [org.springdoc.core.models.GroupedOpenApi]: Factory method 'memberApi' threw exception with message: Group name can not be null or empty
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:648)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:485)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1355)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1185)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:971)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at com.yoyo.payment.PaymentApplication.main(PaymentApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springdoc.core.models.GroupedOpenApi]: Factory method 'memberApi' threw exception with message: Group name can not be null or empty
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:178)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:644)
+	... 24 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Group name can not be null or empty
+	at org.springframework.util.Assert.isTrue(Assert.java:111)
+	at org.springdoc.core.models.GroupedOpenApi.<init>(GroupedOpenApi.java:121)
+	at org.springdoc.core.models.GroupedOpenApi$Builder.build(GroupedOpenApi.java:542)
+	at com.yoyo.payment.config.SwaggerConfig.memberApi(SwaggerConfig.java:27)
+	at com.yoyo.payment.config.SwaggerConfig$$SpringCGLIB$$0.CGLIB$memberApi$1(<generated>)
+	at com.yoyo.payment.config.SwaggerConfig$$SpringCGLIB$$FastClass$$1.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:258)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:348)
+	at com.yoyo.payment.config.SwaggerConfig$$SpringCGLIB$$0.memberApi(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:146)
+	... 25 common frames omitted
+[20240907 19:34:43:975][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:34:44:006][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 25272 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:34:44:007][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:34:44:047][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:34:44:047][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:34:44:779][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:34:44:782][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:34:44:807][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+[20240907 19:34:45:060][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:34:45:077][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:34:45:422][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:34:45:435][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:34:45:439][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:34:45:439][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:34:45:505][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:34:45:506][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1457 ms
+[20240907 19:34:45:568][WARN ][o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'paymentApi' defined in class path resource [com/yoyo/payment/config/SwaggerConfig.class]: Failed to instantiate [org.springdoc.core.models.GroupedOpenApi]: Factory method 'paymentApi' threw exception with message: Group name can not be null or empty
+[20240907 19:34:45:570][INFO ][o.apache.catalina.core.StandardService] Stopping service [Tomcat]
+[20240907 19:34:45:583][INFO ][o.s.b.a.l.ConditionEvaluationReportLogger] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[20240907 19:34:45:603][ERROR][o.springframework.boot.SpringApplication] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'paymentApi' defined in class path resource [com/yoyo/payment/config/SwaggerConfig.class]: Failed to instantiate [org.springdoc.core.models.GroupedOpenApi]: Factory method 'paymentApi' threw exception with message: Group name can not be null or empty
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:648)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:485)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1355)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1185)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:971)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at com.yoyo.payment.PaymentApplication.main(PaymentApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.springdoc.core.models.GroupedOpenApi]: Factory method 'paymentApi' threw exception with message: Group name can not be null or empty
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:178)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:644)
+	... 24 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Group name can not be null or empty
+	at org.springframework.util.Assert.isTrue(Assert.java:111)
+	at org.springdoc.core.models.GroupedOpenApi.<init>(GroupedOpenApi.java:121)
+	at org.springdoc.core.models.GroupedOpenApi$Builder.build(GroupedOpenApi.java:542)
+	at com.yoyo.payment.config.SwaggerConfig.paymentApi(SwaggerConfig.java:27)
+	at com.yoyo.payment.config.SwaggerConfig$$SpringCGLIB$$0.CGLIB$paymentApi$1(<generated>)
+	at com.yoyo.payment.config.SwaggerConfig$$SpringCGLIB$$FastClass$$1.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:258)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:348)
+	at com.yoyo.payment.config.SwaggerConfig$$SpringCGLIB$$0.paymentApi(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:146)
+	... 25 common frames omitted
+[20240907 19:35:11:396][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:35:11:429][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 26440 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:35:11:430][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:35:11:471][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:35:11:471][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:35:12:332][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:35:12:335][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:35:12:364][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+[20240907 19:35:12:668][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:35:12:686][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:35:13:044][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:35:13:057][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:35:13:061][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:35:13:062][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:35:13:137][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:35:13:138][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1666 ms
+[20240907 19:35:13:852][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 19:35:14:461][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 19:35:14:481][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 19:35:14:504][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 19:35:14:516][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.554 seconds (process running for 3.947)
+[20240907 19:35:40:998][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 19:35:40:998][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 19:35:40:999][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 19:35:41:465][INFO ][o.springdoc.api.AbstractOpenApiResource] Init duration for springdoc-openapi is: 121 ms
+[20240907 19:37:01:387][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:37:01:419][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 27020 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:37:01:420][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:37:01:458][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:37:01:458][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:37:02:289][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:37:02:292][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:37:02:323][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+[20240907 19:37:02:592][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:37:02:609][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:37:02:961][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:37:02:973][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:37:02:977][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:37:02:977][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:37:03:041][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:37:03:041][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1583 ms
+[20240907 19:37:03:663][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 19:37:04:509][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 19:37:04:529][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 19:37:04:561][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 19:37:04:571][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.642 seconds (process running for 4.094)
+[20240907 19:37:09:434][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 19:37:09:434][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 19:37:09:435][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 19:37:09:947][INFO ][o.springdoc.api.AbstractOpenApiResource] Init duration for springdoc-openapi is: 258 ms
+[20240907 19:39:46:252][WARN ][o.s.w.s.m.s.DefaultHandlerExceptionResolver] Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity<org.json.simple.JSONObject> com.yoyo.payment.controller.WidgetController.confirmPayment(java.lang.String) throws java.lang.Exception]
+[20240907 19:39:54:045][WARN ][o.s.w.s.m.s.DefaultHandlerExceptionResolver] Resolved [org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public org.springframework.http.ResponseEntity<org.json.simple.JSONObject> com.yoyo.payment.controller.WidgetController.confirmPayment(java.lang.String) throws java.lang.Exception]
+[20240907 19:42:44:902][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:42:44:935][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 28772 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:42:44:936][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:42:44:974][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:42:44:975][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:42:45:775][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:42:45:778][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:42:45:810][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 15 ms. Found 0 Redis repository interfaces.
+[20240907 19:42:46:083][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:42:46:101][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:42:46:442][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:42:46:455][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:42:46:462][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:42:46:463][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:42:46:538][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:42:46:538][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1563 ms
+[20240907 19:42:47:208][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 19:42:47:864][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 19:42:47:887][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 19:42:47:916][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 19:42:47:927][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.462 seconds (process running for 3.845)
+[20240907 19:42:49:786][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 19:42:49:786][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 19:42:49:787][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 0 ms
+[20240907 19:42:50:157][INFO ][o.springdoc.api.AbstractOpenApiResource] Init duration for springdoc-openapi is: 187 ms
+[20240907 19:43:22:584][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:43:22:615][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 2216 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:43:22:616][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:43:22:657][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:43:22:657][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:43:23:415][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:43:23:417][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:43:23:442][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+[20240907 19:43:23:692][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:43:23:708][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:43:25:537][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:43:25:569][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 18464 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:43:25:570][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:43:25:613][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:43:25:613][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:43:26:344][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:43:26:347][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:43:26:373][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+[20240907 19:43:26:622][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:43:26:638][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:43:26:972][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:43:26:985][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:43:26:989][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:43:26:989][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:43:27:058][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:43:27:059][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1445 ms
+[20240907 19:43:27:746][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 19:43:28:387][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 19:43:28:409][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 19:43:28:439][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 19:43:28:449][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.333 seconds (process running for 3.726)
+[20240907 19:43:31:345][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 19:43:31:346][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 19:43:31:346][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 0 ms
+[20240907 19:43:31:384][ERROR][o.a.c.c.C.[.[.[/].[dispatcherServlet]] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: Unexpected token COLON(:) at position 15.] with root cause
+org.json.simple.parser.ParseException: null
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:146)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:81)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:75)
+	at com.yoyo.payment.controller.WidgetController.confirmPayment(WidgetController.java:42)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+[20240907 19:52:03:372][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:52:03:411][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 17848 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:52:03:412][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:52:03:459][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:52:03:459][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:52:04:317][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:52:04:320][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:52:04:350][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 15 ms. Found 0 Redis repository interfaces.
+[20240907 19:52:04:654][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:52:04:674][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:52:05:021][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:52:05:034][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:52:05:038][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:52:05:038][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:52:05:107][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:52:05:107][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1648 ms
+[20240907 19:52:05:877][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 19:52:06:664][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 19:52:06:690][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 19:52:06:726][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 19:52:06:740][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.851 seconds (process running for 4.315)
+[20240907 19:52:37:389][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 19:52:37:429][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 26928 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 19:52:37:430][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 19:52:37:481][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 19:52:37:481][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 19:52:38:408][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 19:52:38:411][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 19:52:38:445][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+[20240907 19:52:38:752][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 19:52:38:773][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 19:52:39:150][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 19:52:39:161][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 19:52:39:165][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 19:52:39:166][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 19:52:39:233][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 19:52:39:233][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1751 ms
+[20240907 19:52:39:896][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 19:52:40:592][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 19:52:40:614][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 19:52:40:648][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 19:52:40:659][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.732 seconds (process running for 4.627)
+[20240907 19:53:42:668][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 19:53:42:668][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 19:53:42:669][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 20:31:50:335][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 20:31:50:370][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 7368 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 20:31:50:371][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 20:31:50:415][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 20:31:50:415][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 20:31:51:244][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 20:31:51:247][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 20:31:51:272][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+[20240907 20:31:51:602][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 20:31:51:625][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 20:31:52:043][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 20:31:52:055][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 20:31:52:059][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 20:31:52:059][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 20:31:52:126][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 20:31:52:127][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1712 ms
+[20240907 20:31:52:849][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 20:31:53:552][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 20:31:53:573][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 20:31:53:600][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 20:31:53:615][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.711 seconds (process running for 4.106)
+[20240907 20:47:13:596][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 20:47:13:638][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 21588 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 20:47:13:639][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 20:47:13:695][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 20:47:13:695][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 20:47:14:587][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 20:47:14:590][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 20:47:14:619][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+[20240907 20:47:14:908][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 20:47:14:927][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 20:47:15:268][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 20:47:15:283][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 20:47:15:286][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 20:47:15:287][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 20:47:15:354][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 20:47:15:355][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1658 ms
+[20240907 20:47:16:063][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 20:47:16:690][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 20:47:16:707][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 20:47:16:731][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 20:47:16:742][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.609 seconds (process running for 4.032)
+[20240907 20:54:10:250][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 20:54:10:286][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 15708 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 20:54:10:287][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 20:54:10:330][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 20:54:10:330][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 20:54:11:191][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 20:54:11:195][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 20:54:11:233][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+[20240907 20:54:11:564][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 20:54:11:584][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 20:54:11:927][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 20:54:11:944][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 20:54:11:947][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 20:54:11:948][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 20:54:12:014][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 20:54:12:015][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1685 ms
+[20240907 20:54:12:664][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 20:54:13:351][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 20:54:13:373][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 20:54:13:404][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 20:54:13:416][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.617 seconds (process running for 4.025)
+[20240907 20:57:10:229][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 20:57:10:230][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 20:57:10:231][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 20:58:48:774][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 20:58:48:809][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 22824 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 20:58:48:810][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 20:58:48:855][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 20:58:48:856][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 20:58:49:727][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 20:58:49:731][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 20:58:49:764][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 15 ms. Found 0 Redis repository interfaces.
+[20240907 20:58:50:067][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 20:58:50:085][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 20:58:50:431][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 20:58:50:440][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 20:58:50:444][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 20:58:50:444][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 20:58:50:508][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 20:58:50:508][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1652 ms
+[20240907 20:58:51:115][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 20:58:51:737][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 20:58:51:760][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 20:58:51:788][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 20:58:51:803][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.488 seconds (process running for 3.883)
+[20240907 20:59:16:734][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 20:59:16:734][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 20:59:16:735][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 21:02:51:598][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:02:51:630][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 25944 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:02:51:631][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 21:02:51:674][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:02:51:674][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:02:52:506][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:02:52:509][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:02:52:538][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+[20240907 21:02:52:811][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:02:52:829][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:02:53:198][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 21:02:53:210][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 21:02:53:215][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:02:53:215][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:02:53:291][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:02:53:291][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1616 ms
+[20240907 21:02:53:351][WARN ][o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'paymentController': Injection of autowired dependencies failed
+[20240907 21:02:53:355][INFO ][o.apache.catalina.core.StandardService] Stopping service [Tomcat]
+[20240907 21:02:53:369][INFO ][o.s.b.a.l.ConditionEvaluationReportLogger] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[20240907 21:02:53:388][ERROR][o.springframework.boot.SpringApplication] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'paymentController': Injection of autowired dependencies failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:515)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1439)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:971)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at com.yoyo.payment.PaymentApplication.main(PaymentApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'widget.secret' in value "${widget.secret}"
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:180)
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:126)
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239)
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210)
+	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:964)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1374)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:785)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:768)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:145)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509)
+	... 22 common frames omitted
+[20240907 21:03:03:830][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:03:03:866][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 20164 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:03:03:867][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 21:03:03:906][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:03:03:907][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:03:04:716][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:03:04:719][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:03:04:746][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+[20240907 21:03:05:006][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:03:05:022][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:03:05:382][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 21:03:05:395][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 21:03:05:399][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:03:05:399][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:03:05:472][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:03:05:472][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1565 ms
+[20240907 21:03:05:531][WARN ][o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'paymentController': Injection of autowired dependencies failed
+[20240907 21:03:05:533][INFO ][o.apache.catalina.core.StandardService] Stopping service [Tomcat]
+[20240907 21:03:05:545][INFO ][o.s.b.a.l.ConditionEvaluationReportLogger] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[20240907 21:03:05:563][ERROR][o.springframework.boot.SpringApplication] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'paymentController': Injection of autowired dependencies failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:515)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1439)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:971)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at com.yoyo.payment.PaymentApplication.main(PaymentApplication.java:10)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.lang.IllegalArgumentException: Circular placeholder reference 'payment.secret' in property definitions
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:147)
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:168)
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:126)
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239)
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210)
+	at org.springframework.core.env.AbstractPropertyResolver.resolveNestedPlaceholders(AbstractPropertyResolver.java:230)
+	at org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertyResolver.getProperty(ConfigurationPropertySourcesPropertyResolver.java:80)
+	at org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertyResolver.getProperty(ConfigurationPropertySourcesPropertyResolver.java:61)
+	at org.springframework.core.env.AbstractEnvironment.getProperty(AbstractEnvironment.java:552)
+	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer$1.getProperty(PropertySourcesPlaceholderConfigurer.java:153)
+	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer$1.getProperty(PropertySourcesPlaceholderConfigurer.java:149)
+	at org.springframework.core.env.PropertySourcesPropertyResolver.getProperty(PropertySourcesPropertyResolver.java:85)
+	at org.springframework.core.env.PropertySourcesPropertyResolver.getPropertyAsRawString(PropertySourcesPropertyResolver.java:74)
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:153)
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:126)
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239)
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210)
+	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:200)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:964)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1374)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1353)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:785)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:768)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:145)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509)
+	... 22 common frames omitted
+[20240907 21:03:58:532][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:03:58:574][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 15704 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:03:58:574][INFO ][com.yoyo.payment.PaymentApplication] The following 1 profile is active: "local"
+[20240907 21:03:58:611][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:03:58:611][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:03:59:396][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:03:59:399][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:03:59:415][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+[20240907 21:03:59:680][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:03:59:697][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:04:00:018][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 21:04:00:034][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 21:04:00:034][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:04:00:034][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:04:00:107][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:04:00:108][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1497 ms
+[20240907 21:04:00:766][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 21:04:01:370][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 21:04:01:385][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 21:04:01:417][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 21:04:01:435][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.356 seconds (process running for 3.765)
+[20240907 21:05:44:465][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:05:44:500][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 860 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:05:44:502][INFO ][com.yoyo.payment.PaymentApplication] The following 1 profile is active: "local"
+[20240907 21:05:44:555][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:05:44:555][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:05:45:393][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:05:45:408][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:05:45:424][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+[20240907 21:05:45:684][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:05:45:701][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:05:46:062][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 21:05:46:079][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 21:05:46:079][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:05:46:079][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:05:46:158][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:05:46:158][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1602 ms
+[20240907 21:05:46:913][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 21:05:47:619][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 21:05:47:642][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 21:05:47:669][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 21:05:47:684][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.657 seconds (process running for 4.086)
+[20240907 21:07:46:061][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 21:07:46:061][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 21:07:46:061][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 0 ms
+[20240907 21:08:04:989][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:08:05:034][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 29692 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:08:05:034][INFO ][com.yoyo.payment.PaymentApplication] The following 1 profile is active: "local"
+[20240907 21:08:05:070][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:08:05:070][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:08:05:873][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:08:05:876][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:08:05:904][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+[20240907 21:08:06:172][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:08:06:191][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:08:06:536][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 21:08:06:548][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 21:08:06:551][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:08:06:551][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:08:06:617][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:08:06:618][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1548 ms
+[20240907 21:08:07:276][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 21:08:08:039][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 21:08:08:059][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 21:08:08:093][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 21:08:08:106][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.548 seconds (process running for 3.959)
+[20240907 21:08:35:496][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 21:08:35:496][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 21:08:35:497][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 21:10:03:994][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:10:04:042][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 13956 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:10:04:042][INFO ][com.yoyo.payment.PaymentApplication] The following 1 profile is active: "local"
+[20240907 21:10:04:081][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:10:04:081][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:10:04:826][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:10:04:826][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:10:04:851][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+[20240907 21:24:02:895][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:24:02:930][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 28284 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:24:02:931][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 21:24:02:967][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:24:02:967][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:24:03:784][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:24:03:789][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:24:03:801][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+[20240907 21:24:04:072][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:24:04:089][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:24:04:474][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 21:24:04:487][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 21:24:04:490][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:24:04:490][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:24:04:608][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:24:04:608][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1641 ms
+[20240907 21:24:05:258][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 21:24:06:046][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 21:24:06:072][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 21:24:06:105][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 21:24:06:117][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.687 seconds (process running for 4.121)
+[20240907 21:25:27:432][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 21:25:27:432][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 21:25:27:433][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 21:25:58:385][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:25:58:433][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 10796 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:25:58:434][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 21:25:58:492][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:25:58:493][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:25:59:363][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:25:59:366][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:25:59:397][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+[20240907 21:25:59:697][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:25:59:719][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:26:00:145][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 21:26:00:160][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 21:26:00:164][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:26:00:165][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:26:00:227][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:26:00:227][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1734 ms
+[20240907 21:26:01:010][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 21:26:01:724][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 21:26:01:744][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 21:26:01:777][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 21:26:01:786][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.927 seconds (process running for 4.398)
+[20240907 21:26:07:298][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 21:26:07:298][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 21:26:07:299][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 21:51:27:679][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:51:27:719][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 26004 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:51:27:720][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 21:51:27:766][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:51:27:767][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:51:28:761][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:51:28:765][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:51:28:797][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 15 ms. Found 0 Redis repository interfaces.
+[20240907 21:51:29:162][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:51:29:186][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:51:29:639][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 21:51:29:652][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 21:51:29:657][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:51:29:657][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:51:29:745][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:51:29:746][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1979 ms
+[20240907 21:51:30:723][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 21:51:31:503][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 21:51:31:526][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 21:51:31:551][WARN ][o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+[20240907 21:51:31:617][INFO ][o.s.b.a.l.ConditionEvaluationReportLogger] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+[20240907 21:51:31:701][ERROR][o.s.b.d.LoggingFailureAnalysisReporter] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 4242 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 4242 or configure this application to listen on another port.
+
+[20240907 21:51:40:049][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:51:40:091][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 23568 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:51:40:092][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 21:51:40:142][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:51:40:142][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:51:41:191][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:51:41:195][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:51:41:226][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+[20240907 21:51:41:537][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:51:41:558][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:51:41:954][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 21:51:41:968][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 21:51:41:972][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:51:41:972][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:51:42:052][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:51:42:052][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1909 ms
+[20240907 21:51:42:838][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 21:51:43:605][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 21:51:43:623][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 21:51:43:654][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 21:51:43:666][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 4.125 seconds (process running for 4.602)
+[20240907 21:51:51:574][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 21:51:51:574][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 21:51:51:575][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 21:51:51:949][INFO ][o.springdoc.api.AbstractOpenApiResource] Init duration for springdoc-openapi is: 208 ms
+[20240907 21:53:02:821][ERROR][o.a.c.c.C.[.[.[/].[dispatcherServlet]] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: Unexpected character (;) at position 13.] with root cause
+org.json.simple.parser.ParseException: null
+	at org.json.simple.parser.Yylex.yylex(Yylex.java:610)
+	at org.json.simple.parser.JSONParser.nextToken(JSONParser.java:269)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:118)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:81)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:75)
+	at com.yoyo.payment.controller.PaymentController.confirmPayment(PaymentController.java:45)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+[20240907 21:53:19:788][ERROR][o.a.c.c.C.[.[.[/].[dispatcherServlet]] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: Unexpected character (;) at position 13.] with root cause
+org.json.simple.parser.ParseException: null
+	at org.json.simple.parser.Yylex.yylex(Yylex.java:610)
+	at org.json.simple.parser.JSONParser.nextToken(JSONParser.java:269)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:118)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:81)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:75)
+	at com.yoyo.payment.controller.PaymentController.confirmPayment(PaymentController.java:45)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+[20240907 21:54:38:195][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:54:38:241][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 17396 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:54:38:242][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 21:54:38:307][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:54:38:307][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:54:39:225][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:54:39:228][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:54:39:260][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+[20240907 21:54:39:576][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:54:39:595][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:54:40:007][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 4242 (http)
+[20240907 21:54:40:024][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-4242"]
+[20240907 21:54:40:028][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:54:40:029][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:54:40:100][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:54:40:101][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1793 ms
+[20240907 21:54:40:868][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 21:54:41:567][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 21:54:41:587][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-4242"]
+[20240907 21:54:41:614][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 4242 (http) with context path '/'
+[20240907 21:54:41:628][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.92 seconds (process running for 4.406)
+[20240907 21:54:46:758][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 21:54:46:758][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 21:54:46:759][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 21:54:46:813][ERROR][o.a.c.c.C.[.[.[/].[dispatcherServlet]] Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: Unexpected character (;) at position 13.] with root cause
+org.json.simple.parser.ParseException: null
+	at org.json.simple.parser.Yylex.yylex(Yylex.java:610)
+	at org.json.simple.parser.JSONParser.nextToken(JSONParser.java:269)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:118)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:81)
+	at org.json.simple.parser.JSONParser.parse(JSONParser.java:75)
+	at com.yoyo.payment.controller.PaymentController.confirmPayment(PaymentController.java:45)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+[20240907 21:55:39:561][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 21:55:39:602][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 2220 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 21:55:39:603][INFO ][com.yoyo.payment.PaymentApplication] No active profile set, falling back to 1 default profile: "default"
+[20240907 21:55:39:650][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 21:55:39:650][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 21:55:40:521][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 21:55:40:524][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 21:55:40:557][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 15 ms. Found 0 Redis repository interfaces.
+[20240907 21:55:40:875][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 21:55:40:898][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 21:55:41:312][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 8080 (http)
+[20240907 21:55:41:325][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-8080"]
+[20240907 21:55:41:329][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 21:55:41:329][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 21:55:41:414][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 21:55:41:415][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1764 ms
+[20240907 21:55:42:168][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 21:55:42:882][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 21:55:42:907][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-8080"]
+[20240907 21:55:42:936][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 8080 (http) with context path '/'
+[20240907 21:55:42:948][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.893 seconds (process running for 4.404)
+[20240907 21:56:31:764][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 21:56:31:765][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 21:56:31:766][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms
+[20240907 22:03:49:950][INFO ][o.h.validator.internal.util.Version] HV000001: Hibernate Validator 8.0.0.Final
+[20240907 22:03:49:987][INFO ][com.yoyo.payment.PaymentApplication] Starting PaymentApplication using Java 17.0.11 with PID 25084 (C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo\payment-service\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\YoYo\S11P21A308\BackEnd_YoYo)
+[20240907 22:03:49:988][INFO ][com.yoyo.payment.PaymentApplication] The following 1 profile is active: "local"
+[20240907 22:03:50:028][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[20240907 22:03:50:028][INFO ][o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[20240907 22:03:50:875][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Multiple Spring Data modules found, entering strict repository configuration mode
+[20240907 22:03:50:877][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[20240907 22:03:50:901][INFO ][o.s.d.r.c.RepositoryConfigurationDelegate] Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+[20240907 22:03:51:161][WARN ][o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker] Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$SpringCGLIB$$0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [annotationActionEndpointMapping] is declared through a non-static factory method on that class; consider declaring it as static instead.
+[20240907 22:03:51:177][INFO ][o.s.w.s.a.s.AnnotationActionEndpointMapping] Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+[20240907 22:03:51:538][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat initialized with port 8080 (http)
+[20240907 22:03:51:549][INFO ][o.apache.coyote.http11.Http11NioProtocol] Initializing ProtocolHandler ["http-nio-8080"]
+[20240907 22:03:51:556][INFO ][o.apache.catalina.core.StandardService] Starting service [Tomcat]
+[20240907 22:03:51:556][INFO ][org.apache.catalina.core.StandardEngine] Starting Servlet engine: [Apache Tomcat/10.1.28]
+[20240907 22:03:51:638][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring embedded WebApplicationContext
+[20240907 22:03:51:639][INFO ][o.s.b.w.s.c.ServletWebServerApplicationContext] Root WebApplicationContext: initialization completed in 1610 ms
+[20240907 22:03:52:396][WARN ][o.s.b.a.t.ThymeleafAutoConfiguration$DefaultTemplateResolverConfiguration] Cannot find template location: classpath:/templates/ (please add some templates, check your Thymeleaf configuration, or set spring.thymeleaf.check-template-location=false)
+[20240907 22:03:53:186][INFO ][o.s.b.d.a.OptionalLiveReloadServer] LiveReload server is running on port 35729
+[20240907 22:03:53:216][INFO ][o.apache.coyote.http11.Http11NioProtocol] Starting ProtocolHandler ["http-nio-8080"]
+[20240907 22:03:53:264][INFO ][o.s.b.w.embedded.tomcat.TomcatWebServer] Tomcat started on port 8080 (http) with context path '/'
+[20240907 22:03:53:281][INFO ][com.yoyo.payment.PaymentApplication] Started PaymentApplication in 3.796 seconds (process running for 4.24)
+[20240907 22:04:05:574][INFO ][o.a.c.c.C.[Tomcat].[localhost].[/]] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[20240907 22:04:05:574][INFO ][o.s.web.servlet.DispatcherServlet] Initializing Servlet 'dispatcherServlet'
+[20240907 22:04:05:575][INFO ][o.s.web.servlet.DispatcherServlet] Completed initialization in 1 ms

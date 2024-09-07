@@ -1,6 +1,6 @@
-package com.yoyo.smsauth.controller;
+package com.yoyo.sms.controller;
 
-import com.yoyo.smsauth.service.SmsCertificationService;
+import com.yoyo.sms.service.SmsCertificationService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;

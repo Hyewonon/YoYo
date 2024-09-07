@@ -54,9 +54,10 @@ services:
     networks:
       - yoyo_network
     ports:
-      - "8084:8080"
+      - "8082:8080"
     depends_on:
       - mysql
+      - redis
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/yoyo
       - SPRING_DATASOURCE_USERNAME=ssafy
@@ -65,13 +66,19 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
       - LOGGING_TOPIC=yoyo.logging.out.stdout
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - COOL_SMS_API_KEY=NCS2BT9XCBDOKM00
+      - COOL_SMS_API_SECRET=A0KQGWPABG62CS21X8OJHZ9P4J8LDFSR
+      - COOL_SMS_DOMAIN=https://api.coolsms.co.kr
+      - COOL_SMS_SEND_PHONE_NUMBER="01054513115"
 
   banking-service:
     image: yoyo-banking-service:1.0.0
     networks:
       - yoyo_network
     ports:
-      - "8082:8080"
+      - "8083:8080"
     depends_on:
       - mysql
     environment:
@@ -88,7 +95,7 @@ services:
     networks:
       - yoyo_network
     ports:
-      - "8083:8080"
+      - "8084:8080"
     depends_on:
       - mysql
     environment:
@@ -117,6 +124,29 @@ services:
       - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
       - LOGGING_TOPIC=yoyo.logging.out.stdout
 
+  payment-service:
+    image: yoyo-payment-service:1.0.0
+    networks:
+      - yoyo_network
+    ports:
+      - "8086:8080"
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/yoyo
+      - SPRING_DATASOURCE_USERNAME=ssafy
+      - SPRING_DATASOURCE_PASSWORD=ssafy
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+      - LOGGING_TOPIC=yoyo.logging.out.stdout
+      - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+      - SPRING_FREEMARKER_CACHE=false
+      - SPRING_THYMELEAF_CACHE=false
+      - LOGGING_LEVEL_ROOT=info
+      - PAYMENT_SECRET=test_sk_zXLkKEypNArWmo50nX3lmeaxYG5R
+      - PAYMENT_URL=https://api.tosspayments.com/v1/payments/confirm
+
   zookeeper:
     image: bitnami/zookeeper:3.8.0
     networks:
@@ -134,14 +164,15 @@ services:
       - yoyo_network
     ports:
       - '9092:9092'
+      - '29092:29092'
     environment:
       - KAFKA_BROKER_ID=1
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
-      - KAFKA_CFG_LISTENERS=LC://kafka:29092,LX://kafka:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=LC://kafka:29092,LX://${DOCKER_HOST_IP:-localhost}:9092
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=LC:PLAINTEXT,LX:PLAINTEXT
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=LC
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://kafka:29092,EXTERNAL://0.0.0.0:9092  # 내부 통신용 및 외부 통신용 리스너
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:29092,EXTERNAL://localhost:9092  # 외부 클라이언트 접근시 localhost:9092 사용
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT  # 브로커 간 통신에 사용하는 리스너 명칭
     depends_on:
       - zookeeper
 
@@ -158,7 +189,7 @@ services:
       - zookeeper
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29092
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=localhost:9092
       - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
 
 

@@ -1,6 +1,6 @@
-package com.yoyo.smsauth.service;
+package com.yoyo.sms.service;
 
-import com.yoyo.smsauth.repository.SmsCertificationRepository;
+import com.yoyo.sms.repository.SmsCertificationRepository;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

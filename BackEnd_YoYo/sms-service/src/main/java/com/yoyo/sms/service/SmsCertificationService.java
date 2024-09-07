@@ -1,4 +1,4 @@
-package com.yoyo.smsauth.service;
+package com.yoyo.sms.service;
 
 
 import net.nurigo.sdk.message.model.Message;
