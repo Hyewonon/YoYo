@@ -1,4 +1,4 @@
-package com.yoyo.member.adapter.in.web;
+package com.yoyo.member.adapter.in.web.member;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;

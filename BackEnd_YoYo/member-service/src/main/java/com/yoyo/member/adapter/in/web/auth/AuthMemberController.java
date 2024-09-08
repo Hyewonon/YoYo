@@ -1,10 +1,10 @@
-package com.yoyo.member.adapter.in.web;
+package com.yoyo.member.adapter.in.web.auth;
 
 import com.yoyo.common.annotation.WebAdapter;
-import com.yoyo.member.application.port.in.AuthMemberUseCase;
-import com.yoyo.member.application.port.in.LoginMemberCommand;
-import com.yoyo.member.application.port.in.RefreshTokenCommand;
-import com.yoyo.member.application.port.in.ValidateTokenCommand;
+import com.yoyo.member.application.port.in.auth.AuthMemberUseCase;
+import com.yoyo.member.application.port.in.auth.LoginMemberCommand;
+import com.yoyo.member.application.port.in.auth.RefreshTokenCommand;
+import com.yoyo.member.application.port.in.auth.ValidateTokenCommand;
 import com.yoyo.member.domain.JwtToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +21,8 @@ public class AuthMemberController {
     @PostMapping("/members/login")
     JwtToken loginMember(@RequestBody LoginMemberRequest request) {
         LoginMemberCommand command = LoginMemberCommand.builder()
-                                                       .memberId(request.getMemberId())
+                                                       .phoneNumber(request.getPhoneNumber())
+                                                       .password(request.getPassword())
                                                        .build();
         return authMemberUseCase.loginMember(command);
     }

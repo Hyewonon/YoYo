@@ -1,4 +1,4 @@
-package com.yoyo.member.application.port.in;
+package com.yoyo.member.application.port.in.auth;
 
 import com.yoyo.member.domain.JwtToken;
 import com.yoyo.member.domain.Member;

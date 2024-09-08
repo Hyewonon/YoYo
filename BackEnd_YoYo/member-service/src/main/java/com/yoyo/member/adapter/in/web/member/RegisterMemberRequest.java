@@ -1,4 +1,4 @@
-package com.yoyo.member.adapter.in.web;
+package com.yoyo.member.adapter.in.web.member;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
@@ -14,4 +14,5 @@ public class RegisterMemberRequest {
     private String phoneNumber;
     private String password;
     private LocalDate birthDay;
+    private boolean isValid;
 }

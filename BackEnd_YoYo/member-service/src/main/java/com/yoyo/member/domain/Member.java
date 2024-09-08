@@ -18,15 +18,15 @@ public class Member {
     private final boolean isValid;
     private final String refreshToken;
     public static Member generateMember(
-            MemberId memberId, MemberName memberName, MemberPassword memberPassword,
-            MemberPhoneNumber memberPhoneNumber, MemberBirthDay memberBirthDay,
+            MemberId memberId, MemberName memberName,MemberPhoneNumber memberPhoneNumber, MemberPassword memberPassword,
+             MemberBirthDay memberBirthDay,
             MemberIsValid memberIsValid,
             MemberRefreshToken memberRefreshToken
     ) {
         return new Member(memberId.memberId,
                           memberName.nameValue,
-                          memberPassword.passwordValue,
                           memberPhoneNumber.phoneNumberValue,
+                          memberPassword.passwordValue,
                           memberBirthDay.birthDayValue,
                           memberIsValid.isValid,
                           memberRefreshToken.refreshToken);

@@ -40,13 +40,13 @@ public class MemberJpaEntity {
     @Setter
     private String refreshToken;
 
-    public MemberJpaEntity(String naveValue, String passwordValue, String phoneNumberValue, LocalDate birthDayValue,boolean isValid, String refreshToken) {
+    public MemberJpaEntity(String naveValue, String phoneNumberValue, String passwordValue, LocalDate birthDayValue,
+                           boolean isValid, String refreshToken) {
         this.name = naveValue;
-        this.password = passwordValue;
         this.phoneNumber = phoneNumberValue;
+        this.password = passwordValue;
         this.birthDay = birthDayValue;
         this.isValid = isValid;
         this.refreshToken = refreshToken;
     }
-
 }

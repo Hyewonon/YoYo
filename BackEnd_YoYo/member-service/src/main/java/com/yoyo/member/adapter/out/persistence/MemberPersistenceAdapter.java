@@ -8,6 +8,7 @@ import com.yoyo.member.application.port.out.RegisterMemberPort;
 import com.yoyo.member.application.port.out.UpdateMemberPort;
 import com.yoyo.member.domain.Member.MemberBirthDay;
 import com.yoyo.member.domain.Member.MemberId;
+import com.yoyo.member.domain.Member.MemberIsValid;
 import com.yoyo.member.domain.Member.MemberName;
 import com.yoyo.member.domain.Member.MemberPassword;
 import com.yoyo.member.domain.Member.MemberPhoneNumber;
@@ -21,19 +22,26 @@ public class MemberPersistenceAdapter implements RegisterMemberPort, FindMemberP
     private final SpringDataMemberRepository memberRepository;
 
     @Override
-    public MemberJpaEntity createMember(MemberName memberName, MemberPassword memberPassword,
-                                        MemberPhoneNumber memberPhoneNumber,
-                                        MemberBirthDay memberBirthDay) {
+    public MemberJpaEntity createMember(MemberName memberName, MemberPhoneNumber memberPhoneNumber,
+                                        MemberPassword memberPassword,
+                                        MemberBirthDay memberBirthDay,
+                                        MemberIsValid memberIsValid) {
         return memberRepository.save(new MemberJpaEntity(memberName.getNameValue(),
-                                                         memberPassword.getPasswordValue(),
                                                          memberPhoneNumber.getPhoneNumberValue(),
-                                                         memberBirthDay.getBirthDayValue(), ""));
+                                                         memberPassword.getPasswordValue(),
+                                                         memberBirthDay.getBirthDayValue(), memberIsValid.isValid(),
+                                                         ""));
     }
 
     @Override
     public MemberJpaEntity findMemberById(MemberId memberId) {
         return memberRepository.findById(memberId.getMemberId())
                                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
+    }
+
+    @Override
+    public MemberJpaEntity findMemberByPhoneNumber(MemberPhoneNumber memberPhoneNumber) {
+        return memberRepository.findByPhoneNumber(memberPhoneNumber.getPhoneNumberValue());
     }
 
 
