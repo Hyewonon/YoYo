@@ -15,16 +15,21 @@ public class Member {
     private final String phoneNumber;
     private final String password;
     private final LocalDate birthDay;
-
+    private final boolean isValid;
+    private final String refreshToken;
     public static Member generateMember(
             MemberId memberId, MemberName memberName, MemberPassword memberPassword,
-            MemberPhoneNumber memberPhoneNumber, MemberBirthDay memberBirthDay
+            MemberPhoneNumber memberPhoneNumber, MemberBirthDay memberBirthDay,
+            MemberIsValid memberIsValid,
+            MemberRefreshToken memberRefreshToken
     ) {
         return new Member(memberId.memberId,
                           memberName.nameValue,
                           memberPassword.passwordValue,
                           memberPhoneNumber.phoneNumberValue,
-                          memberBirthDay.birthDayValue);
+                          memberBirthDay.birthDayValue,
+                          memberIsValid.isValid,
+                          memberRefreshToken.refreshToken);
     }
 
     @Value
@@ -79,9 +84,28 @@ public class Member {
 
     }
 
+    @Value
+    public static class MemberRefreshToken{
+
+        String refreshToken;
+
+        public MemberRefreshToken(String value) {
+            this.refreshToken = value;
+        }
+    }
+
+    @Value
+    public static class MemberIsValid{
+
+        boolean isValid;
+
+        public MemberIsValid(boolean value) {
+            this.isValid = value;
+        }
+    }
+
     public void updateName(MemberName newValue) {
         this.name = newValue.getNameValue();
     }
 }
 
-// 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

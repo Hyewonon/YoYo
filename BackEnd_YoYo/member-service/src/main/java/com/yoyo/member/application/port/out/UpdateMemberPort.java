@@ -1,9 +1,15 @@
 package com.yoyo.member.application.port.out;
 
+import com.yoyo.member.adapter.out.persistence.MemberJpaEntity;
 import com.yoyo.member.domain.Member;
 
 public interface UpdateMemberPort {
 
-    Member findMemberById(Long memberId);
-    void save(Member member);
+    MemberJpaEntity updateMember(
+            Member.MemberId memberId,
+            Member.MemberName memberName,
+            Member.MemberPhoneNumber memberPhoneNumber,
+            Member.MemberBirthDay memberBirthDay,
+            Member.MemberRefreshToken memberRefreshToken
+    );
 }

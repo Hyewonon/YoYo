@@ -17,14 +17,16 @@ public class UpdateMemberController {
 
     private final UpdateMemberUseCase updateMemberUseCase;
 
-    @PatchMapping("/members/{memberId}")
-    ResponseEntity<?> updateMember(@PathVariable("memberId") Long memberId, @RequestBody UpdateMemberRequest request) {
+    @PatchMapping("/members/update")
+    ResponseEntity<?> updateMember(@RequestBody UpdateMemberRequest request) {
         UpdateMemberCommand command = UpdateMemberCommand.builder()
-                                                         .memberId(memberId)
+                                                         .memberId(request.getMemberId())
                                                          .name(request.getName())
+                                                         .phoneNumber(request.getPhoneNumber())
+                                                         .birthDay(request.getBirthDay())
                                                          .build();
         updateMemberUseCase.updateMember(command);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(updateMemberUseCase.updateMember(command));
     }
 
 }

@@ -5,5 +5,5 @@ import com.yoyo.member.domain.Member;
 
 public interface FindMemberPort {
 
-    Member findMember(Member.MemberId memberId);
+    MemberJpaEntity findMemberById(Member.MemberId memberId);
 }
