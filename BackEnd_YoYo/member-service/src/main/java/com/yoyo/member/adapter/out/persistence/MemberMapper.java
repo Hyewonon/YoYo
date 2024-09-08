@@ -14,17 +14,9 @@ public class MemberMapper {
                 new Member.MemberName(memberJpaEntity.getName()),
                 new Member.MemberPassword(memberJpaEntity.getPassword()),
                 new Member.MemberPhoneNumber(memberJpaEntity.getPhoneNumber()),
-                new Member.MemberBirthDay(memberJpaEntity.getBirthDay())
+                new Member.MemberBirthDay(memberJpaEntity.getBirthDay()),
+                new Member.MemberIsValid(memberJpaEntity.isValid()),
+                new Member.MemberRefreshToken(memberJpaEntity.getRefreshToken())
         );
-    }
-
-    public MemberJpaEntity mapToJpaEntity(Member member) {
-        return MemberJpaEntity.builder()
-                .memberId(member.getMemberId())
-                .name(member.getName())
-                .password(member.getPassword())
-                .password(member.getPhoneNumber())
-                .birthDay(member.getBirthDay())
-                              .build();
     }
 }
