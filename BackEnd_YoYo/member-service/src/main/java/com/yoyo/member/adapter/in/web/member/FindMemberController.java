@@ -1,7 +1,7 @@
-package com.yoyo.member.adapter.in.web;
+package com.yoyo.member.adapter.in.web.member;
 
-import com.yoyo.member.application.port.in.FindMemberCommand;
-import com.yoyo.member.application.port.in.FindMemberUseCase;
+import com.yoyo.member.application.port.in.member.FindMemberCommand;
+import com.yoyo.member.application.port.in.member.FindMemberUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

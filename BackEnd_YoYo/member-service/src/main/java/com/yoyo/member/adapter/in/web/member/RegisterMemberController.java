@@ -1,8 +1,8 @@
-package com.yoyo.member.adapter.in.web;
+package com.yoyo.member.adapter.in.web.member;
 
 import com.yoyo.common.annotation.WebAdapter;
-import com.yoyo.member.application.port.in.RegisterMemberCommand;
-import com.yoyo.member.application.port.in.RegisterMemberUseCase;
+import com.yoyo.member.application.port.in.member.RegisterMemberCommand;
+import com.yoyo.member.application.port.in.member.RegisterMemberUseCase;
 import com.yoyo.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,11 +23,12 @@ public class RegisterMemberController {
         // request -> command
 
         // command -> Usecase
-
         RegisterMemberCommand command = RegisterMemberCommand.builder()
                                                              .name(request.getName())
+                                                             .phoneNumber(request.getPhoneNumber())
                                                              .password(request.getPassword())
                                                              .birthDay(request.getBirthDay())
+                                                             .isValid(request.isValid())
                                                              .build();
         return registerMemberUseCase.registerMember(command);
     }

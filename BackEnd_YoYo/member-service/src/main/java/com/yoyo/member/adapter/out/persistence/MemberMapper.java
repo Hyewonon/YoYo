@@ -12,8 +12,8 @@ public class MemberMapper {
         return Member.generateMember(
                 new Member.MemberId(memberJpaEntity.getMemberId()),
                 new Member.MemberName(memberJpaEntity.getName()),
-                new Member.MemberPassword(memberJpaEntity.getPassword()),
                 new Member.MemberPhoneNumber(memberJpaEntity.getPhoneNumber()),
+                new Member.MemberPassword(memberJpaEntity.getPassword()),
                 new Member.MemberBirthDay(memberJpaEntity.getBirthDay()),
                 new Member.MemberIsValid(memberJpaEntity.isValid()),
                 new Member.MemberRefreshToken(memberJpaEntity.getRefreshToken())

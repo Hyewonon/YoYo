@@ -1,4 +1,4 @@
-package com.yoyo.member.adapter.in.web;
+package com.yoyo.member.adapter.in.web.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

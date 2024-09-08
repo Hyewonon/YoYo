@@ -1,4 +1,4 @@
-package com.yoyo.member.application.port.in;
+package com.yoyo.member.application.port.in.member;
 
 import com.yoyo.member.domain.Member;
 

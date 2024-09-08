@@ -8,8 +8,9 @@ public interface RegisterMemberPort {
 
     MemberJpaEntity createMember(
         Member.MemberName memberName,
-        Member.MemberPassword memberPassword,
         Member.MemberPhoneNumber memberPhoneNumber,
-        Member.MemberBirthDay memberBirthDay
+        Member.MemberPassword memberPassword,
+        Member.MemberBirthDay memberBirthDay,
+        Member.MemberIsValid memberIsValid
     );
 }
