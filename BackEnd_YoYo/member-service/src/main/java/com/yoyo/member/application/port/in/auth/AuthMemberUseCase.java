@@ -13,4 +13,5 @@ public interface AuthMemberUseCase {
 
     Member getMemberByJwtToken(ValidateTokenCommand command);
 
+    void logout(LogoutMemberCommand command);
 }

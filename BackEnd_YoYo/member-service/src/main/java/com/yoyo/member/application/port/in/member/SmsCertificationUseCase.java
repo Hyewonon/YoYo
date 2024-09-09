@@ -1,9 +1,9 @@
-package com.yoyo.sms.service;
+package com.yoyo.member.application.port.in.member;
 
 
 import net.nurigo.sdk.message.model.Message;
 
-public interface SmsCertificationService {
+public interface SmsCertificationUseCase {
 
     String getValidationCode();
 
@@ -12,4 +12,6 @@ public interface SmsCertificationService {
     boolean verifySmsCertification(String phoneNumber, String certificationNumber);
 
     void saveSmsCertification(String phoneNumber, String certificationNumber);
+
+    boolean duplicatePhoneNumber(String phoneNumber);
 }

@@ -1,4 +1,4 @@
-package com.yoyo.sms.repository;
+package com.yoyo.member.adapter.out.persistence;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;

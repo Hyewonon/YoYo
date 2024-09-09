@@ -1,6 +1,5 @@
 rootProject.name = 'yoyo'
 include 'member-service'
-include 'sms-service'
 include 'common'
 include 'notification-service'
 include 'event-service'

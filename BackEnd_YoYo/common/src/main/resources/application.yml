@@ -1,0 +1,5 @@
+kafka:
+  clusters:
+    bootstrap-servers: kafka:9092
+logging:
+  topic: logging-topic-name
