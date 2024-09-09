@@ -1,22 +1,25 @@
-package com.yoyo.sms.service;
+package com.yoyo.member.application.service;
 
-import com.yoyo.sms.repository.SmsCertificationRepository;
+import com.yoyo.common.annotation.UseCase;
+import com.yoyo.member.adapter.out.persistence.SmsCertificationRepository;
+import com.yoyo.member.adapter.out.persistence.SpringDataMemberRepository;
+import com.yoyo.member.application.port.in.member.SmsCertificationUseCase;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.message.model.Message;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
+@UseCase
 @RequiredArgsConstructor
-public class SmsCertificationServiceImpl implements SmsCertificationService {
+public class SmsCertificationService implements SmsCertificationUseCase {
 
     @Value("${cool-sms.send-phone-number}")
     private String SEND_PHONE_NUMBER;
 
     private final SmsCertificationRepository smsCertificationRepository;
+    private final SpringDataMemberRepository memberRepository;
 
     @Override
     public String getValidationCode() {
@@ -40,6 +43,11 @@ public class SmsCertificationServiceImpl implements SmsCertificationService {
     @Override
     public void saveSmsCertification(String phoneNumber, String certificationNumber) {
         smsCertificationRepository.createSmsCertification(phoneNumber, certificationNumber);
+    }
+
+    @Override
+    public boolean duplicatePhoneNumber(String phoneNumber) {
+        return memberRepository.existsByPhoneNumber(phoneNumber);
     }
 
     @Override

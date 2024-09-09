@@ -16,4 +16,5 @@ public interface AuthMemberPort {
     // Jwt Token 어떤 memberId를 가지는지 확인
     Member.MemberPhoneNumber parseMemberIdFromToken(String jwtToken);
 
+    long getExpirationTime(String jwtToken);
 }

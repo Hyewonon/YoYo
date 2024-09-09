@@ -67,4 +67,13 @@ public class JwtTokenProvider implements AuthMemberPort {
         Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwtToken).getBody();
         return new Member.MemberPhoneNumber(claims.getSubject());
     }
+
+    @Override
+    public long getExpirationTime(String jwtToken) {
+        Claims claims = Jwts.parser()
+                            .setSigningKey(jwtSecret)
+                            .parseClaimsJws(jwtToken)
+                            .getBody();
+        return claims.getExpiration().getTime();
+    }
 }

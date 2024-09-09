@@ -14,7 +14,7 @@ public class FindMemberController {
 
     private final FindMemberUseCase findMemberUseCase;
 
-    @GetMapping("/members/{memberId}")
+    @GetMapping("/yoyo/members/{memberId}")
     ResponseEntity<?> findMember(@PathVariable("memberId") Long memberId) {
         FindMemberCommand command = FindMemberCommand.builder()
                                                      .memberId(memberId)

@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @WebAdapter
-@RestController("")
+@RestController
 @RequiredArgsConstructor
 public class RegisterMemberController {
 
     private final RegisterMemberUseCase registerMemberUseCase;
 
-    @PostMapping("/members/register")
+    @PostMapping("/yoyo/members/register")
     Member registerMember(@RequestBody RegisterMemberRequest request) {
         // request
 

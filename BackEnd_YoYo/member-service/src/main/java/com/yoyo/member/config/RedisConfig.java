@@ -1,4 +1,4 @@
-package com.yoyo.sms.config;
+package com.yoyo.member.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;

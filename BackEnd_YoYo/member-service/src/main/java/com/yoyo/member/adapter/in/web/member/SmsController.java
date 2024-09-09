@@ -1,6 +1,6 @@
-package com.yoyo.sms.controller;
+package com.yoyo.member.adapter.in.web.member;
 
-import com.yoyo.sms.service.SmsCertificationService;
+import com.yoyo.member.application.port.in.member.SmsCertificationUseCase;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/sms")
+@RequestMapping
 @RequiredArgsConstructor
 public class SmsController {
 
@@ -29,7 +29,7 @@ public class SmsController {
     @Value("${cool-sms.domain}")
     private String DOMAIN;
 
-    private final SmsCertificationService phoneValidationService;
+    private final SmsCertificationUseCase phoneValidationService;
     DefaultMessageService messageService;
 
     @PostConstruct
@@ -37,9 +37,12 @@ public class SmsController {
         this.messageService = NurigoApp.INSTANCE.initialize(COOLSMS_API_KEY, COOLSMS_SECRET, DOMAIN);
     }
 
-    @PostMapping("/validation/phone")
+    @PostMapping("/yoyo/members/send")
     @ResponseBody
     public ResponseEntity<?> sendSMS(@RequestParam String phone) {
+        if (phoneValidationService.duplicatePhoneNumber(phone)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 등록된 전화번호");
+        }
         String randomString = phoneValidationService.getValidationCode();
         Message message = phoneValidationService.getMessageForm(randomString, phone);
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
@@ -47,7 +50,7 @@ public class SmsController {
         return ResponseEntity.ok("인증번호 전송안료");
     }
 
-    @PostMapping("/validation/verify")
+    @PostMapping("/yoyo/members/verify")
     @ResponseBody
     public ResponseEntity<?> verify(@RequestParam String phoneNumber, @RequestParam String code) {
         boolean isValid = phoneValidationService.verifySmsCertification(phoneNumber, code);

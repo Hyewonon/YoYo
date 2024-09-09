@@ -16,7 +16,7 @@ public class UpdateMemberController {
 
     private final UpdateMemberUseCase updateMemberUseCase;
 
-    @PatchMapping("/members/update")
+    @PatchMapping("/yoyo/members/update")
     ResponseEntity<?> updateMember(@RequestBody UpdateMemberRequest request) {
         UpdateMemberCommand command = UpdateMemberCommand.builder()
                                                          .memberId(request.getMemberId())

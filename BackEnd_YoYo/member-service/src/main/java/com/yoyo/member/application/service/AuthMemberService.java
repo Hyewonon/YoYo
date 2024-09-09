@@ -5,6 +5,7 @@ import com.yoyo.member.adapter.out.persistence.MemberJpaEntity;
 import com.yoyo.member.adapter.out.persistence.MemberMapper;
 import com.yoyo.member.application.port.in.auth.AuthMemberUseCase;
 import com.yoyo.member.application.port.in.auth.LoginMemberCommand;
+import com.yoyo.member.application.port.in.auth.LogoutMemberCommand;
 import com.yoyo.member.application.port.in.auth.RefreshTokenCommand;
 import com.yoyo.member.application.port.in.auth.ValidateTokenCommand;
 import com.yoyo.member.application.port.out.AuthMemberPort;
@@ -16,8 +17,10 @@ import com.yoyo.member.domain.JwtToken.MemberRefreshToken;
 import com.yoyo.member.domain.Member;
 import com.yoyo.member.domain.Member.MemberPhoneNumber;
 import jakarta.transaction.Transactional;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.data.redis.core.RedisTemplate;
 
 @RequiredArgsConstructor
 @UseCase
@@ -28,6 +31,9 @@ public class AuthMemberService implements AuthMemberUseCase {
     private final FindMemberPort findMemberPort;
     private final UpdateMemberPort updateMemberPort;
     private final MemberMapper mapper;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    private static final String TOKEN_BLACKLIST_PREFIX = "blacklist: ";
 
     @Override
     public JwtToken loginMember(LoginMemberCommand command) {
@@ -87,6 +93,10 @@ public class AuthMemberService implements AuthMemberUseCase {
     @Override
     public boolean validateJwtToken(ValidateTokenCommand command) {
         String jwtToken = command.getJwtToken();
+        boolean isBlackList = Boolean.TRUE.equals(redisTemplate.hasKey(TOKEN_BLACKLIST_PREFIX + jwtToken));
+        if (isBlackList) {
+            return false;
+        }
         return authMemberPort.validateJwtToken(jwtToken);
     }
 
@@ -105,5 +115,13 @@ public class AuthMemberService implements AuthMemberUseCase {
             return mapper.mapToDomainEntity(memberJpaEntity);
         }
         return null;
+    }
+
+    @Override
+    public void logout(LogoutMemberCommand command) {
+        String jwtToken = command.getJwtToken();
+        long expiration = authMemberPort.getExpirationTime(jwtToken);
+        redisTemplate.opsForValue().set(TOKEN_BLACKLIST_PREFIX + jwtToken, "logged-out", expiration,
+                                        TimeUnit.MILLISECONDS);
     }
 }

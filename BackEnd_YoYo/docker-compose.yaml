@@ -40,40 +40,21 @@ services:
       - "8081:8080"
     depends_on:
       - mysql
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/yoyo
-      - SPRING_DATASOURCE_USERNAME=ssafy
-      - SPRING_DATASOURCE_PASSWORD=ssafy
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
-      - LOGGING_TOPIC=yoyo.logging.out.stdout
-    env_file:
-      - .env
-
-  sms-service:
-    image: yoyo-sms-service:1.0.0
-    networks:
-      - yoyo_network
-    ports:
-      - "8082:8080"
-    depends_on:
-      - mysql
       - redis
+    env_file: .env
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/yoyo
       - SPRING_DATASOURCE_USERNAME=ssafy
       - SPRING_DATASOURCE_PASSWORD=ssafy
       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
       - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
       - LOGGING_TOPIC=yoyo.logging.out.stdout
-      - SPRING_REDIS_HOST=redis
-      - SPRING_REDIS_PORT=6379
-      - COOL_SMS_API_KEY=NCS2BT9XCBDOKM00
-      - COOL_SMS_API_SECRET=A0KQGWPABG62CS21X8OJHZ9P4J8LDFSR
-      - COOL_SMS_DOMAIN=https://api.coolsms.co.kr
-      - COOL_SMS_SEND_PHONE_NUMBER="01054513115"
+      - SPRING_PROFILES_ACTIVE=local
+      - JWT_SECRET=NYd4nEtyLtcU7cpS/1HTFVmQJd7MmrP+HafWoXZjWNOL7qKccOOUfQNEx5yvG6dfdpuBeyMs9eEbRmdBrPQCNg==
+      - JWT_EXPIRATION_MS=20000
+      - JWT_REFRESH_EXPIRATION_MS=60000
+
 
   banking-service:
     image: yoyo-banking-service:1.0.0
@@ -178,22 +159,21 @@ services:
     depends_on:
       - zookeeper
 
-  kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
-    networks:
-      - yoyo_network
-    ports:
-      - "8989:8080"
-    restart: always
-    depends_on:
-      - kafka
-      - zookeeper
-    environment:
-      - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=localhost:9092
-      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
-
+#  kafka-ui:
+#    image: provectuslabs/kafka-ui
+#    container_name: kafka-ui
+#    networks:
+#      - yoyo_network
+#    ports:
+#      - "8989:8080"
+#    restart: always
+#    depends_on:
+#      - kafka
+#      - zookeeper
+#    environment:
+#      - KAFKA_CLUSTERS_0_NAME=local
+#      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=localhost:9092
+#      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
 
 networks:
   yoyo_network:
