@@ -2,6 +2,7 @@ package com.yoyo.common.exception;
 
 import com.yoyo.common.dto.response.BodyValidationExceptionResopnse;
 import com.yoyo.common.exception.exceptionType.BankingException;
+import com.yoyo.common.exception.exceptionType.EventException;
 import com.yoyo.common.exception.exceptionType.MemberException;
 import com.yoyo.common.exception.exceptionType.NotificationException;
 import com.yoyo.common.exception.exceptionType.TransactionException;
@@ -35,9 +36,15 @@ public class GlobalExceptionHandler {
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
 
-    @ExceptionHandler(TransactionException.class)
-    public ResponseEntity<ErrorResponse> handleTransactionException(TransactionException e) {
-        log.error("[TransactionException] : {} is occurred", e.getErrorCode());
+    @ExceptionHandler(EventException.class)
+    public ResponseEntity<ErrorResponse> handleEventException(EventException e) {
+        log.error("[EventException] : {} is occurred", e.getErrorCode());
+        return ErrorResponse.toResponseEntity(e.getErrorCode());
+    }
+
+    @ExceptionHandler(MemberException.class)
+    public ResponseEntity<ErrorResponse> handleMemberException(NotificationException e) {
+        log.error("[MemberException] : {} is occurred", e.getErrorCode());
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
 
@@ -47,9 +54,9 @@ public class GlobalExceptionHandler {
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
 
-    @ExceptionHandler(MemberException.class)
-    public ResponseEntity<ErrorResponse> handleMemberException(NotificationException e) {
-        log.error("[MemberException] : {} is occurred", e.getErrorCode());
+    @ExceptionHandler(TransactionException.class)
+    public ResponseEntity<ErrorResponse> handleTransactionException(TransactionException e) {
+        log.error("[TransactionException] : {} is occurred", e.getErrorCode());
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
 

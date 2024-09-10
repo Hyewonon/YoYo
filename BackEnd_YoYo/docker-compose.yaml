@@ -130,6 +130,23 @@ services:
       - PAYMENT_SECRET=test_sk_zXLkKEypNArWmo50nX3lmeaxYG5R
       - PAYMENT_URL=https://api.tosspayments.com/v1/payments/confirm
 
+  event-service:
+    image: yoyo-event-service:1.0.0
+    networks:
+      - yoyo_network
+    ports:
+      - "8087:8080"
+    depends_on:
+      - mysql
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/yoyo
+      - SPRING_DATASOURCE_USERNAME=ssafy
+      - SPRING_DATASOURCE_PASSWORD=ssafy
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+      - LOGGING_TOPIC=yoyo.logging.out.stdout
+
   zookeeper:
     image: bitnami/zookeeper:3.8.0
     networks:
