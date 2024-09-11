@@ -10,6 +10,7 @@ spring:
             uri: lb://member-service
             predicates:
               - Path=/yoyo/members/**
+            filters: []
           - id: banking-service
             uri: lb://banking-service
             predicates:
@@ -26,6 +27,7 @@ spring:
             uri: lb://payment-service
             predicates:
               - Path=/**
+            filters: []
           - id: event-service
             uri: lb://event-service
             predicates:
@@ -50,3 +52,13 @@ management:
     web:
       exposure:
         include: gateway
+
+jwt:
+  secret: NYd4nEtyLtcU7cpS/1HTFVmQJd7MmrP+HafWoXZjWNOL7qKccOOUfQNEx5yvG6dfdpuBeyMs9eEbRmdBrPQCNg==
+  expiration:
+    ms: 20000
+  refresh:
+    expiration:
+      ms: 60000
+encryption:
+  secret: U2FsdGVkX19R4x5Q9x6TYg==
