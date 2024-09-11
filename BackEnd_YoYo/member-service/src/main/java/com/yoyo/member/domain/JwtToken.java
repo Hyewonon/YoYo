@@ -1,6 +1,5 @@
 package com.yoyo.member.domain;
 
-import com.yoyo.member.domain.Member.MemberId;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

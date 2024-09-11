@@ -33,8 +33,10 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.4.10'
     implementation project(path: ':common')
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+//    runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -43,22 +45,25 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
 }
+ext{
+    axonVersion = "4.6.0"
+    springCloudVersion = "2023.0.3"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
 
 test {
     useJUnitPlatform()
 }
 
-
 docker {
     println(tasks.bootJar.outputs.files)
-
-    // 이미지 이름
     name rootProject.name+'-'+project.name+":"+version
-
-    // 어떤 Dockerfile
     dockerfile file('../Dockerfile')
-    // 어떤 파일들을 Dockerfile에 복사할 것인가
     files tasks.bootJar.outputs.files
-    // Dockerfile에 전달할 인자
     buildArgs(['JAR_FILE':tasks.bootJar.outputs.files.singleFile.name])
 }

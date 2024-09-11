@@ -5,7 +5,7 @@ plugins {
     id 'com.palantir.docker' version '0.35.0'
 }
 
-group = 'com.yoyo.payment'
+group = 'com.yoyo.eureka'
 version = '1.0.0'
 
 java {
@@ -14,53 +14,44 @@ java {
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
 repositories {
     mavenCentral()
 }
 
+
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.3.2'
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-    implementation 'org.springframework.boot:spring-boot-starter-web-services'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.4.10'
-    implementation project(path: ':common')
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-ext{
+ext {
     axonVersion = "4.6.0"
     springCloudVersion = "2023.0.3"
 }
-
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
 docker {
     println(tasks.bootJar.outputs.files)
+    // 이미지 이름
     name rootProject.name+'-'+project.name+":"+version
+    // 어떤 Dockerfile
     dockerfile file('../Dockerfile')
+    // 어떤 파일들을 Dockerfile에 복사할 것인가
     files tasks.bootJar.outputs.files
+    // Dockerfile에 전달할 인자
     buildArgs(['JAR_FILE':tasks.bootJar.outputs.files.singleFile.name])
 }

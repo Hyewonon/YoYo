@@ -1,0 +1,52 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+          - id: member-service
+            uri: lb://member-service
+            predicates:
+              - Path=/yoyo/members/**
+          - id: banking-service
+            uri: lb://banking-service
+            predicates:
+              - Path=/yoyo/account/**
+          - id: transaction-service
+            uri: lb://transaction-service
+            predicates:
+              - Path=/yoyo/transaction/**
+          - id: notification-service
+            uri: lb://notification-service
+            predicates:
+              - Path=/yoyo/notification/**
+          - id: payment-service
+            uri: lb://payment-service
+            predicates:
+              - Path=/**
+          - id: event-service
+            uri: lb://event-service
+            predicates:
+              - Path=/yoyo/event/**
+      default-filters:
+        - name: GlobalFilter
+          args:
+            baseMessage: Spring Cloud Gateway Global Filter
+            preLogger: true
+            postLogger: true
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://admin:1234@localhost:8761/eureka
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+    web:
+      exposure:
+        include: gateway

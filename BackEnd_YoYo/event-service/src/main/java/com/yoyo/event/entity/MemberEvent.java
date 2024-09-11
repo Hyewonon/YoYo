@@ -1,5 +1,5 @@
-package com.yoyo.event.entity;
-
-public class MemberEvent {
-
-}
+//package com.yoyo.event.entity;
+//
+//public class MemberEvent {
+//
+//}
