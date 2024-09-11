@@ -45,8 +45,8 @@ public class Event {
     @Column(columnDefinition = "TEXT")
     private String sendLink;
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberEvent> memberEvents;
+//    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<MemberEvent> memberEvents;
 
     public void updateEvent(String title, String location, LocalDateTime startAt, LocalDateTime endAt){
         if(title !=null) this.title = title;
@@ -55,9 +55,9 @@ public class Event {
         if(endAt != null) this.endAt = endAt;
     }
 
-    // - 비즈니스 로직
-    public void addMemberEvent(MemberEvent memberEvent){
-        memberEvents.add(memberEvent);
-    }
+//    // - 비즈니스 로직
+//    public void addMemberEvent(MemberEvent memberEvent){
+//        memberEvents.add(memberEvent);
+//    }
 
 }

@@ -39,10 +39,11 @@ dependencies {
     implementation 'org.mindrot:jbcrypt:0.4'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.4.10'
     implementation project(path: ':common')
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-//    runtimeOnly 'com.h2database:h2'
+//	runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -54,7 +55,15 @@ tasks.named('test') {
 
 ext{
     axonVersion = "4.6.0"
+    springCloudVersion = "2023.0.3"
 }
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
 
 docker {
     println(tasks.bootJar.outputs.files)
@@ -66,4 +75,10 @@ docker {
     files tasks.bootJar.outputs.files
     // Dockerfile에 전달할 인자
     buildArgs(['JAR_FILE':tasks.bootJar.outputs.files.singleFile.name])
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
 }
