@@ -42,6 +42,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
 test {
@@ -55,19 +59,13 @@ ext{
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"}
 }
+
 docker {
     println(tasks.bootJar.outputs.files)
-
-    // 이미지 이름
     name rootProject.name+'-'+project.name+":"+version
-
-    // 어떤 Dockerfile
     dockerfile file('../Dockerfile')
-    // 어떤 파일들을 Dockerfile에 복사할 것인가
     files tasks.bootJar.outputs.files
-    // Dockerfile에 전달할 인자
     buildArgs(['JAR_FILE':tasks.bootJar.outputs.files.singleFile.name])
 }
