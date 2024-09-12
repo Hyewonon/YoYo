@@ -36,7 +36,7 @@ public class AccountCreateDTO {
         @NotNull(message = "결제 비밀번호를 입력하세요.")
         private String pin;
 
-        public static Account toEntity(AccountCreateDTO.Request request, Long memberId, Long bankCode) {
+        public static Account toEntity(AccountCreateDTO.Request request, Long memberId, String bankCode) {
             return Account.builder()
                           .memberId(memberId)
                           .accountNumber(PasswordEncryptUtil.encrypt(request.getAccountNumber()))
