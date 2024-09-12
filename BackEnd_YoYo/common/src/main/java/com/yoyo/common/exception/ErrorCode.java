@@ -17,6 +17,9 @@ public enum ErrorCode {
 
     // 뱅킹서비스 관련 에러
     NOT_FOUND_BANK("존재하지 않는 은행입니다.", HttpStatus.NOT_FOUND),
+    
+    // 일정 관련 에러
+    DUPLICATE_MEMBER_EVENT("이미 등록된 일정입니다.", HttpStatus.CONFLICT),
     ;
 
     private final String message;
