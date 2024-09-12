@@ -32,6 +32,18 @@ services:
     ports:
       - "6379:6379"
 
+#  common:
+#    image: yoyo-common:1.0.0
+#    networks:
+#      - yoyo_network
+#    ports:
+#      - "8088:8080"
+#    depends_on:
+#      - mysql
+#    environment:
+#      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+#      - LOGGING_TOPIC=yoyo.logging.out.stdout
+
   eureka-service:
     image: yoyo-eureka-server:1.0.0
     networks:
@@ -96,6 +108,8 @@ services:
       - EUREKA_CLIENT_REGISTER_WITH_EUREKA=true
       - EUREKA_CLIENT_FETCH_REGISTRY=true
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://admin:1234@localhost:8761/eureka
+      - TZ=Asia/Seoul
+
   transaction-service:
     image: yoyo-transaction-service:1.0.0
     networks:

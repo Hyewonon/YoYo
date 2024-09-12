@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Bank {
     @Id
-    private Long bankCode;
+    private String bankCode;
     @Column(name = "bank_name")
     private String bankName;
 }

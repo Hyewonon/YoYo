@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    active: local
+    include: local
   application:
     name: banking-service
 
