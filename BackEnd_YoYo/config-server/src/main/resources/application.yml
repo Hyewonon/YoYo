@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: local
+    include: local
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: ${git.config.repository}
+          username: ${git.username}
+          password: ${git.password}
+
+#  1. application.yaml
+#  2. application.yaml
+#  3. application-{profile}.yaml
+#  4. {application name}/{application name}-{profile}

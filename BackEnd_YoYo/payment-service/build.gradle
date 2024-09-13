@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.3'
     id 'io.spring.dependency-management' version '1.1.6'
-    id 'com.palantir.docker' version '0.35.0'
 }
 
 group = 'com.yoyo.payment'
@@ -30,6 +29,10 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.3.2'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    //    Config Client
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '2.4.10'
@@ -55,12 +58,4 @@ dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
-}
-
-docker {
-    println(tasks.bootJar.outputs.files)
-    name rootProject.name+'-'+project.name+":"+version
-    dockerfile file('../Dockerfile')
-    files tasks.bootJar.outputs.files
-    buildArgs(['JAR_FILE':tasks.bootJar.outputs.files.singleFile.name])
 }
