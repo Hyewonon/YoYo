@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,9 +25,10 @@ import org.springframework.stereotype.Service;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final int PAGE_SIZE = 10;
 
-    public EventDTO.Response createEvent(EventDTO.Request request, Long memberId){
-        // TODO : Member 유효 검증 로직
+    public EventDTO.Response createEvent(Long memberId, EventDTO.Request request) {
+        // TODO : [Member] 유효 검증 로직
 
         // TODO : sendLink 생성 로직
         String sendLink = "";
@@ -31,39 +36,44 @@ public class EventService {
         return EventDTO.Response.of(eventRepository.save(event));
     }
 
-    public List<EventDTO.Response> getEventList(Long memberId){
+    public List<EventDTO.Response> getEventList(Long memberId) {
         return eventRepository.findAllByMemberId(memberId).stream()
-                .map(EventDTO.Response::of)
-                .collect(Collectors.toList());
+                              .map(EventDTO.Response::of)
+                              .collect(Collectors.toList());
     }
 
-    public EventDetailDTO.Response getEvent(Long memberId, Long eventId, String tag, boolean isRegister){
+    public EventDetailDTO.Response getEvent(Long memberId, Long eventId, String tag, boolean isRegister) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(()-> new EventException(ErrorCode.NOT_FOUND));
+                                     .orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND));
 
-        // TODO : Member 유효 검증 로직 -> 나의 이벤트인가
-        
-        // TODO : EventId로 받은 사람, 받은 총액 가져오기
+        // TODO : [Member] 유효 검증 로직 -> 나의 이벤트인가
+
+        // TODO : [Transactional] EventId로 받은 사람, 받은 총액 가져오기
         Long totalReceiver = 100L;
         Long totalReceivedAmount = 100L;
 
-        // TODO : EventId & 필터링 정보로 거래 내역 가져오기
+        // TODO : [Transactional] EventId & 필터링 정보로 거래 내역 가져오기
         List<TransactionDTO.Response> transactions = new ArrayList<>();
-        if(isRegister){
-        }else{
+        if (isRegister) {
+        } else {
         }
         return EventDetailDTO.Response.of(event.getId(), totalReceiver, totalReceivedAmount, transactions);
     }
-    
-    public EventDTO.Response updateEvent(Long eventId, Long memberId, EventUpdateDTO.Request request){
-        Event event = eventRepository.findById(eventId)
-                                     .orElseThrow(()->new EventException(ErrorCode.NOT_FOUND));
 
-        // TODO : Member 유효 검증 로직 -> 나의 이벤트인가
+    public EventDTO.Response updateEvent(Long memberId, Long eventId, EventUpdateDTO.Request request) {
+        Event event = eventRepository.findById(eventId)
+                                     .orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND));
+
+        // TODO : [Member] 유효 검증 로직 -> 나의 이벤트인가
 
         event.updateEvent(request.getTitle(), request.getLocation(), request.getStartAt(), request.getEndAt());
         return EventDTO.Response.of(eventRepository.save(event));
     }
-    
-    // TODO : 이벤트 검색
+
+    public Slice<EventDTO.Response> searchEvent(Long memberId, String keyword, int pageNumber) {
+        // TODO : [Member] 유효한 멤버인지 검증
+
+        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by("title"));
+        return eventRepository.searchEventByTitle(memberId, keyword, pageable);
+    }
 }

@@ -1,6 +1,7 @@
 package com.yoyo.event.domain.event.controller;
 
 import com.yoyo.event.domain.event.dto.EventDTO;
+import com.yoyo.event.domain.event.dto.EventDTO.Response;
 import com.yoyo.event.domain.event.dto.EventDetailDTO;
 import com.yoyo.event.domain.event.dto.EventUpdateDTO;
 import com.yoyo.event.domain.event.service.EventService;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,24 +36,24 @@ public class EventController {
     private final EventService eventService;
 
     @Operation(summary = "이벤트 생성", description = "이벤트를 생성한다.")
-    @ApiResponses(value={
+    @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "이벤트 생성 성공",
                          content = {@Content(schema = @Schema(implementation = EventDTO.Response.class))})
     })
     @PostMapping
-    public ResponseEntity<?> createEvent(@RequestBody EventDTO.Request request, Long memberId){
-        EventDTO.Response response = eventService.createEvent(request, memberId);
+    public ResponseEntity<?> createEvent(@RequestBody EventDTO.Request request, Long memberId) {
+        EventDTO.Response response = eventService.createEvent(this.memberId, request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Operation(summary = "이벤트 목록 조회", description = "이벤트 목록을 조회한다.")
-    @ApiResponses(value={
+    @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이벤트 목록 조회 성공",
                          content = @Content(schema = @Schema(implementation = EventDTO.Response.class)))
     })
     @GetMapping
-    public ResponseEntity<?> getEventList(Long memberId){
-        List<EventDTO.Response> responses = eventService.getEventList(memberId);
+    public ResponseEntity<?> getEventList(Long memberId) {
+        List<EventDTO.Response> responses = eventService.getEventList(this.memberId);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
@@ -62,8 +64,9 @@ public class EventController {
             @ApiResponse(responseCode = "400", description = "이벤트가 존재하지 않습니다.")
     })
     @GetMapping("/{eventId}")
-    public ResponseEntity<?> getEvent(@PathVariable("eventId") Long eventId, @RequestParam String tag, @RequestParam boolean isRegister, Long memberId){
-        EventDetailDTO.Response response = eventService.getEvent(memberId, eventId, tag, isRegister);
+    public ResponseEntity<?> getEvent(@PathVariable("eventId") Long eventId, @RequestParam String tag,
+                                      @RequestParam boolean isRegister, Long memberId) {
+        EventDetailDTO.Response response = eventService.getEvent(this.memberId, eventId, tag, isRegister);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -74,8 +77,22 @@ public class EventController {
             @ApiResponse(responseCode = "400", description = "이벤트가 존재하지 않습니다.")
     })
     @PatchMapping("/{eventId}")
-    public ResponseEntity<?> updateEvent(@PathVariable("eventId") Long eventId, @RequestBody EventUpdateDTO.Request request, Long memberId){
-        EventDTO.Response response = eventService.updateEvent(eventId, memberId, request);
+    public ResponseEntity<?> updateEvent(@PathVariable("eventId") Long eventId,
+                                         @RequestBody EventUpdateDTO.Request request, Long memberId) {
+        EventDTO.Response response = eventService.updateEvent(this.memberId, eventId, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "이벤트 검색", description = "이벤트를 검색한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이벤트 검색 성공",
+                         content = @Content(schema = @Schema(implementation = EventDTO.Response.class)))
+    })
+    @GetMapping("/search")
+    public ResponseEntity<?> searchEvent(@RequestParam("keyword") String keyword,
+                                         @RequestParam(defaultValue = "0", value = "pageNumber") int pageNumber,
+                                         Long memberId) {
+        Slice<Response> responses = eventService.searchEvent(this.memberId, keyword, pageNumber);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 }

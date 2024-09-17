@@ -6,7 +6,8 @@ import lombok.Getter;
 public class EventUpdateDTO {
 
     @Getter
-    public static class Request{
+    public static class Request {
+
         private String title;
         private String location;
         private LocalDateTime startAt;
