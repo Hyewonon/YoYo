@@ -1,23 +1,25 @@
-package com.yoyo.transaction.entity;
+package com.yoyo.transaction.adapter.port.out.persistence;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
 @Getter
-public class Transaction extends AuditableEntity {
+@Builder
+@AllArgsConstructor
+public class TransactionJpaEntity extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
-    private Long memberId;
+    private Long senderId;
+    private Long receiverId;
     private Long eventId;
     private String title;
+    private boolean isMember;
     private Long amount;
     private String memo;
 }

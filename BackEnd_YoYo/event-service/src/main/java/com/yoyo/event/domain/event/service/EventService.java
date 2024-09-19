@@ -31,7 +31,7 @@ public class EventService {
 
     public EventDTO.Response createEvent(Long memberId, EventDTO.Request request) {
         // TODO : [Member] 유효 검증 로직
-//        eventServiceProducer.sendMemberId(memberId);
+        eventServiceProducer.sendMemberId(memberId);
         // TODO : sendLink 생성 로직
         String sendLink = "";
         Event event = EventDTO.Request.toEntity(request, memberId, sendLink);

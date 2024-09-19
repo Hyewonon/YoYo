@@ -4,4 +4,4 @@ spring:
       uri: http://localhost:8888
       name: scg
   profiles:
-    active: local
+    active: dev
