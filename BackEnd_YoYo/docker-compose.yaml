@@ -57,7 +57,7 @@ services:
   # Eureka Server
   eureka-server:
     image: eureka-server:1.0.0
-    container_name: eureka_1
+    container_name: eureka
     build:
       context: ./eureka-server
     ports:

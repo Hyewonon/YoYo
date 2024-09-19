@@ -7,10 +7,16 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class KafkaMemberValidationProducer {
-    private final KafkaTemplate<Long, Boolean> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
     private final String RESULT_TOPIC = "member-validation-result-topic";
 
     public void sendValidationResult(Long memberId, boolean valid) {
-        kafkaTemplate.send(RESULT_TOPIC, memberId, valid);
+        String isValid;
+        if (valid) {
+            isValid = "true";
+        } else {
+            isValid = "false";
+        }
+        kafkaTemplate.send(RESULT_TOPIC, memberId.toString(), isValid);
     }
 }
