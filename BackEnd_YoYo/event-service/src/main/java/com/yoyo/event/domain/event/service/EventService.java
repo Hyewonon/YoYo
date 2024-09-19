@@ -6,6 +6,7 @@ import com.yoyo.event.domain.event.dto.EventDTO;
 import com.yoyo.event.domain.event.dto.EventDetailDTO;
 import com.yoyo.event.domain.event.dto.EventUpdateDTO;
 import com.yoyo.event.domain.event.dto.TransactionDTO;
+import com.yoyo.event.domain.event.kafka.EventServiceProducer;
 import com.yoyo.event.domain.event.repository.EventRepository;
 import com.yoyo.event.entity.Event;
 import java.util.ArrayList;
@@ -25,11 +26,12 @@ import org.springframework.stereotype.Service;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final EventServiceProducer eventServiceProducer;
     private final int PAGE_SIZE = 10;
 
     public EventDTO.Response createEvent(Long memberId, EventDTO.Request request) {
         // TODO : [Member] 유효 검증 로직
-
+//        eventServiceProducer.sendMemberId(memberId);
         // TODO : sendLink 생성 로직
         String sendLink = "";
         Event event = EventDTO.Request.toEntity(request, memberId, sendLink);

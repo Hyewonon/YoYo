@@ -21,7 +21,7 @@ services:
       - MYSQL_PASSWORD=ssafy
       - MYSQL_DATABASE=yoyo
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u${MYSQL_USER} --password=${MYSQL_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -39,6 +39,7 @@ services:
   # Config Server
   config-server:
     image: config-server:1.0.0
+    container_name: config-server
     build:
       context: ./config-server
     ports:
@@ -47,9 +48,14 @@ services:
       - yoyo_network
     environment:
       - SPRING_PROFILES_ACTIVE=default
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   # Eureka Server
-  eureka-service:
+  eureka-server:
     image: eureka-server:1.0.0
     container_name: eureka_1
     build:
@@ -71,6 +77,7 @@ services:
   # Member Service
   member-service:
     image: member-service:1.0.0
+    container_name: member-service
     build:
       context: ./member-service
     networks:
@@ -80,7 +87,8 @@ services:
     depends_on:
       - mysql
       - redis
-      - eureka-service
+      - eureka-server
+      - config-server
     environment:
       - SPRING_PROFILES_ACTIVE=default
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
@@ -90,6 +98,7 @@ services:
   # Banking Service
   banking-service:
     image: banking-service:1.0.0
+    container_name: banking-service
     build:
       context: ./banking-service
     networks:
@@ -98,7 +107,8 @@ services:
       - "8082:8082"
     depends_on:
       - mysql
-      - eureka-service
+      - eureka-server
+      - config-server
     environment:
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
       - SPRING_CLOUD_CONFIG_NAME=banking
@@ -107,6 +117,7 @@ services:
   # Transaction Service
   transaction-service:
     image: transaction-service:1.0.0
+    container_name: transaction-service
     build:
       context: ./transaction-service
     networks:
@@ -115,7 +126,8 @@ services:
       - "8083:8083"
     depends_on:
       - mysql
-      - eureka-service
+      - eureka-server
+      - config-server
     environment:
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
       - SPRING_CLOUD_CONFIG_NAME=transaction
@@ -125,6 +137,7 @@ services:
   # Notification Service
   notification-service:
     image: notification-service:1.0.0
+    container_name: notification-service
     build:
       context: ./notification-service
     networks:
@@ -133,7 +146,8 @@ services:
       - "8084:8084"
     depends_on:
       - mysql
-      - eureka-service
+      - eureka-server
+      - config-server
     environment:
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
       - SPRING_CLOUD_CONFIG_NAME=notification
@@ -142,6 +156,7 @@ services:
   # Payment Service
   payment-service:
     image: payment-service:1.0.0
+    container_name: payment-service
     build:
       context: ./payment-service
     networks:
@@ -150,7 +165,8 @@ services:
       - "8085:8085"
     depends_on:
       - mysql
-      - eureka-service
+      - eureka-server
+      - config-server
     environment:
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
       - SPRING_CLOUD_CONFIG_NAME=payment
@@ -159,6 +175,7 @@ services:
   # Event Service
   event-service:
     image: event-service:1.0.0
+    container_name: event-service
     build:
       context: ./event-service
     networks:
@@ -167,7 +184,8 @@ services:
       - "8086:8086"
     depends_on:
       - mysql
-      - eureka-service
+      - eureka-server
+      - config-server
     environment:
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
       - SPRING_CLOUD_CONFIG_NAME=event
@@ -176,6 +194,7 @@ services:
   # Spring Cloud Gateway
   scg:
     image: scg:1.0.0
+    container_name: spring-cloud-gateway
     build:
       context: ./scg
     networks:
@@ -183,7 +202,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - eureka-service
+      - eureka-server
     environment:
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
       - SPRING_CLOUD_CONFIG_NAME=scg
@@ -192,6 +211,7 @@ services:
   # Zookeeper for Kafka
   zookeeper:
     image: bitnami/zookeeper:3.8.0
+    container_name: zookeeper
     networks:
       - yoyo_network
     ports:
@@ -203,7 +223,8 @@ services:
 
   # Kafka for event-driven communication
   kafka:
-    image: 'bitnami/kafka:3.4.0'
+    image: 'bitnami/kafka:latest'
+    container_name: kafka
     networks:
       - yoyo_network
     ports:
@@ -211,10 +232,12 @@ services:
     depends_on:
       - zookeeper
     environment:
-      - KAFKA_BROKER_ID=1
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://kafka:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
 
 networks:
  yoyo_network:
