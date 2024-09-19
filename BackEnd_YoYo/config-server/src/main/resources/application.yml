@@ -9,9 +9,13 @@ spring:
       server:
         git:
           uri: ${git.config.repository}
+#          ignore-local-ssh-settings: true
+#          private-key: ${git.private}
           username: ${git.username}
           password: ${git.password}
 
+server:
+  port: 8888
 #  1. application.yaml
 #  2. application.yaml
 #  3. application-{profile}.yaml

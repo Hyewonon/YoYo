@@ -6,6 +6,7 @@ import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.member.application.port.out.FindMemberPort;
 import com.yoyo.member.application.port.out.RegisterMemberPort;
 import com.yoyo.member.application.port.out.UpdateMemberPort;
+import com.yoyo.member.domain.Member;
 import com.yoyo.member.domain.Member.MemberBirthDay;
 import com.yoyo.member.domain.Member.MemberId;
 import com.yoyo.member.domain.Member.MemberIsValid;

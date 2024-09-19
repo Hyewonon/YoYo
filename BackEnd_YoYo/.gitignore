@@ -33,12 +33,10 @@ out/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
 .vscode/
 
 application-local.yml
-
 .env
 
-
 db/data/
+logs/

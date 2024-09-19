@@ -1,6 +1,7 @@
 package com.yoyo.member.domain;
 
 import java.time.LocalDate;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,24 +18,26 @@ public class Member {
     private final LocalDate birthDay;
     private final boolean isValid;
     private final String refreshToken;
+
     public static Member generateMember(
-            MemberId memberId, MemberName memberName,MemberPhoneNumber memberPhoneNumber, MemberPassword memberPassword,
-             MemberBirthDay memberBirthDay,
+            MemberId memberId, MemberName memberName, MemberPhoneNumber memberPhoneNumber, MemberPassword memberPassword,
+            MemberBirthDay memberBirthDay,
             MemberIsValid memberIsValid,
             MemberRefreshToken memberRefreshToken
     ) {
         return new Member(memberId.memberId,
-                          memberName.nameValue,
-                          memberPhoneNumber.phoneNumberValue,
-                          memberPassword.passwordValue,
-                          memberBirthDay.birthDayValue,
-                          memberIsValid.isValid,
-                          memberRefreshToken.refreshToken);
+                memberName.nameValue,
+                memberPhoneNumber.phoneNumberValue,
+                memberPassword.passwordValue,
+                memberBirthDay.birthDayValue,
+                memberIsValid.isValid,
+                memberRefreshToken.refreshToken);
     }
 
     @Value
     public static class MemberId {
         Long memberId;
+
         public MemberId(Long value) {
             this.memberId = value;
         }
@@ -85,7 +88,7 @@ public class Member {
     }
 
     @Value
-    public static class MemberRefreshToken{
+    public static class MemberRefreshToken {
 
         String refreshToken;
 
@@ -95,7 +98,7 @@ public class Member {
     }
 
     @Value
-    public static class MemberIsValid{
+    public static class MemberIsValid {
 
         boolean isValid;
 

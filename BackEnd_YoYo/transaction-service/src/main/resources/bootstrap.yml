@@ -4,4 +4,4 @@ spring:
       uri: http://localhost:8888
       name: transaction
   profiles:
-    active: dev
+    active: local

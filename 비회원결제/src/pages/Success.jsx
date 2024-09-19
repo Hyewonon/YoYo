@@ -55,19 +55,19 @@ export function Success() {
         </div>
         <div className="p-grid typography--p" style={{ marginTop: "10px" }}>
           <div className="p-grid-col text--left">
-            <b>주문번호</b>
+            <b>받는 사람</b>
           </div>
           <div className="p-grid-col text--right" id="orderId">
             {`${searchParams.get("orderId")}`}
           </div>
         </div>
       </div>
-      {/* <div className="box_section" style={{ width: "600px", textAlign: "left" }}>
+      <div className="box_section" style={{ width: "600px", textAlign: "left" }}>
         <b>Response Data :</b>
         <div id="response" style={{ whiteSpace: "initial" }}>
           {responseData && <pre>{JSON.stringify(responseData, null, 4)}</pre>}
         </div>
-      </div> */}
+      </div>
     </>
   );
 }

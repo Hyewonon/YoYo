@@ -31,7 +31,6 @@ public class AccountService {
                                                                                    request.getAccountNumber(),
                                                                                    bankCode))
                                            .orElse(createNewAccount(request, memberId, bankCode));
-
         accountRepository.save(account);
         return CommonResponse.of(true, "계좌가 등록되었습니다.");
     }

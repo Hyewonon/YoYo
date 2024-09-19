@@ -4,4 +4,4 @@ spring:
       uri: http://localhost:8888
       name: notification
   profiles:
-    active: dev
+    active: local

@@ -6,7 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import java.time.LocalDate;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +32,6 @@ public class MemberJpaEntity {
     private String name;
     @Setter
     private String phoneNumber;
-
     @Setter
     private String password;
     @Setter
@@ -39,6 +40,10 @@ public class MemberJpaEntity {
     private boolean isValid;
     @Setter
     private String refreshToken;
+    @Setter
+    private String accountNumber;
+    @Setter
+    private String bankCode;
 
     public MemberJpaEntity(String naveValue, String phoneNumberValue, String passwordValue, LocalDate birthDayValue,
                            boolean isValid, String refreshToken) {

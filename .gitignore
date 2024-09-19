@@ -43,3 +43,5 @@ application-local.yml
 
 node_modules
 BackEnd_YoYo/db/data/
+
+BackEnd_YoYo/logs
