@@ -18,11 +18,7 @@ public class RegisterMemberController {
 
     @PostMapping("/yoyo/members/register")
     Member registerMember(@RequestBody RegisterMemberRequest request) {
-        // request
-
         // request -> command
-
-        // command -> Usecase
         RegisterMemberCommand command = RegisterMemberCommand.builder()
                                                              .name(request.getName())
                                                              .phoneNumber(request.getPhoneNumber())
@@ -30,6 +26,7 @@ public class RegisterMemberController {
                                                              .birthDay(request.getBirthDay())
                                                              .isValid(request.isValid())
                                                              .build();
+        // command -> Usecase
         return registerMemberUseCase.registerMember(command);
     }
 }

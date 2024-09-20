@@ -1,4 +1,4 @@
-package com.yoyo.transaction.adapter.port.out.persistence;
+package com.yoyo.transaction.adapter.out.persistence;
 
 import com.yoyo.common.annotation.PersistenceAdapter;
 import com.yoyo.transaction.application.port.out.FindTransactionPort;
@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 public class TransactionPersistenceAdapter implements FindTransactionPort {
     private final TransactionMapper transactionMapper;
     private final SpringDataTransactionRepository transactionRepository;
+
     @Override
     public Transaction findTransaction(Transaction.TransactionId transactionId) {
         return transactionMapper.mapToDomainEntity(transactionRepository.findById(transactionId.getTransactionId())

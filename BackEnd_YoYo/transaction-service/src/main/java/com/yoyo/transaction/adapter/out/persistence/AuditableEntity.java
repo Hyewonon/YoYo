@@ -1,4 +1,4 @@
-package com.yoyo.transaction.adapter.port.out.persistence;
+package com.yoyo.transaction.adapter.out.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

@@ -1,4 +1,4 @@
-package com.yoyo.event.domain.event.kafka;
+package com.yoyo.event.domain.event.message;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

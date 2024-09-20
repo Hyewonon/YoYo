@@ -10,16 +10,20 @@ import lombok.Value;
 public class Transaction {
     private final Long transactionId;
     private final Long senderId;
+    private final String senderName;
     private final Long receiverId;
+    private final String receiverName;
     private final Long eventId;
     private final String title;
     private final boolean isMember;
-    private final Long amount;
+    private final int amount;
     private final String memo;
 
     public static Transaction generateTransaction(TransactionId transactionId,
                                                   TransactionSenderId transactionSenderId,
+                                                  TransactionSenderName transactionSenderName,
                                                   TransactionReceiverId transactionReceiverId,
+                                                  TransactionReceiverName transactionReceiverName,
                                                   TransactionEventId transactionEventId,
                                                   TransactionTitle transactionTitle,
                                                   TransactionIsMember transactionIsMember,
@@ -27,7 +31,9 @@ public class Transaction {
                                                   TransactionMemo transactionMemo) {
         return new Transaction(transactionId.transactionId,
                 transactionSenderId.memberId,
+                transactionSenderName.senderName,
                 transactionReceiverId.memberId,
+                transactionReceiverName.receiverName,
                 transactionEventId.eventId,
                 transactionTitle.title,
                 transactionIsMember.isMember,
@@ -54,11 +60,25 @@ public class Transaction {
         }
     }
     @Value
+    public static class TransactionSenderName {
+        String senderName;
+        public TransactionSenderName(String value) {
+            this.senderName = value;
+        }
+    }
+    @Value
     public static class TransactionReceiverId {
         Long memberId;
 
         public TransactionReceiverId(Long value) {
             this.memberId = value;
+        }
+    }
+    @Value
+    public static class TransactionReceiverName {
+        String receiverName;
+        public TransactionReceiverName(String value) {
+            this.receiverName = value;
         }
     }
 
@@ -91,9 +111,9 @@ public class Transaction {
 
     @Value
     public static class TransactionAmount {
-        Long amount;
+        int amount;
 
-        public TransactionAmount(Long value) {
+        public TransactionAmount(int value) {
             this.amount = value;
         }
     }
