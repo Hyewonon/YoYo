@@ -6,7 +6,7 @@ import com.yoyo.event.domain.event.dto.EventDTO;
 import com.yoyo.event.domain.event.dto.EventDetailDTO;
 import com.yoyo.event.domain.event.dto.EventUpdateDTO;
 import com.yoyo.event.domain.event.dto.TransactionDTO;
-import com.yoyo.event.domain.event.kafka.EventServiceProducer;
+import com.yoyo.event.domain.event.message.EventServiceProducer;
 import com.yoyo.event.domain.event.repository.EventRepository;
 import com.yoyo.event.entity.Event;
 import java.util.ArrayList;

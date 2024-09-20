@@ -98,6 +98,6 @@ export function Payment() {
 }
 
 function generateRandomString() {
-  const memberId = "memberId";
+  const memberId = "receverId-or-eventId";
   return memberId + window.btoa(Math.random().toString()).slice(0, 20);
 }

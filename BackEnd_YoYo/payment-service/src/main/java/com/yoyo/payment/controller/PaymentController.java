@@ -1,6 +1,8 @@
 package com.yoyo.payment.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.yoyo.payment.dto.Transaction;
+import com.yoyo.payment.service.SuccessService;
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -10,9 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -22,6 +21,7 @@ import java.util.Base64;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class PaymentController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -30,11 +30,10 @@ public class PaymentController {
     private String SECRETKEY;
     @Value("${payment.url}")
     private String PAYMENTURL;
+    private final SuccessService successService;
 
     @PostMapping(value = "/confirm/payment", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
-        System.out.println(SECRETKEY);
-        System.out.println(PAYMENTURL);
 
         JSONParser parser = new JSONParser();
         String orderId;
@@ -76,7 +75,8 @@ public class PaymentController {
 
         // TODO: 결제 성공 및 실패 비즈니스 로직을 구현
         /*
-        결제 성공 시 -> 받는 사람의 계좌에 돈 올려주기
+        1. 결제 성공 시 -> 받는 사람의 계좌에 돈 올려주기
+        2. 내역 기록 : 받은 사람 ID, 금액, 메모
          */
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
@@ -85,38 +85,9 @@ public class PaymentController {
         return ResponseEntity.status(code).body(jsonObject);
     }
 
-    /**
-     * 인증성공처리
-     * @param request
-     * @param model
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/success", method = RequestMethod.GET)
-    public String paymentRequest(HttpServletRequest request, Model model) throws Exception {
-        return "/success";
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(HttpServletRequest request, Model model) throws Exception {
-        return "/checkout";
-    }
-
-    /**
-     * 인증실패처리
-     * @param request
-     * @param model
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/fail", method = RequestMethod.GET)
-    public String failPayment(HttpServletRequest request, Model model) throws Exception {
-        String failCode = request.getParameter("code");
-        String failMessage = request.getParameter("message");
-
-        model.addAttribute("code", failCode);
-        model.addAttribute("message", failMessage);
-
-        return "/fail";
+    @PostMapping("/yoyo/payment/success")
+    public ResponseEntity<?> createTransaction(@RequestBody Transaction transaction) {
+        successService.sendTransaction(transaction);
+        return ResponseEntity.ok().build();
     }
 }
