@@ -2,7 +2,7 @@ package com.yoyo.member.adapter.out.jwt;
 
 import com.yoyo.member.application.port.out.AuthMemberPort;
 import com.yoyo.member.domain.Member;
-import com.yoyo.member.domain.Member.MemberPhoneNumber;
+import com.yoyo.member.domain.Member.MemberId;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,12 +22,12 @@ public class JwtTokenProvider implements AuthMemberPort {
 
 
     @Override
-    public String generateJwtToken(Member.MemberPhoneNumber memberPhoneNumber) {
+    public String generateJwtToken(Member.MemberId memberId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtTokenExpirationInMs);
 
         return Jwts.builder()
-                   .setSubject(memberPhoneNumber.getPhoneNumberValue())
+                   .setSubject(memberId.getMemberId().toString())
                    .setIssuedAt(now)
                    .setExpiration(expiryDate)
                    .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -35,12 +35,12 @@ public class JwtTokenProvider implements AuthMemberPort {
     }
 
     @Override
-    public String generateRefreshToken(Member.MemberPhoneNumber memberPhoneNumber) {
+    public String generateRefreshToken(Member.MemberId memberId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + refreshTokenExpirationInMs);
 
         return Jwts.builder()
-                   .setSubject(memberPhoneNumber.getPhoneNumberValue())
+                   .setSubject(memberId.getMemberId().toString())
                    .setIssuedAt(now)
                    .setExpiration(expiryDate)
                    .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -72,9 +72,9 @@ public class JwtTokenProvider implements AuthMemberPort {
     }
 
     @Override
-    public MemberPhoneNumber parseMemberIdFromToken(String jwtToken) {
+    public MemberId parseMemberIdFromToken(String jwtToken) {
         Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwtToken).getBody();
-        return new Member.MemberPhoneNumber(claims.getSubject());
+        return new Member.MemberId(Long.parseLong(claims.getSubject()));
     }
 
     @Override

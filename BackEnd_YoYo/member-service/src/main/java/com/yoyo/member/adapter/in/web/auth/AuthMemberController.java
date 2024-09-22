@@ -37,14 +37,6 @@ public class AuthMemberController {
         return authMemberUseCase.refreshJwtTokenByRefreshToken(command);
     }
 
-    @PostMapping("/yoyo/members/token-validate")
-    boolean validateToken(@RequestBody ValidateTokenRequest request) {
-        ValidateTokenCommand command = ValidateTokenCommand.builder()
-                                                           .jwtToken(request.getJwtToken())
-                                                           .build();
-        return authMemberUseCase.validateJwtToken(command);
-    }
-
     @PostMapping("/yoyo/members/logout")
     public ResponseEntity<?> logout(@RequestBody LogoutMemberRequest request) {
         LogoutMemberCommand command = LogoutMemberCommand.builder()

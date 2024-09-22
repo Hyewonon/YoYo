@@ -9,8 +9,6 @@ public interface AuthMemberUseCase {
 
     JwtToken refreshJwtTokenByRefreshToken(RefreshTokenCommand command);
 
-    boolean validateJwtToken(ValidateTokenCommand command);
-
     Member getMemberByJwtToken(ValidateTokenCommand command);
 
     void logout(LogoutMemberCommand command);

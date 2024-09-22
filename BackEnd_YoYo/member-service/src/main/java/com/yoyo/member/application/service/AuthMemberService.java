@@ -44,11 +44,12 @@ public class AuthMemberService implements AuthMemberUseCase {
         if (!BCrypt.checkpw(command.getPassword(), memberJpaEntity.getPassword())) {
             throw new IllegalArgumentException("비밀번호 틀림");
         }
+        Long memberId = memberJpaEntity.getMemberId();
         String jwtToken = authMemberPort.generateJwtToken(
-                new Member.MemberPhoneNumber(phoneNumber)
+                new Member.MemberId(memberId)
         );
         String refreshToken = authMemberPort.generateRefreshToken(
-                new Member.MemberPhoneNumber(phoneNumber)
+                new Member.MemberId(memberId)
         );
         updateMemberPort.updateMember(
                 new Member.MemberId(memberJpaEntity.getMemberId()),
@@ -58,7 +59,7 @@ public class AuthMemberService implements AuthMemberUseCase {
                 new Member.MemberRefreshToken(refreshToken)
         );
         return JwtToken.generateJwtToken(
-                new JwtToken.MemberPhoneNumber(phoneNumber),
+                new JwtToken.MemberId(memberId.toString()),
                 new MemberJwtToken(jwtToken),
                 new MemberRefreshToken(refreshToken)
         );
@@ -69,20 +70,18 @@ public class AuthMemberService implements AuthMemberUseCase {
         String requestRefreshToken = command.getRefreshToken();
         boolean validateJwtToken = authMemberPort.validateJwtToken(requestRefreshToken);
         if (validateJwtToken) {
-            Member.MemberPhoneNumber memberPhoneNumber = authMemberPort.parseMemberIdFromToken(requestRefreshToken);
-            MemberJpaEntity memberJpaEntity = findMemberPort.findMemberByPhoneNumber(memberPhoneNumber);
-            if (!memberJpaEntity.getRefreshToken().equals(
-                    command.getRefreshToken()
-            )) {
+            Member.MemberId memberId = authMemberPort.parseMemberIdFromToken(requestRefreshToken);
+            MemberJpaEntity memberJpaEntity = findMemberPort.findMemberById(memberId);
+            if (!memberJpaEntity.getRefreshToken().equals(command.getRefreshToken())) {
                 return null;
             }
             // refresh 정보와 요청 받은 refresh token 정보가 일치하는지 확인 된 후
                 String newJwtToken = authMemberPort.generateJwtToken(
-                        new Member.MemberPhoneNumber(memberPhoneNumber.getPhoneNumberValue())
+                        new Member.MemberId(memberId.getMemberId())
                 );
 
                 return JwtToken.generateJwtToken(
-                        new JwtToken.MemberPhoneNumber(memberPhoneNumber.getPhoneNumberValue()),
+                        new JwtToken.MemberId(memberId.getMemberId().toString()),
                         new JwtToken.MemberJwtToken(newJwtToken),
                         new JwtToken.MemberRefreshToken(requestRefreshToken)
                 );
@@ -91,24 +90,14 @@ public class AuthMemberService implements AuthMemberUseCase {
     }
 
     @Override
-    public boolean validateJwtToken(ValidateTokenCommand command) {
-        String jwtToken = command.getJwtToken();
-        boolean isBlackList = Boolean.TRUE.equals(redisTemplate.hasKey(TOKEN_BLACKLIST_PREFIX + jwtToken));
-        if (isBlackList) {
-            return false;
-        }
-        return authMemberPort.validateJwtToken(jwtToken);
-    }
-
-    @Override
     public Member getMemberByJwtToken(ValidateTokenCommand command) {
         String jwtToken = command.getJwtToken();
         boolean validateJwtToken = authMemberPort.validateJwtToken(jwtToken);
         MemberJpaEntity memberJpaEntity = null;
         if (validateJwtToken) {
-            Member.MemberPhoneNumber memberPhoneNumber = authMemberPort.parseMemberIdFromToken(jwtToken);
+            Member.MemberId memberId = authMemberPort.parseMemberIdFromToken(jwtToken);
 
-            memberJpaEntity = findMemberPort.findMemberByPhoneNumber(memberPhoneNumber);
+            memberJpaEntity = findMemberPort.findMemberById(memberId);
             if (!memberJpaEntity.getRefreshToken().equals(command.getJwtToken())) {
                 return null;
             }
