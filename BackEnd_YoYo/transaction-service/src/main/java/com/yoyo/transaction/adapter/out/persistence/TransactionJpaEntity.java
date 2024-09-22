@@ -22,10 +22,12 @@ public class TransactionJpaEntity extends AuditableEntity {
     private Long eventId;
     private String title;
     private boolean isMember;
-    private int amount;
+    private long amount;
     private String memo;
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
 
-    public TransactionJpaEntity(String senderName, Long receiverId, String receiverName, Long eventId, String title, int amount, String memo){
+    public TransactionJpaEntity(String senderName, Long receiverId, String receiverName, Long eventId, String title, long amount, String memo){
         this.senderName = senderName;
         this.receiverId = receiverId;
         this.receiverName = receiverName;
@@ -34,5 +36,18 @@ public class TransactionJpaEntity extends AuditableEntity {
         this.isMember = false;
         this.amount = amount;
         this.memo = memo;
+    }
+
+    public TransactionJpaEntity(Long senderId,String senderName, Long receiverId, String receiverName, Long eventId, String title,boolean isMember, long amount, String memo, TransactionType transactionType){
+        this.senderId = senderId;
+        this.senderName = senderName;
+        this.receiverId = receiverId;
+        this.receiverName = receiverName;
+        this.eventId = eventId;
+        this.title = title;
+        this.isMember = false;
+        this.amount = amount;
+        this.memo = memo;
+        this.transactionType = transactionType;
     }
 }

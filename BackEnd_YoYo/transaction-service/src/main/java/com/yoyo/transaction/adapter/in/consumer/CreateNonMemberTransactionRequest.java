@@ -1,4 +1,4 @@
-package com.yoyo.transaction.adapter.in.web;
+package com.yoyo.transaction.adapter.in.consumer;
 
 import lombok.Getter;
 

@@ -17,7 +17,8 @@ public class TransactionMapper {
                 new Transaction.TransactionTitle(transactionJpaEntity.getTitle()),
                 new Transaction.TransactionIsMember(transactionJpaEntity.isMember()),
                 new Transaction.TransactionAmount(transactionJpaEntity.getAmount()),
-                new Transaction.TransactionMemo(transactionJpaEntity.getMemo())
+                new Transaction.TransactionMemo(transactionJpaEntity.getMemo()),
+                transactionJpaEntity.getTransactionType()
         );
     }
 
@@ -33,6 +34,7 @@ public class TransactionMapper {
                 .isMember(transaction.isMember())
                 .amount(transaction.getAmount())
                 .memo(transaction.getMemo())
+                .transactionType(transaction.getTransactionType())
                 .build();
     }
 

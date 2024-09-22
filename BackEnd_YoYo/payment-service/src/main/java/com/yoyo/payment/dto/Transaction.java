@@ -1,5 +1,8 @@
 package com.yoyo.payment.dto;
 
+import lombok.Data;
+
+@Data
 public class Transaction {
     private String senderName;
     private Long receiverId;
