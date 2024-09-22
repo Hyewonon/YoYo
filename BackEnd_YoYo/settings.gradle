@@ -6,5 +6,4 @@ include 'event-service'
 include 'banking-service'
 include 'transaction-service'
 include 'payment-service'
-include 'eureka-server'
 

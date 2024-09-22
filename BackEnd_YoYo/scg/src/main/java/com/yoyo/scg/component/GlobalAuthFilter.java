@@ -1,9 +1,9 @@
 package com.yoyo.scg.component;
 
 import com.yoyo.scg.util.JwtUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;  // 이 부분을 수정
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpStatus;
@@ -14,10 +14,15 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class GlobalAuthFilter extends AbstractGatewayFilterFactory<GlobalAuthFilter.Config> {
 
     private final JwtUtil jwtUtil;
+
+    @Autowired
+    public GlobalAuthFilter(JwtUtil jwtUtil) {
+        super(GlobalAuthFilter.Config.class);
+        this.jwtUtil = jwtUtil;
+    }
 
     public static class Config {
     }
