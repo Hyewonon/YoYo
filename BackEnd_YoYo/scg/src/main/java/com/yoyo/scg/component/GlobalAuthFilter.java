@@ -1,85 +1,58 @@
-//package com.yoyo.scg.component;
-//
-//import com.yoyo.scg.util.JwtUtil;
-//import com.yoyo.scg.util.EncryptionUtil;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.cloud.gateway.filter.GatewayFilter;
-//import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.server.reactive.ServerHttpRequest;
-//import org.springframework.http.server.reactive.ServerHttpResponse;
-//import org.springframework.stereotype.Component;
-//import reactor.core.publisher.Mono;
-//
-//import javax.crypto.SecretKey;
-//
-//@Slf4j
-//@Component
-//public class GlobalAuthFilter extends AbstractGatewayFilterFactory<GlobalAuthFilter.Config> {
-//
-//    private final JwtUtil jwtUtil;
-//    private final SecretKey encryptionKey;
-//
-//    public GlobalAuthFilter(JwtUtil jwtUtil,@Value("${encryption.secret}") String encryptionSecret) {
-//        super(Config.class);
-//        this.jwtUtil = jwtUtil;
-//        this.encryptionKey = EncryptionUtil.getKey(encryptionSecret);
-//    }
-//
-//    public static class Config {
-//    }
-//
-//    @Override
-//    public GatewayFilter apply(Config config) {
-//        return (exchange, chain) -> {
-//            ServerHttpRequest request = exchange.getRequest();
-//            ServerHttpResponse response = exchange.getResponse();
-//
-//            String accessToken = jwtUtil.getToken(request, "ACCESS-TOKEN");
-//            String refreshToken = jwtUtil.getToken(request, "REFRESH-TOKEN");
-//
-//            if (accessToken == null) {
-////                log.error("Access Token is missing");
-//                response.setStatusCode(HttpStatus.UNAUTHORIZED);
-//                return response.setComplete();
-//            }
-//
-//            if (!jwtUtil.isValidAccessToken(accessToken)) {
-//                // 만약 Access Token이 만료되었고, Refresh Token이 유효하면 새로운 Access Token 발급
-//                if (refreshToken != null && jwtUtil.isValidRefreshToken(refreshToken)) {
-//                    String newAccessToken = jwtUtil.generateAccessToken(refreshToken);
-//                    ServerHttpRequest modifiedRequest = request.mutate()
-//                            .header("ACCESS-TOKEN", newAccessToken)
-//                            .build();
-//
-//                    return chain.filter(exchange.mutate().request(modifiedRequest).build());
-//                } else {
-////                    log.error("Invalid Access Token and Refresh Token");
-//                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
-//                    return response.setComplete();
-//                }
-//            }
-//
-//            try {
-//                String phoneNumber = jwtUtil.getPhoneNumberFromToken(accessToken);
-//                String encryptedPhoneNumber = EncryptionUtil.encrypt(phoneNumber, encryptionKey);
-////                log.info("Encrypted phoneNumber -> {}", encryptedPhoneNumber);
-//
-//                ServerHttpRequest modifiedRequest = request.mutate()
-//                        .header("ENCRYPTED-PHONE-NUMBER", encryptedPhoneNumber)
-//                        .header("AUTH", "true")
-//                        .build();
-//
-//                return chain.filter(exchange.mutate().request(modifiedRequest).build())
-//                        .then(Mono.fromRunnable(() -> {
-////                            log.info("Custom Post Filter: response code -> {}", response.getStatusCode());
-//                        }));
-//            } catch (Exception e) {
-////                log.error("Error encrypting phoneNumber", e);
-//                response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-//                return response.setComplete();
-//            }
-//        };
-//    }
-//}
+package com.yoyo.scg.component;
+
+import com.yoyo.scg.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;  // 이 부분을 수정
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class GlobalAuthFilter extends AbstractGatewayFilterFactory<GlobalAuthFilter.Config> {
+
+    private final JwtUtil jwtUtil;
+
+    public static class Config {
+    }
+
+    @Override
+    public GatewayFilter apply(Config config) {
+        return (exchange, chain) -> {
+            ServerHttpRequest request = exchange.getRequest();
+            String token = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+            if (token == null || !token.startsWith("Bearer ")) {
+                return handleUnauthorized(exchange);
+            }
+            token = token.substring(7); // "Bearer " 이후의 실제 토큰 값 추출
+
+            try {
+                // 1. JWT 검증
+                if (!jwtUtil.validateJwtToken(token)) {
+                    return handleUnauthorized(exchange);
+                }
+                // 2. JWT에서 memberId 추출
+                String memberId = jwtUtil.getMemberIdFromToken(token);
+                // 3. 요청 헤더에 memberId 추가
+                ServerHttpRequest modifiedRequest = request.mutate()
+                        .header("memberId", memberId)
+                        .build();
+                return chain.filter(exchange.mutate().request(modifiedRequest).build());
+            } catch (Exception e) {
+                log.error("JWT 검증 실패", e);
+                return handleUnauthorized(exchange);
+            }
+        };
+    }
+
+    private Mono<Void> handleUnauthorized(ServerWebExchange exchange) {
+        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+        return exchange.getResponse().setComplete();
+    }
+}

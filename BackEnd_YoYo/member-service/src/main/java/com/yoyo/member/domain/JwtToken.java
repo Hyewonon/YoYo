@@ -9,24 +9,24 @@ import lombok.Value;
 @Getter
 public class JwtToken {
 
-    private final String memberPhoneNumber;
+    private final String memberId;
     private final String jwtToken;
     private final String refreshToken;
 
-    public static JwtToken generateJwtToken(MemberPhoneNumber memberPhoneNumber,
+    public static JwtToken generateJwtToken(MemberId memberId,
                                             MemberJwtToken memberJwtToken,
                                             MemberRefreshToken memberRefreshToken) {
-        return new JwtToken(memberPhoneNumber.getMemberPhoneNumber(),
+        return new JwtToken(memberId.getMemberId(),
                 memberJwtToken.jwtToken,
                 memberRefreshToken.refreshToken);
     }
 
     @Value
-    public static class MemberPhoneNumber {
-        String memberPhoneNumber;
+    public static class MemberId {
+        String memberId;
 
-        public MemberPhoneNumber(String value) {
-            this.memberPhoneNumber = value;
+        public MemberId(String value) {
+            this.memberId = value;
         }
     }
 
