@@ -8,6 +8,8 @@ import com.yoyo.transaction.domain.Transaction;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @UseCase
 @RequiredArgsConstructor
 @Transactional
@@ -16,5 +18,15 @@ public class FindTransactionService implements FindTransactionUseCase {
     @Override
     public Transaction findTransaction(FindTransactionCommand findTransactionCommand) {
         return findTransactionPort.findTransaction(new Transaction.TransactionId(findTransactionCommand.getTransactionId()));
+    }
+
+    @Override
+    public List<Transaction> findTransactionBySenderId(Long memberId) {
+        return findTransactionPort.findTransactionsBySenderId(memberId);
+    }
+
+    @Override
+    public List<Transaction> findTransactionByReceiverId(Long memberId) {
+        return findTransactionPort.findTransactionsByReceiverId(memberId);
     }
 }

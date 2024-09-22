@@ -11,17 +11,14 @@ public class EventDetailDTO {
     public static class Response {
 
         private Long eventId;
-        private Long totalReceiver;
-        private Long totalReceivedAmount;
-        private List<TransactionDTO.Response> transactions;
+        private int totalReceiver;
+        private long totalReceivedAmount;
 
-        public static EventDetailDTO.Response of(Long eventId, Long totalReceiver, Long totalReceivedAmount,
-                                                 List<TransactionDTO.Response> transactions) {
+        public static EventDetailDTO.Response of(Long eventId, int totalReceiver, long totalReceivedAmount) {
             return Response.builder()
                            .eventId(eventId)
                            .totalReceiver(totalReceiver)
                            .totalReceivedAmount(totalReceivedAmount)
-                           .transactions(transactions)
                            .build();
         }
     }

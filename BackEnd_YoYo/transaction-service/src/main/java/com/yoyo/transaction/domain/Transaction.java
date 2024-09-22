@@ -1,5 +1,6 @@
 package com.yoyo.transaction.domain;
 
+import com.yoyo.transaction.adapter.out.persistence.TransactionType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,8 +17,9 @@ public class Transaction {
     private final Long eventId;
     private final String title;
     private final boolean isMember;
-    private final int amount;
+    private final long amount;
     private final String memo;
+    private final TransactionType TransactionType;
 
     public static Transaction generateTransaction(TransactionId transactionId,
                                                   TransactionSenderId transactionSenderId,
@@ -28,7 +30,8 @@ public class Transaction {
                                                   TransactionTitle transactionTitle,
                                                   TransactionIsMember transactionIsMember,
                                                   TransactionAmount transactionAmount,
-                                                  TransactionMemo transactionMemo) {
+                                                  TransactionMemo transactionMemo,
+                                                  TransactionType transactionType) {
         return new Transaction(transactionId.transactionId,
                 transactionSenderId.memberId,
                 transactionSenderName.senderName,
@@ -38,7 +41,8 @@ public class Transaction {
                 transactionTitle.title,
                 transactionIsMember.isMember,
                 transactionAmount.amount,
-                transactionMemo.memo
+                transactionMemo.memo,
+                transactionType
         );
     }
 
@@ -111,9 +115,9 @@ public class Transaction {
 
     @Value
     public static class TransactionAmount {
-        int amount;
+        long amount;
 
-        public TransactionAmount(int value) {
+        public TransactionAmount(long value) {
             this.amount = value;
         }
     }

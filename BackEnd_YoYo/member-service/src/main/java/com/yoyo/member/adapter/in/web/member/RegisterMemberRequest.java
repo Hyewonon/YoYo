@@ -1,13 +1,13 @@
 package com.yoyo.member.adapter.in.web.member;
 
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 public class RegisterMemberRequest {
 
     private String name;

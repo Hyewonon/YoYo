@@ -64,9 +64,8 @@ public class EventController {
             @ApiResponse(responseCode = "400", description = "이벤트가 존재하지 않습니다.")
     })
     @GetMapping("/{eventId}")
-    public ResponseEntity<?> getEvent(@PathVariable("eventId") Long eventId, @RequestParam String tag,
-                                      @RequestParam boolean isRegister, Long memberId) {
-        EventDetailDTO.Response response = eventService.getEvent(this.memberId, eventId, tag, isRegister);
+    public ResponseEntity<?> getEvent(@PathVariable("eventId") Long eventId, Long memberId) {
+        EventDetailDTO.Response response = eventService.getEvent(this.memberId, eventId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
