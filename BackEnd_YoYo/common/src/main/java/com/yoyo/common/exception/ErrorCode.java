@@ -18,6 +18,8 @@ public enum ErrorCode {
     // 뱅킹서비스 관련 에러
     NOT_FOUND_BANK("존재하지 않는 은행입니다.", HttpStatus.NOT_FOUND),
     NOT_FOUND_USER_KEY("user key가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    NOT_FOUND_ACCOUNT("계좌를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    EXCEEDS_PAY_BALANCE("충전 금액을 초과하였습니다.", HttpStatus.BAD_REQUEST),
 
     // 일정 관련 에러
     DUPLICATE_MEMBER_EVENT("이미 등록된 일정입니다.", HttpStatus.CONFLICT),

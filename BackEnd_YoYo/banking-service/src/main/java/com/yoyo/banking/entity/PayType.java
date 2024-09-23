@@ -1,5 +1,5 @@
 package com.yoyo.banking.entity;
 
 public enum PayType {
-    DEPOSIT, WITHDRAW;
+    DEPOSIT, WITHDRAW, CHARGE, REFUND;
 }

@@ -3,12 +3,18 @@ package com.yoyo.banking.domain.account.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
 public class DummyAccountDTO {
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Schema(description = "[ DummyAccountDTO ] 싸피은행 더미 계좌 입금 요청 DTO")
+    public static class Request {
+        private Long amount;
+    }
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor

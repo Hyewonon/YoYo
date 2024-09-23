@@ -110,6 +110,7 @@ services:
       - eureka
       - config-server
     environment:
+      - TZ=Asia/Seoul
       - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
       - SPRING_CLOUD_CONFIG_NAME=banking
       - SPRING_PROFILES_ACTIVE=dev

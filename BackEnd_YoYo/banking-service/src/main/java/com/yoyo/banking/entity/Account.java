@@ -37,6 +37,7 @@ public class Account {
     private String bankCode;
 
     @Builder.Default
+    @Setter
     private Long balance = 0L;
 
     private String pin;

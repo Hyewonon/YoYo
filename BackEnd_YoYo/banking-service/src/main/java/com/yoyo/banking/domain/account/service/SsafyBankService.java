@@ -64,6 +64,12 @@ public class SsafyBankService {
     @Value("${ssafy.bank.account.demand-deposit.create}")
     private String bankCreateDemandDepositUrl;
 
+    @Value("${ssafy.bank.account.demand-deposit.deposit}")
+    private String bankDemandDepositDepositUrl;
+
+    @Value("${ssafy.bank.account.demand-deposit.withdrawal}")
+    private String bankDemandDepositWithdrawalUrl;
+
     /**
      * [ssafy 금융 API]더미 계좌 생성
      */
@@ -211,7 +217,7 @@ public class SsafyBankService {
     }
 
     /**
-     * [ssafy 금융 API] userKey 저장
+     * [ssafy 금융 API] userKey 생성 및 저장
      */
     public ResponseEntity<?> createUserKey(Long memberId) {
         String url = bankCreateUserKeyUrl;
@@ -237,7 +243,7 @@ public class SsafyBankService {
     }
 
     /**
-     * [ssafy 금융 API] userKey 조회
+     * [ssafy 금융 API] userKey 조회 및 저장
      */
     public ResponseEntity<?> getUserKey(Long memberId) {
         String url = bankGetUserKeyUrl;
@@ -258,6 +264,39 @@ public class SsafyBankService {
             account.setUserKey(userKey);
             accountRepository.save(account);
             return new ResponseEntity<>(userKey, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(responseFromSsafy.getBody(), responseFromSsafy.getStatusCode());
+        }
+    }
+
+    /**
+     * [ssafy 금융 API] 출금 / 입금 요청
+     *
+     * @param isDeposit 입금 요청 여부
+     * */
+    public ResponseEntity<?> updateDemandDeposit(Long memberId, Long amount, Boolean isDeposit) {
+        log.info("-------------계좌 입출금---------------");
+
+        String url = bankDemandDepositWithdrawalUrl;
+        String successMessage = "계좌 출금(페이 충전)에 성공했습니다.";
+        String transactionSummary = "계좌 출금";
+        if(isDeposit){
+            url = bankDemandDepositDepositUrl;
+            successMessage = "계좌 입금(페이 환불)에 성공했습니다.";
+            transactionSummary = "계좌 입금";
+        }
+
+        Account account = accountRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new BankingException(ErrorCode.NOT_FOUND_ACCOUNT));
+
+        Map<String, Object> requestToSsafy = new HashMap<>();
+        requestToSsafy.put("accountNo", account.getAccountNumber());
+        requestToSsafy.put("transactionBalance", amount);
+        requestToSsafy.put("transactionSummary", transactionSummary);
+        ResponseEntity<Map> responseFromSsafy = sendPostRequestToSsafy(url, requestToSsafy, memberId);
+
+        if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
+            return new ResponseEntity<>(CommonResponse.of(true, successMessage), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(responseFromSsafy.getBody(), responseFromSsafy.getStatusCode());
         }
@@ -285,7 +324,7 @@ public class SsafyBankService {
             // 클라이언트에게 오류 응답 반환
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("responseCode", e.getStatusCode().toString());
-            errorResponse.put("responseMessage", e.getResponseBodyAsString());
+            errorResponse.put("responseMessage", (String) e.getResponseBodyAs(Map.class).get("responseMessage"));
 
             return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
         }

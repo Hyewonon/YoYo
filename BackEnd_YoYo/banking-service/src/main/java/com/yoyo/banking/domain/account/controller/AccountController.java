@@ -9,8 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -35,6 +33,8 @@ public class AccountController {
 
     /**
      *  [ssafy 금융 API] user key 생성 및 저장
+     * <p>
+     *  - 회원가입 시 userkey 생성 및 저장
      * */
     @PostMapping("/user-key")
     @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
@@ -44,24 +44,13 @@ public class AccountController {
     }
 
     /**
-     *  [ssafy 금융 API] user key 조회
+     *  [ssafy 금융 API] user key 조회 및 저장
      * */
     @GetMapping("/user-key")
     @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
     ResponseEntity<?> getUserKey() {
         Long currentMemberId = memberId;
         return ssafyBankService.getUserKey(currentMemberId);
-    }
-
-    /**
-     *  [ssafy 금융 API] 거래 내역 확인 (1원 송금 확인용)
-     * */
-    @GetMapping("/dummy-transaction")
-    @Operation(summary = "더미 계좌 거래 내역 조회", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
-    ResponseEntity<?> getDummyAccountTransaction(@RequestBody @Valid AccountAuthDTO.Request request){
-        Long currentMemberId = memberId;
-        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        return ssafyBankService.getDummyAccountTransaction(request, currentMemberId, today);
     }
 
     /**
@@ -103,4 +92,8 @@ public class AccountController {
         CommonResponse response = accountService.createAccount(request, currentMemberId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    /**
+     * * TODO : 계좌 삭제
+     * */
 }
