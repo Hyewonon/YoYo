@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @WebAdapter
@@ -17,15 +18,14 @@ public class UpdateMemberController {
     private final UpdateMemberUseCase updateMemberUseCase;
 
     @PatchMapping("/yoyo/members/update")
-    ResponseEntity<?> updateMember(@RequestBody UpdateMemberRequest request) {
+    ResponseEntity<?> updateMember(@RequestHeader("memberId") String memberId, @RequestBody UpdateMemberRequest request) {
         UpdateMemberCommand command = UpdateMemberCommand.builder()
-                                                         .memberId(request.getMemberId())
-                                                         .name(request.getName())
-                                                         .phoneNumber(request.getPhoneNumber())
-                                                         .birthDay(request.getBirthDay())
-                                                         .build();
+                .memberId(Long.parseLong(memberId))
+                .name(request.getName())
+                .phoneNumber(request.getPhoneNumber())
+                .birthDay(request.getBirthDay())
+                .build();
         updateMemberUseCase.updateMember(command);
         return ResponseEntity.ok(updateMemberUseCase.updateMember(command));
     }
-
 }

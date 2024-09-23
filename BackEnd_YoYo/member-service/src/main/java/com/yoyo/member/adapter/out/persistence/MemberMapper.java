@@ -1,8 +1,7 @@
 package com.yoyo.member.adapter.out.persistence;
 
+import com.yoyo.member.adapter.out.persistence.entity.MemberJpaEntity;
 import com.yoyo.member.domain.Member;
-import com.yoyo.member.domain.Member.MemberPassword;
-import com.yoyo.member.domain.Member.MemberPhoneNumber;
 import org.springframework.stereotype.Component;
 
 @Component

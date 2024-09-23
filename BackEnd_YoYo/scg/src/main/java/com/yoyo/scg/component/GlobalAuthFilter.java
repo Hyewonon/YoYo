@@ -31,6 +31,10 @@ public class GlobalAuthFilter extends AbstractGatewayFilterFactory<GlobalAuthFil
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
+            String path = request.getURI().getPath();
+            if(path.equals("/yoyo/payment/success") || path.equals("/confirm/payment") || path.equals("/yoyo/members/**")){
+                return chain.filter(exchange);
+            }
             String token = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
             if (token == null || !token.startsWith("Bearer ")) {
                 return handleUnauthorized(exchange);

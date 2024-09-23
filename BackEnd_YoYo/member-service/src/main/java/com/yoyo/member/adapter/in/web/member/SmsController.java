@@ -39,14 +39,14 @@ public class SmsController {
 
     @PostMapping("/yoyo/members/send")
     @ResponseBody
-    public ResponseEntity<?> sendSMS(@RequestParam String phone) {
-        if (phoneValidationService.duplicatePhoneNumber(phone)) {
+    public ResponseEntity<?> sendSMS(@RequestParam String phoneNumber) {
+        if (phoneValidationService.duplicatePhoneNumber(phoneNumber)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 등록된 전화번호");
         }
         String randomString = phoneValidationService.getValidationCode();
-        Message message = phoneValidationService.getMessageForm(randomString, phone);
+        Message message = phoneValidationService.getMessageForm(randomString, phoneNumber);
         SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-        phoneValidationService.saveSmsCertification(phone, randomString);
+        phoneValidationService.saveSmsCertification(phoneNumber, randomString);
         return ResponseEntity.ok("인증번호 전송안료");
     }
 

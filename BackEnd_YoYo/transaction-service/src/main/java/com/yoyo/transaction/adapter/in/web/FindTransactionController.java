@@ -2,7 +2,6 @@ package com.yoyo.transaction.adapter.in.web;
 
 import com.yoyo.transaction.application.port.in.FindTransactionCommand;
 import com.yoyo.transaction.application.port.in.FindTransactionUseCase;
-import com.yoyo.transaction.domain.Transaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

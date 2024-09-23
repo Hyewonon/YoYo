@@ -1,7 +1,7 @@
 package com.yoyo.member.application.service;
 
 import com.yoyo.common.annotation.UseCase;
-import com.yoyo.member.adapter.out.persistence.MemberJpaEntity;
+import com.yoyo.member.adapter.out.persistence.entity.MemberJpaEntity;
 import com.yoyo.member.adapter.out.persistence.MemberMapper;
 import com.yoyo.member.application.port.in.member.UpdateMemberCommand;
 import com.yoyo.member.application.port.in.member.UpdateMemberUseCase;
@@ -10,7 +10,6 @@ import com.yoyo.member.domain.Member;
 import com.yoyo.member.domain.Member.MemberRefreshToken;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.mindrot.jbcrypt.BCrypt;
 
 @UseCase
 @RequiredArgsConstructor

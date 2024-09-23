@@ -9,6 +9,7 @@ import lombok.*;
 @DiscriminatorColumn
 @Getter
 @Builder
+@Table(name = "transaction")
 @AllArgsConstructor
 public class TransactionJpaEntity extends AuditableEntity {
 
