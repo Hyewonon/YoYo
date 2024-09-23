@@ -31,6 +31,8 @@ public class Event {
 
     private Long memberId;
 
+    private String name;
+
     @Enumerated(EnumType.STRING)
     private EventType eventType;
 

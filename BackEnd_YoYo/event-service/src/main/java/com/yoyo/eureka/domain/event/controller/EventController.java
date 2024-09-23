@@ -54,7 +54,8 @@ public class EventController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이벤트 상세 조회 성공",
                     content = @Content(schema = @Schema(implementation = EventDetailDTO.Response.class))),
-            @ApiResponse(responseCode = "400", description = "이벤트가 존재하지 않습니다.")
+            @ApiResponse(responseCode = "400", description = "이벤트가 존재하지 않습니다."),
+            @ApiResponse(responseCode = "403", description = "이벤트 접근 권한이 없습니다.")
     })
     @GetMapping("/{eventId}")
     public ResponseEntity<?> getEvent(@RequestHeader("memberId") String memberId, @PathVariable("eventId") Long eventId) {
@@ -66,7 +67,8 @@ public class EventController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이벤트 수정 성공",
                     content = @Content(schema = @Schema(implementation = EventDTO.Response.class))),
-            @ApiResponse(responseCode = "400", description = "이벤트가 존재하지 않습니다.")
+            @ApiResponse(responseCode = "400", description = "이벤트가 존재하지 않습니다."),
+            @ApiResponse(responseCode = "403", description = "이벤트 접근 권한이 없습니다.")
     })
     @PatchMapping("/{eventId}")
     public ResponseEntity<?> updateEvent(@RequestHeader("memberId") String memberId,
