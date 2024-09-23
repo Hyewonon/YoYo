@@ -11,7 +11,6 @@ services:
       - ./db/conf.d:/etc/mysql/conf.d
       - ./db/data:/var/lib/mysql
       - ./db/initdb.d:/docker-entrypoint-initdb.d
-    env_file: .env
     ports:
       - "3306:3306"
     environment:
@@ -28,6 +27,8 @@ services:
 
   redis:
     image: redis:alpine
+    networks:
+      - yoyo_network
     restart: always
     ports:
       - "6379:6379"

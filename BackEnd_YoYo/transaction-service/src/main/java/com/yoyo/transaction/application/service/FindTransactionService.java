@@ -21,12 +21,8 @@ public class FindTransactionService implements FindTransactionUseCase {
     }
 
     @Override
-    public List<Transaction> findTransactionBySenderId(Long memberId) {
-        return findTransactionPort.findTransactionsBySenderId(memberId);
+    public List<Transaction> findTransactionBySenderAndReceiver(Long senderId, Long receiverId) {
+        return findTransactionPort.findBySenderAndReceiver(senderId, receiverId);
     }
 
-    @Override
-    public List<Transaction> findTransactionByReceiverId(Long memberId) {
-        return findTransactionPort.findTransactionsByReceiverId(memberId);
-    }
 }
