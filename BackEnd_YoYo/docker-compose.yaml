@@ -26,13 +26,9 @@ services:
       timeout: 5s
       retries: 5
 
-  # Redis Cache
   redis:
     image: redis:alpine
     restart: always
-    container_name: redis_boot
-    command: redis-server --port 6379
-    hostname: redis
     ports:
       - "6379:6379"
 
@@ -64,15 +60,12 @@ services:
       - "8761:8761"
     networks:
       - yoyo_network
-    depends_on:
-      - config-server
     environment:
-      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_APPLICATION_NAME=eureka-server
+      - SERVER_PORT=8761
       - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
       - EUREKA_CLIENT_FETCH_REGISTRY=false
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
-      - SPRING_CLOUD_CONFIG_NAME=eureka
-      - SPRING_PROFILES_ACTIVE=dev
+
 
   # Member Service
   member-service:
@@ -85,15 +78,8 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - mysql
-      - redis
       - eureka
-      - config-server
-    environment:
-      - SPRING_PROFILES_ACTIVE=default
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
-      - SPRING_CLOUD_CONFIG_NAME=member
-      - SPRING_PROFILES_ACTIVE=dev
+
 
   # Banking Service
   banking-service:
@@ -106,14 +92,8 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      - mysql
       - eureka
-      - config-server
-    environment:
-      - TZ=Asia/Seoul
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
-      - SPRING_CLOUD_CONFIG_NAME=banking
-      - SPRING_PROFILES_ACTIVE=dev
+
 
   # Transaction Service
   transaction-service:
@@ -126,13 +106,7 @@ services:
     ports:
       - "8083:8083"
     depends_on:
-      - mysql
       - eureka
-      - config-server
-    environment:
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
-      - SPRING_CLOUD_CONFIG_NAME=transaction
-      - SPRING_PROFILES_ACTIVE=dev
 
 
   # Notification Service
@@ -146,13 +120,8 @@ services:
     ports:
       - "8084:8084"
     depends_on:
-      - mysql
       - eureka
-      - config-server
-    environment:
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
-      - SPRING_CLOUD_CONFIG_NAME=notification
-      - SPRING_PROFILES_ACTIVE=dev
+
 
   # Payment Service
   payment-service:
@@ -165,13 +134,8 @@ services:
     ports:
       - "8085:8085"
     depends_on:
-      - mysql
       - eureka
-      - config-server
-    environment:
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
-      - SPRING_CLOUD_CONFIG_NAME=payment
-      - SPRING_PROFILES_ACTIVE=dev
+
 
   # Event Service
   event-service:
@@ -187,10 +151,7 @@ services:
       - mysql
       - eureka
       - config-server
-    environment:
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
-      - SPRING_CLOUD_CONFIG_NAME=event
-      - SPRING_PROFILES_ACTIVE=dev
+
 
   # Spring Cloud Gateway
   scg:
@@ -201,13 +162,10 @@ services:
     networks:
       - yoyo_network
     ports:
-      - "8080:8080"
+      - "8000:8000"
     depends_on:
       - eureka
-    environment:
-      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
-      - SPRING_CLOUD_CONFIG_NAME=scg
-      - SPRING_PROFILES_ACTIVE=dev
+
 
   # Zookeeper for Kafka
   zookeeper:

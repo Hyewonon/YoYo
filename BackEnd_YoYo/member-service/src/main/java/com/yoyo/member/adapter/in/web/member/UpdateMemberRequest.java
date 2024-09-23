@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateMemberRequest {
 
-    private Long memberId;
     private String name;
     private String phoneNumber;
     private LocalDate birthDay;

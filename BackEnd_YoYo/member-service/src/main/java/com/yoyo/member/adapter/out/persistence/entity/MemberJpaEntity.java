@@ -1,13 +1,11 @@
-package com.yoyo.member.adapter.out.persistence;
+package com.yoyo.member.adapter.out.persistence.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,6 +42,10 @@ public class MemberJpaEntity {
     private String accountNumber;
     @Setter
     private String bankCode;
+
+    @OneToMany(mappedBy = "member" ,cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<RelationJpaEntity> relations = new ArrayList<>();
 
     public MemberJpaEntity(String naveValue, String phoneNumberValue, String passwordValue, LocalDate birthDayValue,
                            boolean isValid, String refreshToken) {
