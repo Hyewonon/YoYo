@@ -21,6 +21,7 @@ public enum ErrorCode {
 
     // 일정 관련 에러
     DUPLICATE_MEMBER_EVENT("이미 등록된 일정입니다.", HttpStatus.CONFLICT),
+    FORBIDDEN_EVENT("이벤트 접근 권한이 없습니다.", HttpStatus.FORBIDDEN);
     ;
 
     private final String message;
