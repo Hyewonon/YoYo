@@ -2,18 +2,14 @@ package com.yoyo.eureka.domain.member_event.service;
 
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.EventException;
-import com.yoyo.eureka.domain.event.dto.TransactionDTO;
 import com.yoyo.eureka.domain.event.repository.EventRepository;
 import com.yoyo.eureka.domain.member_event.dto.MemberEventCreateDTO;
 import com.yoyo.eureka.domain.member_event.dto.MemberEventDTO;
-import com.yoyo.eureka.domain.member_event.dto.MemberEventTransactionDTO;
 import com.yoyo.eureka.domain.member_event.repository.MemberEventRepository;
 import com.yoyo.eureka.entity.Event;
 import com.yoyo.eureka.entity.MemberEvent;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,46 +20,40 @@ public class MemberEventService {
     private final MemberEventRepository memberEventRepository;
     private final EventRepository eventRepository;
 
-    private final String name = "홍길동"; // 임시 이름
-
     public List<MemberEventDTO.Response> getScheduleList(Long memberId) {
-        List<MemberEventDTO.Response> memberEvents = memberEventRepository.customFindAllByMemberId(memberId,
-                                                                                                   LocalDateTime.now());
-
-        return memberEvents.stream()
-                           .map(memberEvent -> {
-                               // TODO : [Member] memberEvent.event.memberId로 name 조회
-                               memberEvent.setName(name);
-                               return memberEvent;
-                           })
-                           .collect(Collectors.toList());
+        return memberEventRepository.customFindAllByMemberId(memberId,
+                                                             LocalDateTime.now());
     }
 
-    public MemberEventTransactionDTO.Response getSchedule(Long memberId, Long memberEventId, String type) {
-        MemberEvent memberEvent = memberEventRepository.findById(memberEventId)
-                                                       .orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND));
-
-        // TODO : [Member] memberEvent.event.memberId로 name 조회
-
-        List<TransactionDTO.Response> transactions = new ArrayList<>();
-        // TODO : [Transaction] senderId: memberId, receiverId: event.memberId
-        Long totalSentAmount = 100L;
-        // TODO : [Transaction] senderId: event.memberId, receiverId: memberId
-        Long totalReceivedAmount = 100L;
-
-        return MemberEventTransactionDTO.Response.of(name, memberEvent.getEvent(), totalSentAmount, totalReceivedAmount,
-                                                     transactions);
+    public MemberEventDTO.Response getSchedule(Long memberId, Long memberEventId) {
+        MemberEvent memberEvent = findMemberEventById(memberEventId);
+        isMyMemberEvent(memberEvent, memberId);
+        return MemberEventDTO.Response.of(memberEvent);
     }
 
     public MemberEventCreateDTO createSchedule(Long memberId, MemberEventCreateDTO request) {
+        Event event = findEventById(request.getEventId());
         if (memberEventRepository.existsByMemberIdAndEventId(request.getMemberId(), request.getEventId())) {
             throw new EventException(ErrorCode.DUPLICATE_MEMBER_EVENT);
         }
 
-        Event event = eventRepository.findById(request.getEventId())
-                                     .orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND));
-
         MemberEvent memberEvent = MemberEventCreateDTO.toEntity(memberId, event);
         return MemberEventCreateDTO.of(memberEventRepository.save(memberEvent));
+    }
+
+    private Event findEventById(Long eventId) {
+        return eventRepository.findById(eventId)
+                              .orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND));
+    }
+
+    private MemberEvent findMemberEventById(Long memberEventId) {
+        return memberEventRepository.findById(memberEventId)
+                                    .orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND));
+    }
+
+    private void isMyMemberEvent(MemberEvent memberEvent, Long memberId) {
+        if (!memberEvent.getMemberId().equals(memberId)) {
+            throw new EventException(ErrorCode.FORBIDDEN_EVENT);
+        }
     }
 }

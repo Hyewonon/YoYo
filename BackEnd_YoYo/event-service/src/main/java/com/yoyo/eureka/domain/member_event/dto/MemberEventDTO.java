@@ -3,8 +3,10 @@ package com.yoyo.eureka.domain.member_event.dto;
 import com.yoyo.eureka.entity.Event;
 import com.yoyo.eureka.entity.MemberEvent;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class MemberEventDTO {
 
@@ -21,6 +23,9 @@ public class MemberEventDTO {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Response {
 
         private Long memberId;
@@ -31,33 +36,10 @@ public class MemberEventDTO {
         private LocalDateTime startAt;
         private LocalDateTime endAt;
 
-        @Builder
-        public Response(Long memberId, String name, Long eventId, String title, String location, LocalDateTime startAt, LocalDateTime endAt) {
-            this.memberId = memberId;
-            this.name = name;
-            this.eventId = eventId;
-            this.title = title;
-            this.location = location;
-            this.startAt = startAt;
-            this.endAt = endAt;
-        }
-
-        public Response(Long memberId, Long eventId, String title, String location, LocalDateTime startAt, LocalDateTime endAt) {
-            this.memberId = memberId;
-            this.eventId = eventId;
-            this.title = title;
-            this.location = location;
-            this.startAt = startAt;
-            this.endAt = endAt;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
         public static MemberEventDTO.Response of(MemberEvent memberEvent) {
             return Response.builder()
                            .memberId(memberEvent.getMemberId())
+                           .name(memberEvent.getEvent().getName())
                            .eventId(memberEvent.getEvent().getId())
                            .title(memberEvent.getEvent().getTitle())
                            .location(memberEvent.getEvent().getLocation())

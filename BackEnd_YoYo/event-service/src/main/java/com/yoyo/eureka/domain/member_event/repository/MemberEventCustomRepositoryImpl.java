@@ -20,6 +20,7 @@ public class MemberEventCustomRepositoryImpl implements MemberEventCustomReposit
         return queryFactory
                 .select(Projections.constructor(MemberEventDTO.Response.class,
                                                 memberEvent.memberId,
+                                                event.name,
                                                 event.id,
                                                 event.title,
                                                 event.location,
