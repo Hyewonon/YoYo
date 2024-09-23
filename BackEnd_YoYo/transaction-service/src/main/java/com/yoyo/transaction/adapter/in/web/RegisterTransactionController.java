@@ -4,7 +4,10 @@ import com.yoyo.common.annotation.WebAdapter;
 import com.yoyo.transaction.application.port.in.RegisterTransactionCommand;
 import com.yoyo.transaction.application.port.in.RegisterTransactionUseCase;
 import com.yoyo.transaction.domain.Transaction;
+import com.yoyo.transaction.global.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +20,7 @@ public class RegisterTransactionController {
     private final RegisterTransactionUseCase registerTransactionUseCase;
 
     @PostMapping("/yoyo/transactions/register")
-    Transaction registerMember(@RequestBody RegisterTransactionRequest request, Long memberId) {
+    public ResponseEntity<?> registerMember(@RequestBody RegisterTransactionRequest request, Long memberId) {
         // request -> command
         RegisterTransactionCommand command = RegisterTransactionCommand.builder()
                 .senderId(request.getSenderId())
@@ -30,6 +33,11 @@ public class RegisterTransactionController {
                 .amount(request.getAmount())
                 .memo(request.getMemo())
                 .build();
-        return registerTransactionUseCase.registerTransaction(command, memberId);
+        ApiResponse<Transaction> response = new ApiResponse<>(
+                HttpStatus.CREATED.value(),
+                "직접 등록 완료",
+                registerTransactionUseCase.registerTransaction(command, memberId)
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

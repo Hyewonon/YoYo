@@ -1,6 +1,7 @@
 package com.yoyo.transaction.adapter.out.persistence;
 
 import com.yoyo.common.annotation.PersistenceAdapter;
+import com.yoyo.transaction.application.port.out.DeleteTransactionPort;
 import com.yoyo.transaction.application.port.out.FindTransactionPort;
 import com.yoyo.transaction.application.port.out.RegisterTransactionPort;
 import com.yoyo.transaction.domain.Transaction;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-public class TransactionPersistenceAdapter implements RegisterTransactionPort, FindTransactionPort {
+public class TransactionPersistenceAdapter implements RegisterTransactionPort, FindTransactionPort, DeleteTransactionPort {
     private final TransactionMapper transactionMapper;
     private final SpringDataTransactionRepository transactionRepository;
 
@@ -24,17 +25,8 @@ public class TransactionPersistenceAdapter implements RegisterTransactionPort, F
     }
 
     @Override
-    public List<Transaction> findTransactionsBySenderId(Long memberId) {
-        return transactionRepository.findAllBySenderId(memberId).stream()
-                .map(transactionMapper::mapToDomainEntity)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Transaction> findTransactionsByReceiverId(Long memberId) {
-        return transactionRepository.findAllByReceiverId(memberId).stream()
-                .map(transactionMapper::mapToDomainEntity)
-                .collect(Collectors.toList());
+    public List<Transaction> findBySenderAndReceiver(Long senderId, Long receiverId) {
+        return transactionRepository.findBySenderIdAndReceiverId(senderId, receiverId).stream().map(transactionMapper::mapToDomainEntity).collect(Collectors.toList());
     }
 
     @Override
@@ -51,5 +43,10 @@ public class TransactionPersistenceAdapter implements RegisterTransactionPort, F
                 transactionMemo.getMemo(),
                 transactionType
         ));
+    }
+
+    @Override
+    public void deleteTransaction(Long transactionId) {
+        transactionRepository.deleteById(transactionId);
     }
 }

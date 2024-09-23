@@ -9,7 +9,5 @@ import java.util.List;
 public interface SpringDataTransactionRepository extends JpaRepository<TransactionJpaEntity, Long> {
     @Query("SELECT t FROM TransactionJpaEntity t WHERE t.receiverId = :receiverId AND t.eventId = :eventId")
     List<TransactionJpaEntity> findByReceiverIdAndEventId(@Param("receiverId") Long receiverId,@Param("eventId") Long eventId);
-
-    List<TransactionJpaEntity> findAllBySenderId(Long senderId);
-    List<TransactionJpaEntity> findAllByReceiverId(Long receiverId);
+    List<TransactionJpaEntity> findBySenderIdAndReceiverId(Long senderId, Long receiverId);
 }
