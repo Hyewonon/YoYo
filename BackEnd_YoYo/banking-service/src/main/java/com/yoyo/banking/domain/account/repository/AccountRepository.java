@@ -16,4 +16,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     * */
     @Query("SELECT a.userKey FROM Account a WHERE a.memberId = :memberId")
     Optional<String> findUserKeyByMemberId(Long memberId);
+
+    /*
+    * * memberId로 페이 잔액 조회
+     */
+    @Query("SELECT a.balance FROM Account a WHERE a.memberId = :memberId")
+    Long findBalanceByMemberId(Long memberId);
 }

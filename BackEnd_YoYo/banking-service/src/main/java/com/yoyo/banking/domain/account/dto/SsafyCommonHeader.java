@@ -5,12 +5,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Data
 @Slf4j
 public class SsafyCommonHeader {
 

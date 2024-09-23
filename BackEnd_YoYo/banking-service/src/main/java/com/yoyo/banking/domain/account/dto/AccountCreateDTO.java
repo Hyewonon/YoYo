@@ -8,11 +8,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
 public class AccountCreateDTO {
 
     /*
@@ -36,10 +34,11 @@ public class AccountCreateDTO {
         @NotNull(message = "결제 비밀번호를 입력하세요.")
         private String pin;
 
+        // TODO : 계좌번호 저장시 양방향 암호화 알고리즘 적용 필요
         public static Account toEntity(AccountCreateDTO.Request request, Long memberId, String bankCode) {
             return Account.builder()
                           .memberId(memberId)
-                          .accountNumber(PasswordEncryptUtil.encrypt(request.getAccountNumber()))
+                          .accountNumber(request.getAccountNumber())
                           .bankCode(bankCode)
                           .balance(0L)
                           .pin(PasswordEncryptUtil.encrypt(request.getPin()))

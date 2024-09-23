@@ -6,11 +6,9 @@ import java.util.List;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +23,6 @@ public class DummyTransactionDTOs {
                 .build();
     }
 
-    @Data
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
