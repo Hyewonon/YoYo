@@ -9,7 +9,6 @@ import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.hibernate.validator.internal.constraintvalidators.bv.AssertFalseValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SmsController {
 
-    private final AssertFalseValidator assertFalseValidator;
     @Value("${cool-sms.api-key}")
     private String COOLSMS_API_KEY;
     @Value("${cool-sms.api-secret}")
