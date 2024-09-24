@@ -39,7 +39,7 @@ public class GlobalAuthFilter extends AbstractGatewayFilterFactory<GlobalAuthFil
             if (token == null || !token.startsWith("Bearer ")) {
                 return handleUnauthorized(exchange);
             }
-            token = token.substring(7); // "Bearer " 이후의 실제 토큰 값 추출
+            token = token.substring(7); // "Bearer " 이후의 실제 토큰 값
 
             try {
                 // 1. JWT 검증

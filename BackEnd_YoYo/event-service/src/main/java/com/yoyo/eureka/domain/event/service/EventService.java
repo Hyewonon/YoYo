@@ -5,9 +5,9 @@ import com.yoyo.common.exception.exceptionType.EventException;
 import com.yoyo.eureka.domain.event.dto.EventDTO;
 import com.yoyo.eureka.domain.event.dto.EventDetailDTO;
 import com.yoyo.eureka.domain.event.dto.EventUpdateDTO;
-import com.yoyo.eureka.domain.event.producer.TransactionSummaryRequest;
+import com.yoyo.common.kafka.dto.TransactionRequestDTO;
 import com.yoyo.eureka.domain.event.producer.EventProducer;
-import com.yoyo.eureka.domain.event.consumer.TransactionSummaryResponse;
+import com.yoyo.common.kafka.dto.TransactionResponseDTO;
 import com.yoyo.eureka.domain.event.repository.EventRepository;
 import com.yoyo.eureka.entity.Event;
 
@@ -34,7 +34,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventProducer eventToTransactionProducer;
     private final int PAGE_SIZE = 10;
-    private final Map<Long, CompletableFuture<TransactionSummaryResponse>> summaries = new ConcurrentHashMap<>();
+    private final Map<Long, CompletableFuture<TransactionResponseDTO>> summaries = new ConcurrentHashMap<>();
 
     public EventDTO.Response createEvent(Long memberId, EventDTO.Request request) {
         // TODO : [Member] memberId로 name Get
@@ -58,11 +58,11 @@ public class EventService {
                 .orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND));
         isMyEvent(event, memberId);
 
-        TransactionSummaryRequest message = new TransactionSummaryRequest(memberId, eventId);
+        TransactionRequestDTO message = new TransactionRequestDTO(memberId, eventId);
         eventToTransactionProducer.sendEventId(message);
-        CompletableFuture<TransactionSummaryResponse> future = new CompletableFuture<>();
+        CompletableFuture<TransactionResponseDTO> future = new CompletableFuture<>();
         summaries.put(eventId, future);
-        TransactionSummaryResponse summary;
+        TransactionResponseDTO summary;
         try {
             summary = future.get(10, TimeUnit.SECONDS);
         } catch (Exception e) {
@@ -88,8 +88,8 @@ public class EventService {
         return eventRepository.searchEventByTitle(memberId, keyword, pageable);
     }
 
-    public void completeTransactionSummary(TransactionSummaryResponse summary) {
-        CompletableFuture<TransactionSummaryResponse> future = summaries.remove(summary.getEventId());
+    public void completeTransactionSummary(TransactionResponseDTO summary) {
+        CompletableFuture<TransactionResponseDTO> future = summaries.remove(summary.getEventId());
         if (future != null) {
             future.complete(summary);
         }

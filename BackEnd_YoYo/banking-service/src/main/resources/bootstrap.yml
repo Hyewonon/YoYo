@@ -4,4 +4,4 @@ spring:
       uri: http://config-server:8888
       name: banking
   profiles:
-    active: local
+    active: dev
