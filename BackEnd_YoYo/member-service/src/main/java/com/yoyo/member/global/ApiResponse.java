@@ -1,5 +1,8 @@
 package com.yoyo.member.global;
 
+import lombok.Getter;
+
+@Getter
 public class ApiResponse<T> {
     private int status;
     private String message;
