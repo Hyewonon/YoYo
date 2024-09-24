@@ -1,7 +1,7 @@
 package com.yoyo.banking.domain.account.controller;
 
-import com.yoyo.banking.domain.account.dto.PayDTO;
-import com.yoyo.banking.domain.account.dto.PayTransferDTO;
+import com.yoyo.banking.domain.account.dto.pay.PayDTO;
+import com.yoyo.banking.domain.account.dto.pay.PayTransferDTO;
 import com.yoyo.banking.domain.account.service.PayService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,7 +39,7 @@ public class PayController {
     @Operation(summary = "페이 머니 충전", description = "페이 머니를 충전한다. (대금 출금 요청)")
     ResponseEntity<?> chargePayment(@RequestBody PayDTO.Request request) {
         Long currentMemberId = memberId;
-        return payService.updatePayBalance(request, currentMemberId, false);
+        return payService.chargeOrRefundPayBalance(request, currentMemberId, false);
     }
     /**
      * * 페이 머니 환불
@@ -51,7 +51,7 @@ public class PayController {
     @Operation(summary = "페이 머니 환불", description = "페이 머니를 환불한다. (대금 입금 요청)")
     ResponseEntity<?> refundPayment(@RequestBody PayDTO.Request request) {
         Long currentMemberId = memberId;
-        return payService.updatePayBalance(request, currentMemberId, true);
+        return payService.chargeOrRefundPayBalance(request, currentMemberId, true);
     }
 
     /**
@@ -64,7 +64,7 @@ public class PayController {
     @Operation(summary = "페이 거래", description = "친구 페이머니로 송금")
     ResponseEntity<?> transferPayment(@RequestBody PayTransferDTO.Request request) {
         Long currentMemberId = memberId;
-        return payService.transferPayment(request, memberId);
+        return payService.transferPayment(request, currentMemberId);
     }
 
     /**

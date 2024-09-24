@@ -1,7 +1,7 @@
 package com.yoyo.banking.domain.account.controller;
 
-import com.yoyo.banking.domain.account.dto.AccountAuthDTO;
-import com.yoyo.banking.domain.account.dto.DummyAccountDTO;
+import com.yoyo.banking.domain.account.dto.account.AccountAuthDTO;
+import com.yoyo.banking.domain.account.dto.account.DummyAccountDTO;
 import com.yoyo.banking.domain.account.service.DummyAccountService;
 import com.yoyo.banking.domain.account.service.SsafyBankService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -76,7 +76,7 @@ public class DummyAccountController {
     @PostMapping("/dummy-bank")
     @Operation(summary = "은행 db에 저장", description = "db에 은행코드를 저장해요.")
     void createDummyBank() {
-        log.info("-----------------은행코드 저장--------------------");
+//        log.info("-----------------은행코드 저장--------------------");
         dummyAccountService.은행_데이터_생성();
     }
 }

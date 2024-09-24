@@ -132,6 +132,5 @@ public class DummyAccountService {
         banks.add(bank19);
 
         bankRepository.saveAll(banks);
-        log.info("은행넣음");
     }
 }
