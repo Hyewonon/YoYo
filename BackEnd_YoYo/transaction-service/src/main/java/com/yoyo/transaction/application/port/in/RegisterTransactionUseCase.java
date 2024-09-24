@@ -4,5 +4,5 @@ import com.yoyo.transaction.domain.Transaction;
 
 public interface RegisterTransactionUseCase {
 
-    Transaction registerTransaction(RegisterTransactionCommand command, Long memberId);
+    Transaction registerTransaction(RegisterTransactionCommand command);
 }

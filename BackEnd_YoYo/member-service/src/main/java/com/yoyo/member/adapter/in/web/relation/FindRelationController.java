@@ -22,11 +22,12 @@ public class FindRelationController {
     @GetMapping("/yoyo/members/transactions")
     public ResponseEntity<?> getRelationList(@RequestHeader("memberId") String memberId,
                                              @RequestParam(required = false) String tag,
-                                             @RequestParam(required = false) String search) {
+                                             @RequestParam(required = false) String search,
+                                             @RequestParam(defaultValue = "true") boolean isRegister) {
         ApiResponse<List<RelationResponse>> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "리스트 조회 성공",
-                relationService.findRelations(Long.parseLong(memberId), tag, search)
+                relationService.findRelations(Long.parseLong(memberId), tag, search, isRegister)
         );
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -19,7 +19,7 @@ public class RelationService {
     private final SpringDataMemberRepository memberRepository;
     private final SpringDataRelationRepository relationRepository;
 
-    public List<RelationResponse> findRelations(Long memberId, String  tag, String search) {
+    public List<RelationResponse> findRelations(Long memberId, String  tag, String search, boolean isRegister) {
         RelationType relationType = null;
         if (tag != null) {
             try {
@@ -29,7 +29,7 @@ public class RelationService {
             }
         }
         List<Long> oppositeIds = memberRepository.findByNameContaining(search);
-        List<RelationJpaEntity> list = relationRepository.findByMember_MemberIdAndRelationTypeAndOppositeIdIn(memberId, relationType, oppositeIds);
+        List<RelationJpaEntity> list = relationRepository.findByMember_MemberIdAndRelationTypeAndOppositeIdInAndIsRegister(memberId, relationType, oppositeIds, isRegister);
         return list.stream()
                 .map(relation -> {
                     String oppositeName = memberRepository.findById(relation.getOppositeId())

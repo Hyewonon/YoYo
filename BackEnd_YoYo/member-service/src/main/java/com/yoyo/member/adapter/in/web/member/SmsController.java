@@ -59,7 +59,7 @@ public class SmsController {
                 "인증번호 전송완료",
                 phoneNumber
         );
-        return ResponseEntity.ok(res);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
     @PostMapping("/yoyo/members/verify")
@@ -73,7 +73,7 @@ public class SmsController {
                     "인증 완료",
                     true
             );
-            return ResponseEntity.ok("인증 완료");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         } else {
             response = new ApiResponse<>(
                     HttpStatus.BAD_REQUEST.value(),

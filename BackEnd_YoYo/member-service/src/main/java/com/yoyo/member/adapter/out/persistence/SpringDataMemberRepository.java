@@ -8,6 +8,7 @@ import java.util.List;
 public interface SpringDataMemberRepository extends JpaRepository<MemberJpaEntity, Long> {
 
     MemberJpaEntity findByPhoneNumber(String phoneNumber);
+    MemberJpaEntity findByMemberId(Long memberId);
 
     boolean existsByPhoneNumber(String phoneNumber);
     // 이름으로 관계의 상대방의 memberId 리스트조회
