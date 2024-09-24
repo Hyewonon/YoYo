@@ -1,4 +1,4 @@
-package com.yoyo.banking.domain.account.dto;
+package com.yoyo.banking.domain.account.dto.pay;
 
 import com.yoyo.banking.entity.Account;
 import com.yoyo.banking.entity.PayTransaction;

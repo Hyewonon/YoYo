@@ -1,9 +1,9 @@
 package com.yoyo.banking.domain.account.service;
 
-import com.yoyo.banking.domain.account.dto.AccountAuthDTO;
-import com.yoyo.banking.domain.account.dto.DummyAccountDTO;
-import com.yoyo.banking.domain.account.dto.DummyTransactionDTOs;
-import com.yoyo.banking.domain.account.dto.DummyTransactionDTOs.DummyTransactionDTO;
+import com.yoyo.banking.domain.account.dto.account.AccountAuthDTO;
+import com.yoyo.banking.domain.account.dto.account.DummyAccountDTO;
+import com.yoyo.banking.domain.account.dto.account.DummyTransactionDTOs;
+import com.yoyo.banking.domain.account.dto.account.DummyTransactionDTOs.DummyTransactionDTO;
 import com.yoyo.banking.domain.account.dto.SsafyCommonHeader.Request;
 import com.yoyo.banking.domain.account.repository.AccountRepository;
 import com.yoyo.banking.entity.Account;
@@ -74,14 +74,14 @@ public class SsafyBankService {
      * [ssafy 금융 API]더미 계좌 생성
      */
     public ResponseEntity<?> createDummyAccount(Long memberId) {
-        log.info("---------------더미 계좌 생성-------------");
+//        log.info("---------------더미 계좌 생성-------------");
 
         // 1. 은행에서 상품 등록
-        log.info("------------1. 상품 등록------------");
+//        log.info("------------1. 상품 등록------------");
         String accountTypeUniqueNo = createDemandDeposit();
 
         // 2. 해당 상품으로 사용자 계좌 생성
-        log.info("------------2. 사용자 계좌 성생------------");
+//        log.info("------------2. 사용자 계좌 성생------------");
         String url = bankCreateAccountUrl;
         Map<String, Object> request = new HashMap<>();
         request.put("accountTypeUniqueNo", accountTypeUniqueNo);
@@ -118,7 +118,7 @@ public class SsafyBankService {
         if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
             Map<String, Object> tmp = (Map<String, Object>) responseFromSsafy.getBody().get("REC");
             String accountTypeUniqueNo = (String) tmp.get("accountTypeUniqueNo");
-            log.info("accountTypeUniqueNo 발급 성공 = {}", accountTypeUniqueNo);
+//            log.info("accountTypeUniqueNo 발급 성공 = {}", accountTypeUniqueNo);
             return accountTypeUniqueNo;
         } else {
             throw new BankingException(ErrorCode.UNEXPECTED_ERROR);
@@ -133,7 +133,7 @@ public class SsafyBankService {
         Map<String, Object> requestToSsafy = new HashMap<>();
         requestToSsafy.put("accountNo", request.getAccountNumber());
         requestToSsafy.put("authText", bankAuthAccountText);
-        log.info("authText= {}", bankAuthAccountText);
+//        log.info("authText= {}", bankAuthAccountText);
 
         ResponseEntity<Map> responseFromSsafy = sendPostRequestToSsafy(url, requestToSsafy, memberId);
 
@@ -160,7 +160,6 @@ public class SsafyBankService {
         ResponseEntity<Map> responseFromSsafy = sendPostRequestToSsafy(url, requestToSsafy, memberId);
 
         if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
-            log.info("Transaction list = {}",responseFromSsafy.getBody().get("REC"));
             Map<String, Object> rec = (Map<String, Object>) responseFromSsafy.getBody().get("REC");
             Long totalCount = Long.valueOf((String) rec.get("totalCount"));
             List<DummyTransactionDTO> transactions = extractTransactions(rec);
@@ -275,7 +274,7 @@ public class SsafyBankService {
      * @param isDeposit 입금 요청 여부
      * */
     public ResponseEntity<?> updateDemandDeposit(Long memberId, Long amount, Boolean isDeposit) {
-        log.info("-------------계좌 입출금---------------");
+//        log.info("-------------계좌 입출금---------------");
 
         String url = bankDemandDepositWithdrawalUrl;
         String successMessage = "계좌 출금(페이 충전)에 성공했습니다.";

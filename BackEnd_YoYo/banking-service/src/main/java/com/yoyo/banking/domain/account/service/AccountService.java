@@ -1,7 +1,7 @@
 package com.yoyo.banking.domain.account.service;
 
-import com.yoyo.banking.domain.account.dto.AccountCreateDTO;
-import com.yoyo.banking.domain.account.dto.AccountCreateDTO.Request;
+import com.yoyo.banking.domain.account.dto.account.AccountCreateDTO;
+import com.yoyo.banking.domain.account.dto.account.AccountCreateDTO.Request;
 import com.yoyo.banking.domain.account.repository.AccountRepository;
 import com.yoyo.banking.entity.Account;
 import com.yoyo.banking.global.util.BankingUtil;

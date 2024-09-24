@@ -1,8 +1,10 @@
 package com.yoyo.banking.domain.account.service;
 
-import com.yoyo.banking.domain.account.dto.PayDTO;
-import com.yoyo.banking.domain.account.dto.PayTransactionDTO;
-import com.yoyo.banking.domain.account.dto.PayTransferDTO;
+import com.yoyo.banking.domain.account.dto.pay.PayDTO;
+import com.yoyo.banking.domain.account.dto.pay.PayInfoDTO;
+import com.yoyo.banking.domain.account.dto.pay.PayTransactionDTO;
+import com.yoyo.banking.domain.account.dto.pay.PayTransferDTO;
+import com.yoyo.banking.domain.account.producer.PayProducer;
 import com.yoyo.banking.domain.account.repository.AccountRepository;
 import com.yoyo.banking.domain.account.repository.PayTransactionRepository;
 import com.yoyo.banking.entity.Account;
@@ -29,17 +31,19 @@ public class PayService {
     private final AccountRepository accountRepository;
     private final PayTransactionRepository payTransactionRepository;
 
+    private final PayProducer payProducer;
+
     /**
      * * 페이 머니 충전 / 환불
      * <p>
      */
-    public ResponseEntity<?> updatePayBalance(PayDTO.Request request, Long memberId, Boolean isDeposit) {
+    public ResponseEntity<?> chargeOrRefundPayBalance(PayDTO.Request request, Long memberId, Boolean isDeposit) {
         // 1. 페이머니 충전 (=계좌 출금 요청) /  환불 (=계좌 입금 요청)
         // 1.1 환불시 페이머니 잔액보다 큰금액이면 예외처리
         Long payBalance = accountRepository.findBalanceByMemberId(memberId);
-        log.info("payBalance: {}", payBalance);
+//        log.info("payBalance: {}", payBalance);
         if(isDeposit && request.getPayAmount() > payBalance) {
-            log.info("! 페이 잔액보다 환불금이 더 크다");
+//            log.info("! 페이 잔액보다 환불금이 더 크다");
             throw new BankingException(ErrorCode.EXCEEDS_PAY_BALANCE);
         }
 
@@ -70,7 +74,7 @@ public class PayService {
         Long insufficientAmount = getInsufficientAmount(request.getPayAmount(), currMemberId);
         if(insufficientAmount < 0) {
             PayDTO.Request chargeRequest = PayDTO.Request.toDto(insufficientAmount, null); // TODO : 회원 이름 불러오기
-            ResponseEntity<?> chargeResult = updatePayBalance(chargeRequest, currMemberId, false);
+            ResponseEntity<?> chargeResult = chargeOrRefundPayBalance(chargeRequest, currMemberId, false);
 
             // 충전 실패했으면 응답반환
             if (!chargeResult.getStatusCode().is2xxSuccessful()) {
@@ -79,26 +83,36 @@ public class PayService {
         }
 
         // 2. 페이머니 잔액 변경 ( 나, 친구)
-        Account myAccount = findAccountByMemberId(currMemberId);
-        myAccount.setBalance(myAccount.getBalance() - request.getPayAmount());
-        Account friendAccount = findAccountByMemberId(request.getMemberId());
-        friendAccount.setBalance(friendAccount.getBalance() + request.getPayAmount());
+        updatePayBalance(currMemberId, request.getPayAmount(), true); // 발신자 페이 잔액 변경
+        updatePayBalance(request.getMemberId(), request.getPayAmount(), false); // 수신자 페이 잔액 변경
 
         // 3. 페이 거래내역 생성
-
         PayDTO.Request transferRequest = PayDTO.Request.toDto(request.getPayAmount(), request.getMemberName());
-        savePayTransaction(transferRequest, currMemberId, PayType.WITHDRAW); // 내계좌 출금
-        savePayTransaction(transferRequest, request.getMemberId(), PayType.DEPOSIT); // 상대계좌 입금
+        savePayTransaction(transferRequest, currMemberId, PayType.WITHDRAW); // 발신자 계좌 출금 거래내역 생성
+        savePayTransaction(transferRequest, request.getMemberId(), PayType.DEPOSIT); // 수신자 계좌 입금 거래내역 생성
 
         // TODO 4. 친구관계 생성 및 총금액 수정
+        PayInfoDTO.Request requestToMember = PayInfoDTO.Request.of(currMemberId, request.getMemberId(), request.getPayAmount());
+        payProducer.sendPayInfo(requestToMember);
 
 
         // TODO 5. 보냈어요 받았어요 거래내역 생성
+        // 5.1 거래내역 생성 요청
 
         return null;
     }
 
-    /**
+    /*
+    * * 페이머니 잔액 변경 ( 나, 친구)
+    * @param memberId : 계좌주인, payAmount : 변경 금액, isSender :발신자여부
+     * */
+    private void updatePayBalance(Long memberId, Long payAmount, boolean isSender) {
+        Account account = findAccountByMemberId(memberId);
+        Long balance = (isSender)? (account.getBalance() - payAmount) : (account.getBalance() + payAmount);
+        account.setBalance(balance);
+    }
+
+    /*
     * * 페이머니 부족한 금액 확인
     * @return <0 : 부족
     * */

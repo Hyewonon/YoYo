@@ -1,4 +1,4 @@
-package com.yoyo.banking.domain.account.dto;
+package com.yoyo.banking.domain.account.dto.account;
 
 import com.yoyo.banking.entity.Account;
 import com.yoyo.common.util.PasswordEncryptUtil;

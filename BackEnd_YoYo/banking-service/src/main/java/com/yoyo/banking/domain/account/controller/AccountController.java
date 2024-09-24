@@ -1,7 +1,7 @@
 package com.yoyo.banking.domain.account.controller;
 
-import com.yoyo.banking.domain.account.dto.AccountAuthDTO;
-import com.yoyo.banking.domain.account.dto.AccountCreateDTO;
+import com.yoyo.banking.domain.account.dto.account.AccountAuthDTO;
+import com.yoyo.banking.domain.account.dto.account.AccountCreateDTO;
 import com.yoyo.banking.domain.account.service.AccountService;
 import com.yoyo.banking.domain.account.service.SsafyBankService;
 import com.yoyo.common.dto.response.CommonResponse;
@@ -87,7 +87,7 @@ public class AccountController {
             @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류")
     })
     ResponseEntity<CommonResponse> createAccount(@RequestBody @Valid AccountCreateDTO.Request request) {
-        log.info("----------------계좌 생성------------------");
+//        log.info("----------------계좌 생성------------------");
         Long currentMemberId = memberId;
         CommonResponse response = accountService.createAccount(request, currentMemberId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
