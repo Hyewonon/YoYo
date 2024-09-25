@@ -2,15 +2,83 @@ version: '3.8'
 
 services:
   # MySQL Database
-  mysql:
+  # member-db
+  member-db:
     image: mysql:8.0
-    container_name: mysql_1
+    container_name: member-db
     networks:
       - yoyo_network
     volumes:
-      - ./db/conf.d:/etc/mysql/conf.d
-      - ./db/data:/var/lib/mysql
-      - ./db/initdb.d:/docker-entrypoint-initdb.d
+      - ./db/member-db/data:/var/lib/mysql
+      - ./db/member-db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3301:3306"
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=ssafy
+      - MYSQL_DATABASE=member-db
+  # banking-db
+  banking-db:
+    image: mysql:8.0
+    container_name: banking-db
+    networks:
+      - yoyo_network
+    volumes:
+      - ./db/banking-db/data:/var/lib/mysql
+      - ./db/banking-db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3302:3306"
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=ssafy
+      - MYSQL_DATABASE=banking-db
+  # transaction-db
+  transaction-db:
+    image: mysql:8.0
+    container_name: transaction-db
+    networks:
+      - yoyo_network
+    volumes:
+      - ./db/transaction-db/data:/var/lib/mysql
+      - ./db/transaction-db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3303:3306"
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=ssafy
+      - MYSQL_DATABASE=transaction-db
+  # notification-db
+  notification-db:
+    image: mysql:8.0
+    container_name: notification-db
+    networks:
+      - yoyo_network
+    volumes:
+      - ./db/notification-db/data:/var/lib/mysql
+      - ./db/notification-db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3304:3306"
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=ssafy
+      - MYSQL_DATABASE=notification-db
+  # event-db
+  event-db:
+    image: mysql:8.0
+    container_name: event-db
+    networks:
+      - yoyo_network
+    volumes:
+      - ./db/event-db/data:/var/lib/mysql
+      - ./db/event-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     environment:
@@ -18,12 +86,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=yoyo
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u${MYSQL_USER} --password=${MYSQL_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - MYSQL_DATABASE=event-db
 
   redis:
     image: redis:alpine
@@ -45,11 +108,6 @@ services:
       - yoyo_network
     environment:
       - SPRING_PROFILES_ACTIVE=default
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   # Eureka Server
   eureka:
@@ -149,9 +207,7 @@ services:
     ports:
       - "8086:8086"
     depends_on:
-      - mysql
       - eureka
-      - config-server
 
 
   # Spring Cloud Gateway
