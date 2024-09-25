@@ -1,5 +1,6 @@
 package com.yoyo.transaction.global.config;
 
+import com.yoyo.common.kafka.dto.PayInfoDTO;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import com.yoyo.common.kafka.dto.CreateTransactionDTO;
 import com.yoyo.common.kafka.KafkaJson;
@@ -40,7 +41,9 @@ public class ConsumerConfig {
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.TYPE_MAPPINGS, KafkaUtils
-                .getJsonTypeMappingInfo(CreateTransactionDTO.class, AmountRequestDTO.class));
+                .getJsonTypeMappingInfo(CreateTransactionDTO.class,
+                                        AmountRequestDTO.class,
+                                        PayInfoDTO.RequestToTransaction.class));
 
         return props;
     }
