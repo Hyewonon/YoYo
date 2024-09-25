@@ -1,0 +1,5 @@
+coolsms:
+  key: NCS2BT9XCBDOKM00
+  secret: A0KQGWPABG62CS21X8OJHZ9P4J8LDFSR
+  domain: https://api.coolsms.co.kr
+  sendNumber: "01054513115"

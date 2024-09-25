@@ -1,4 +1,4 @@
-
+HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -32,6 +32,7 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
+
 
 .vscode/
 BackEnd_YoYo/db/banking-db/data/
