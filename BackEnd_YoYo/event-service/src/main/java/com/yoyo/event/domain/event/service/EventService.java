@@ -4,6 +4,8 @@ import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.EventException;
 import com.yoyo.common.kafka.dto.AmountRequestDTO;
 import com.yoyo.common.kafka.dto.AmountResponseDTO;
+import com.yoyo.common.kafka.dto.EventMemberResponseDTO;
+import com.yoyo.common.kafka.dto.EventMemberRequestDTO;
 import com.yoyo.event.domain.event.producer.EventProducer;
 import com.yoyo.event.domain.event.dto.EventDTO;
 import com.yoyo.event.domain.event.dto.EventDetailDTO;
@@ -31,13 +33,22 @@ import org.springframework.stereotype.Service;
 public class EventService {
 
     private final EventRepository eventRepository;
-    private final EventProducer eventToTransactionProducer;
+    private final EventProducer eventProducer;
     private final int PAGE_SIZE = 10;
     private final Map<Long, CompletableFuture<AmountResponseDTO>> summaries = new ConcurrentHashMap<>();
+    private final Map<Long, CompletableFuture<EventMemberResponseDTO>> names = new ConcurrentHashMap<>();
 
     public EventDTO.Response createEvent(Long memberId, EventDTO.Request request) {
-        // TODO : [Member] memberId로 name Get
-        String name = "홍길동";
+        EventMemberRequestDTO message = new EventMemberRequestDTO(memberId);
+        eventProducer.getMemberName(message);
+        CompletableFuture<EventMemberResponseDTO> future = new CompletableFuture<>();
+        names.put(memberId, future);
+        String name;
+        try{
+            name = future.get(10, TimeUnit.SECONDS).getName();
+        } catch (Exception e){
+            throw new RuntimeException("Failed Kafka", e);
+        }
 
         // TODO : sendLink 생성 로직
         // 링크 눌렀을 때 - eventId, title, memberId, memberName 함께 반환
@@ -58,7 +69,7 @@ public class EventService {
         isMyEvent(event, memberId);
 
         AmountRequestDTO message = new AmountRequestDTO(memberId, eventId);
-        eventToTransactionProducer.sendEventId(message);
+        eventProducer.sendEventId(message);
         CompletableFuture<AmountResponseDTO> future = new CompletableFuture<>();
         summaries.put(eventId, future);
         AmountResponseDTO summary;
@@ -91,6 +102,13 @@ public class EventService {
         CompletableFuture<AmountResponseDTO> future = summaries.remove(summary.getEventId());
         if (future != null) {
             future.complete(summary);
+        }
+    }
+
+    public void completeMemberName(EventMemberResponseDTO name) {
+        CompletableFuture<EventMemberResponseDTO> future = names.remove(name.getMemberId());
+        if (future != null) {
+            future.complete(name);
         }
     }
 
