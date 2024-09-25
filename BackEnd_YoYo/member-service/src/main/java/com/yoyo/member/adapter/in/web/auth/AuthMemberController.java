@@ -1,12 +1,12 @@
 package com.yoyo.member.adapter.in.web.auth;
 
 import com.yoyo.common.annotation.WebAdapter;
+import com.yoyo.common.response.ApiResponse;
 import com.yoyo.member.application.port.in.auth.AuthMemberUseCase;
 import com.yoyo.member.application.port.in.auth.LoginMemberCommand;
 import com.yoyo.member.application.port.in.auth.LogoutMemberCommand;
 import com.yoyo.member.application.port.in.auth.RefreshTokenCommand;
 import com.yoyo.member.domain.JwtToken;
-import com.yoyo.member.global.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

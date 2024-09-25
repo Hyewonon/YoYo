@@ -1,9 +1,8 @@
 package com.yoyo.member.adapter.in.web.relation;
 
+import com.yoyo.common.response.ApiResponse;
 import com.yoyo.member.adapter.out.RelationResponse;
-import com.yoyo.member.adapter.out.persistence.entity.RelationType;
 import com.yoyo.member.application.service.RelationService;
-import com.yoyo.member.global.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

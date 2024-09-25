@@ -12,7 +12,7 @@ import lombok.*;
 @JsonSerialize
 @JsonDeserialize
 @Builder
-public class TransactionResponseDTO implements KafkaJson {
+public class AmountResponseDTO implements KafkaJson {
     private Long memberId;
     private Long eventId;
     private int transactionCount;

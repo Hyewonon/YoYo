@@ -2,8 +2,8 @@ package com.yoyo.event.domain.event.service;
 
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.EventException;
-import com.yoyo.common.kafka.dto.TransactionRequestDTO;
-import com.yoyo.common.kafka.dto.TransactionResponseDTO;
+import com.yoyo.common.kafka.dto.AmountRequestDTO;
+import com.yoyo.common.kafka.dto.AmountResponseDTO;
 import com.yoyo.event.domain.event.producer.EventProducer;
 import com.yoyo.event.domain.event.dto.EventDTO;
 import com.yoyo.event.domain.event.dto.EventDetailDTO;
@@ -33,7 +33,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventProducer eventToTransactionProducer;
     private final int PAGE_SIZE = 10;
-    private final Map<Long, CompletableFuture<TransactionResponseDTO>> summaries = new ConcurrentHashMap<>();
+    private final Map<Long, CompletableFuture<AmountResponseDTO>> summaries = new ConcurrentHashMap<>();
 
     public EventDTO.Response createEvent(Long memberId, EventDTO.Request request) {
         // TODO : [Member] memberId로 name Get
@@ -57,11 +57,11 @@ public class EventService {
                 .orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND));
         isMyEvent(event, memberId);
 
-        TransactionRequestDTO message = new TransactionRequestDTO(memberId, eventId);
+        AmountRequestDTO message = new AmountRequestDTO(memberId, eventId);
         eventToTransactionProducer.sendEventId(message);
-        CompletableFuture<TransactionResponseDTO> future = new CompletableFuture<>();
+        CompletableFuture<AmountResponseDTO> future = new CompletableFuture<>();
         summaries.put(eventId, future);
-        TransactionResponseDTO summary;
+        AmountResponseDTO summary;
         try {
             summary = future.get(10, TimeUnit.SECONDS);
         } catch (Exception e) {
@@ -87,8 +87,8 @@ public class EventService {
         return eventRepository.searchEventByTitle(memberId, keyword, pageable);
     }
 
-    public void completeTransactionSummary(TransactionResponseDTO summary) {
-        CompletableFuture<TransactionResponseDTO> future = summaries.remove(summary.getEventId());
+    public void completeTransactionSummary(AmountResponseDTO summary) {
+        CompletableFuture<AmountResponseDTO> future = summaries.remove(summary.getEventId());
         if (future != null) {
             future.complete(summary);
         }

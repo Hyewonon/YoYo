@@ -1,6 +1,7 @@
 package com.yoyo.member.adapter.in.consumer;
 
 import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
+import com.yoyo.common.kafka.dto.TransactionDTO;
 import com.yoyo.member.adapter.out.persistence.SpringDataMemberRepository;
 import com.yoyo.member.adapter.out.persistence.SpringDataRelationRepository;
 import com.yoyo.member.adapter.out.persistence.entity.RelationJpaEntity;
@@ -17,7 +18,6 @@ import java.util.Optional;
 public class RelationConsumer {
     private final SpringDataRelationRepository relationRepository;
     private final SpringDataMemberRepository memberRepository;
-    private final String GROUP_ID = "relation-service";
 
     @KafkaListener(topics = "transaction-register-topic", concurrency = "3")
     public void setRelation(IncreaseAmountDTO amount) {
@@ -45,5 +45,11 @@ public class RelationConsumer {
                 relationRepository.save(jpa);
             }
         }
+    }
+    @KafkaListener(topics = "payment-register", concurrency = "3")
+    public void setPaymentRelation(TransactionDTO transactionDTO) {
+        RelationJpaEntity jpaEntity = new RelationJpaEntity(
+
+        );
     }
 }

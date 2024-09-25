@@ -1,7 +1,7 @@
 package com.yoyo.member.adapter.in.web.member;
 
+import com.yoyo.common.response.ApiResponse;
 import com.yoyo.member.application.port.in.member.SmsCertificationUseCase;
-import com.yoyo.member.global.ApiResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;

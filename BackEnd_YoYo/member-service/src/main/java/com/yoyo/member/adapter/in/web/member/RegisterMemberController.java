@@ -1,10 +1,10 @@
 package com.yoyo.member.adapter.in.web.member;
 
 import com.yoyo.common.annotation.WebAdapter;
+import com.yoyo.common.response.ApiResponse;
 import com.yoyo.member.application.port.in.member.RegisterMemberCommand;
 import com.yoyo.member.application.port.in.member.RegisterMemberUseCase;
 import com.yoyo.member.domain.Member;
-import com.yoyo.member.global.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
 package com.yoyo.transaction.adapter.in.web;
 
+import com.yoyo.common.response.ApiResponse;
 import com.yoyo.transaction.application.port.in.DeleteTransactionUseCase;
-import com.yoyo.transaction.global.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

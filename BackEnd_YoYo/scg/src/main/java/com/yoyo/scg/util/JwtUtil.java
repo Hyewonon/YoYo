@@ -2,10 +2,12 @@ package com.yoyo.scg.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class JwtUtil {
 
     @Value("${jwt.secret}")
@@ -27,9 +29,12 @@ public class JwtUtil {
 
     // JWT에서 memberId 추출
     public String getMemberIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token).getBody();
-        return claims.get("memberId", String.class);
+        Claims claims = getClaimsFromToken(token);
+        log.info("claims: {}", claims);
+        return claims.getSubject();
+    }
+
+    public Claims getClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     }
 }

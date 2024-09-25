@@ -1,13 +1,13 @@
 package com.yoyo.transaction.adapter.in.web;
 
 import com.yoyo.common.annotation.WebAdapter;
+import com.yoyo.common.response.ApiResponse;
 import com.yoyo.transaction.adapter.out.persistence.TransactionType;
 import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
 import com.yoyo.transaction.adapter.out.producer.TransactionProducer;
 import com.yoyo.transaction.application.port.in.RegisterTransactionCommand;
 import com.yoyo.transaction.application.port.in.RegisterTransactionUseCase;
 import com.yoyo.transaction.domain.Transaction;
-import com.yoyo.transaction.global.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

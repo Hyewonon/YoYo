@@ -28,4 +28,8 @@ public class RelationJpaEntity {
     @Setter
     private long totalSentAmount;
     private boolean isRegister;
+
+    public RelationJpaEntity(String oppositeName, Long receiverId, String receiverName, Long eventId, String title, long amount, String memo) {
+
+    }
 }
