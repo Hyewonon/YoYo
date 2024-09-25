@@ -32,7 +32,7 @@ public class GlobalAuthFilter extends AbstractGatewayFilterFactory<GlobalAuthFil
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             String path = request.getURI().getPath();
-            if(path.equals("/yoyo/payment/success") || path.equals("/confirm/payment") || path.equals("/yoyo/members/**")){
+            if (path.equals("/yoyo/payment/success") || path.equals("/confirm/payment") || path.equals("/yoyo/members/**")) {
                 return chain.filter(exchange);
             }
             String token = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
@@ -51,6 +51,7 @@ public class GlobalAuthFilter extends AbstractGatewayFilterFactory<GlobalAuthFil
                 ServerHttpRequest modifiedRequest = request.mutate()
                         .header("memberId", memberId)
                         .build();
+                log.info("memberId : {}", memberId);
                 return chain.filter(exchange.mutate().request(modifiedRequest).build());
             } catch (Exception e) {
                 log.error("JWT 검증 실패", e);

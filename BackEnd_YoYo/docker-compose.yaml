@@ -9,6 +9,7 @@ services:
     networks:
       - yoyo_network
     volumes:
+      - ./db/member-db/conf.d:/etc/mysql/conf.d
       - ./db/member-db/data:/var/lib/mysql
       - ./db/member-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
@@ -26,6 +27,7 @@ services:
     networks:
       - yoyo_network
     volumes:
+      - ./db/banking-db/conf.d:/etc/mysql/conf.d
       - ./db/banking-db/data:/var/lib/mysql
       - ./db/banking-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
@@ -43,6 +45,7 @@ services:
     networks:
       - yoyo_network
     volumes:
+      - ./db/transaction-db/conf.d:/etc/mysql/conf.d
       - ./db/transaction-db/data:/var/lib/mysql
       - ./db/transaction-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
@@ -60,6 +63,7 @@ services:
     networks:
       - yoyo_network
     volumes:
+      - ./db/notification-db/conf.d:/etc/mysql/conf.d
       - ./db/notification-db/data:/var/lib/mysql
       - ./db/notification-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
@@ -77,6 +81,7 @@ services:
     networks:
       - yoyo_network
     volumes:
+      - ./db/event-db/conf.d:/etc/mysql/conf.d
       - ./db/event-db/data:/var/lib/mysql
       - ./db/event-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
