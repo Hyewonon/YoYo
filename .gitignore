@@ -36,7 +36,16 @@ out/
 ### VS Code ###
 .vscode/
 
-application-local.properties
+application-local.yml
 
 .env
 .env.local
+
+node_modules
+BackEnd_YoYo/db/banking-db/data/
+BackEnd_YoYo/db/event-db/data/
+BackEnd_YoYo/db/member-db/data/
+BackEnd_YoYo/db/notification-db/data/
+BackEnd_YoYo/db/payment-db/data/
+BackEnd_YoYo/db/transaction-db/data/
+BackEnd_YoYo/logs
