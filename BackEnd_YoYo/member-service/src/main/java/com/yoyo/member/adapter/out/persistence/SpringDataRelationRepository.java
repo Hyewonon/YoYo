@@ -27,5 +27,5 @@ public interface SpringDataRelationRepository extends JpaRepository<RelationJpaE
      * 두 멤버아이디로 친구관계 조회
      * */
     @Query("SELECT r FROM RelationJpaEntity r WHERE r.member.memberId = :memberId1 AND r.oppositeId = :memberId2")
-    RelationJpaEntity findByMemberAndOppositeId(Long memberId1, Long memberId2);
+    Optional<RelationJpaEntity> findByMemberAndOppositeId(Long memberId1, Long memberId2);
 }

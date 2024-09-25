@@ -21,7 +21,8 @@ public class PayTransferDTO {
         private String memberName;
 
         private Long eventId;
+        private String title;
 
-        private Long payAmount;
+        private Long amount;
     }
 }

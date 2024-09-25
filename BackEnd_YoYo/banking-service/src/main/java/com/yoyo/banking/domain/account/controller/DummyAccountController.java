@@ -27,10 +27,11 @@ public class DummyAccountController {
     private final DummyAccountService dummyAccountService;
 
     //임시 멤버
-    private Long memberId = 999999999L;
+//    private Long memberId = 999999999L;
+    private Long memberId = 999999998L;
 
     /**
-     *  TODO : [ssafy 금융 API] 더미 계좌를 생성함.
+     *  [ssafy 금융 API] 더미 계좌를 생성함.
      * */
     @PostMapping("/dummy-account")
     @Operation(summary = "더미 계좌 생성", description = "Ssafy 서버에 더미 계좌를 생성한다.")

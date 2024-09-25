@@ -1,7 +1,7 @@
 package com.yoyo.banking.domain.account.service;
 
 import com.yoyo.banking.domain.account.dto.pay.PayDTO;
-import com.yoyo.banking.domain.account.dto.pay.PayInfoDTO;
+import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.banking.domain.account.dto.pay.PayTransactionDTO;
 import com.yoyo.banking.domain.account.dto.pay.PayTransferDTO;
 import com.yoyo.banking.domain.account.producer.PayProducer;
@@ -71,7 +71,7 @@ public class PayService {
     public ResponseEntity<?> transferPayment(PayTransferDTO.Request request, Long currMemberId) {
         // 1. 페이머니 충분한지 확인
         // 1.1 충분하지 않으면 충전
-        Long insufficientAmount = getInsufficientAmount(request.getPayAmount(), currMemberId);
+        Long insufficientAmount = getInsufficientAmount(request.getAmount(), currMemberId);
         if(insufficientAmount < 0) {
             PayDTO.Request chargeRequest = PayDTO.Request.toDto(insufficientAmount, null); // TODO : 회원 이름 불러오기
             ResponseEntity<?> chargeResult = chargeOrRefundPayBalance(chargeRequest, currMemberId, false);
@@ -83,22 +83,29 @@ public class PayService {
         }
 
         // 2. 페이머니 잔액 변경 ( 나, 친구)
-        updatePayBalance(currMemberId, request.getPayAmount(), true); // 발신자 페이 잔액 변경
-        updatePayBalance(request.getMemberId(), request.getPayAmount(), false); // 수신자 페이 잔액 변경
+        updatePayBalance(currMemberId, request.getAmount(), true); // 발신자 페이 잔액 변경
+        updatePayBalance(request.getMemberId(), request.getAmount(), false); // 수신자 페이 잔액 변경
 
         // 3. 페이 거래내역 생성
-        PayDTO.Request transferRequest = PayDTO.Request.toDto(request.getPayAmount(), request.getMemberName());
+        PayDTO.Request transferRequest = PayDTO.Request.toDto(request.getAmount(), request.getMemberName());
         savePayTransaction(transferRequest, currMemberId, PayType.WITHDRAW); // 발신자 계좌 출금 거래내역 생성
         savePayTransaction(transferRequest, request.getMemberId(), PayType.DEPOSIT); // 수신자 계좌 입금 거래내역 생성
 
-        // TODO 4. 친구관계 생성 및 총금액 수정
-        PayInfoDTO.Request requestToMember = PayInfoDTO.Request.of(currMemberId, request.getMemberId(), request.getPayAmount());
-        payProducer.sendPayInfo(requestToMember);
+        // 4. 친구관계 생성 및 총금액 수정
+        PayInfoDTO.RequestToMember requestToMember = PayInfoDTO.RequestToMember.of(currMemberId, request.getMemberId(), request.getAmount());
+        payProducer.sendPayInfoToMember(requestToMember);
 
 
-        // TODO 5. 보냈어요 받았어요 거래내역 생성
-        // 5.1 거래내역 생성 요청
-
+        // 5. 보냈어요 받았어요 거래내역 생성
+        PayInfoDTO.RequestToTransaction requestToTransaction = PayInfoDTO.RequestToTransaction.of(
+                currMemberId,
+                request.getMemberId(),
+                request.getMemberName(),
+                request.getEventId(),
+                request.getTitle(),
+                request.getAmount()
+        );
+        payProducer.sendPayInfoToTransaction(requestToTransaction);
         return null;
     }
 

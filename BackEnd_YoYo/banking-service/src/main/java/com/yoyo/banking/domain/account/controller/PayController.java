@@ -27,7 +27,8 @@ public class PayController {
 
     private final PayService payService;
     //임시 멤버
-    private Long memberId = 999999999L;
+//    private Long memberId = 999999999L;
+    private Long memberId = 999999998L;
 
     /**
      * * 페이 머니 충전

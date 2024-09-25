@@ -5,6 +5,7 @@ import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.EventMemberRequestDTO;
 import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
 import com.yoyo.common.kafka.dto.TransactionDTO;
+import com.yoyo.common.kafka.dto.PayInfoDTO;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +44,9 @@ public class ConsumerConfig {
         props.put(JsonDeserializer.TYPE_MAPPINGS, KafkaUtils
                 .getJsonTypeMappingInfo(IncreaseAmountDTO.class,
                                         TransactionDTO.class,
-                                        EventMemberRequestDTO.class));
+                                        EventMemberRequestDTO.class,
+                                        PayInfoDTO.RequestToMember.class,
+                                        PayInfoDTO.RequestToTransaction.class));
 
         return props;
     }

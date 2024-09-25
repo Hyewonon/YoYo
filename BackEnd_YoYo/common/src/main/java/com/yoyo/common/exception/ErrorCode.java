@@ -18,6 +18,7 @@ public enum ErrorCode {
 
     // 회원 관련 에러
     NOT_FOUND_MEMBER("존재하지 않는 회원입니다.", HttpStatus.NOT_FOUND),
+    NOT_FOUND_RELATION("존재하지 않는 관계입니다.", HttpStatus.NOT_FOUND),
 
     // 뱅킹서비스 관련 에러
     NOT_FOUND_BANK("존재하지 않는 은행입니다.", HttpStatus.NOT_FOUND),

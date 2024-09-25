@@ -152,6 +152,8 @@ services:
       - "8082:8082"
     depends_on:
       - eureka
+    environment:
+      - TZ=Asia/Seoul
 
 
   # Transaction Service
