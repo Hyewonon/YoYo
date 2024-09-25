@@ -52,6 +52,7 @@ public class GlobalAuthFilter extends AbstractGatewayFilterFactory<GlobalAuthFil
                 ServerHttpRequest modifiedRequest = request.mutate()
                         .header("memberId", memberId)
                         .build();
+                log.info("MemberId : {}", memberId);
                 return chain.filter(exchange.mutate().request(modifiedRequest).build());
             } catch (Exception e) {
                 log.error("JWT 검증 실패", e);

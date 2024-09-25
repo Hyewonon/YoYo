@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS event-db;
+USE event-db;
