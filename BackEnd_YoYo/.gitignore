@@ -40,3 +40,6 @@ application-local.yml
 
 db/data/
 logs/
+
+# FCM
+firebaseServiceKey.json
