@@ -2,6 +2,7 @@ package com.yoyo.member.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
+import com.yoyo.common.kafka.dto.EventMemberRequestDTO;
 import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
 import com.yoyo.common.kafka.dto.TransactionDTO;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -40,7 +41,9 @@ public class ConsumerConfig {
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.TYPE_MAPPINGS, KafkaUtils
-                .getJsonTypeMappingInfo(IncreaseAmountDTO.class, TransactionDTO.class));
+                .getJsonTypeMappingInfo(IncreaseAmountDTO.class,
+                                        TransactionDTO.class,
+                                        EventMemberRequestDTO.class));
 
         return props;
     }
