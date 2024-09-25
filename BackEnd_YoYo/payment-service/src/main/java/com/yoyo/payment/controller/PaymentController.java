@@ -1,7 +1,7 @@
 package com.yoyo.payment.controller;
 
-import com.yoyo.payment.dto.Transaction;
-import com.yoyo.payment.service.SuccessService;
+import com.yoyo.common.kafka.dto.TransactionDTO;
+import com.yoyo.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -30,7 +30,7 @@ public class PaymentController {
     private String SECRETKEY;
     @Value("${payment.url}")
     private String PAYMENTURL;
-    private final SuccessService successService;
+    private final PaymentService paymentService;
 
     @PostMapping(value = "/confirm/payment", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
@@ -86,8 +86,9 @@ public class PaymentController {
     }
 
     @PostMapping("/yoyo/payment/success")
-    public ResponseEntity<?> createTransaction(@RequestBody Transaction transaction) {
-        successService.sendTransaction(transaction);
+    public ResponseEntity<?> createTransaction(@RequestBody TransactionDTO transaction) {
+        paymentService.sendTransaction(transaction);
+        paymentService.sendRelation(transaction);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,4 +1,4 @@
-package com.yoyo.transaction.global;
+package com.yoyo.common.response;
 
 import lombok.Getter;
 
