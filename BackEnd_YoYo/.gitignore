@@ -1,0 +1,51 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+
+.vscode/
+BackEnd_YoYo/db/banking-db/data/
+BackEnd_YoYo/db/event-db/data/
+BackEnd_YoYo/db/member-dbs/data/
+BackEnd_YoYo/db/notification-db/data/
+BackEnd_YoYo/db/payment-db/data/
+BackEnd_YoYo/db/transaction-db/data/
+application-local.yml
+.env
+
+db/data/
+logs/
+
+# FCM
+firebaseServiceKey.json
