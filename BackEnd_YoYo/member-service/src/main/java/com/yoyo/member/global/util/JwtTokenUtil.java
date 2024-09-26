@@ -21,13 +21,14 @@ public class JwtTokenUtil {
     public String generateJwtToken(Long memberId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtTokenExpirationInMs);
-
+        log.info("시작 시간 : {} ", now);
+        log.info("만료 시간 : {}", expiryDate);
         return Jwts.builder()
-                   .setSubject(memberId.toString())
-                   .setIssuedAt(now)
-                   .setExpiration(expiryDate)
-                   .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                   .compact();
+                .setSubject(memberId.toString())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
     }
 
     public String generateRefreshToken(Long memberId) {
@@ -35,11 +36,11 @@ public class JwtTokenUtil {
         Date expiryDate = new Date(now.getTime() + refreshTokenExpirationInMs);
 
         return Jwts.builder()
-                   .setSubject(memberId.toString())
-                   .setIssuedAt(now)
-                   .setExpiration(expiryDate)
-                   .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                   .compact();
+                .setSubject(memberId.toString())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
     }
 
     public boolean validateJwtToken(String jwtToken) {
@@ -72,9 +73,9 @@ public class JwtTokenUtil {
 
     public long getExpirationTime(String jwtToken) {
         Claims claims = Jwts.parser()
-                            .setSigningKey(jwtSecret)
-                            .parseClaimsJws(jwtToken)
-                            .getBody();
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(jwtToken)
+                .getBody();
         return claims.getExpiration().getTime();
     }
 }

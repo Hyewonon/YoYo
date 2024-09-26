@@ -38,7 +38,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    @PatchMapping("update")
+    @PatchMapping("/update")
     ResponseEntity<?> updateMember(@RequestHeader("memberId") String memberId, @RequestBody UpdateMemberDTO.Request request) {
 
         Member member  = memberService.updateMember(Long.parseLong(memberId),request);

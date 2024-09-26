@@ -75,33 +75,27 @@ public class RelationService {
         relationRepository.save(relation);
     }
 
-    public List<RelationDTO.Response> findRelations(Long memberId, String tag, String search, boolean isRegister) {
-        RelationType relationType = null;
-        if (tag != null) {
-            try {
-                relationType = RelationType.valueOf(tag.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                return null;
-            }
+    public List<RelationDTO.Response> findRelations(Long memberId, String tag, String search) {
+        RelationType relationType = (tag != null) ? RelationType.valueOf(tag.toUpperCase()) : null;
+        List<Relation> relations;
+        if (relationType != null && search != null) {
+            relations = relationRepository.findByMember_MemberIdAndRelationTypeAndOppositeNameContaining(
+                    memberId, relationType, search
+            );
+        } else if (relationType != null) {
+            relations = relationRepository.findByMember_MemberIdAndRelationType(
+                    memberId, relationType
+            );
+        } else if (search != null) {
+            relations = relationRepository.findByMember_MemberIdAndOppositeNameContaining(
+                    memberId, search
+            );
+        } else {
+            relations = relationRepository.findByMember_MemberId(memberId);
         }
-        List<Long> oppositeIds = memberRepository.findByNameContaining(search);
-        List<Relation> list = relationRepository.findByMember_MemberIdAndRelationTypeAndOppositeIdInAndIsRegister(
-                memberId, relationType, oppositeIds, isRegister);
-        return list.stream()
-                   .map(relation -> {
-                       String oppositeName = memberRepository.findById(relation.getOppositeId())
-                                                             .map(Member::getName)
-                                                             .orElse("Unknown");
-                       return RelationDTO.Response.builder()
-                                                  .relationId(relation.getRelationId())
-                                                  .oppositeId(relation.getOppositeId())
-                                                  .oppositeName(oppositeName)
-                                                  .relationType(String.valueOf(relation.getRelationType()))
-                                                  .description(relation.getDescription())
-                                                  .totalReceivedAmount(relation.getTotalReceivedAmount())
-                                                  .totalSentAmount(relation.getTotalSentAmount())
-                                                  .build();
-                   }).collect(Collectors.toList());
+        return relations.stream().map(
+                relation -> RelationDTO.Response.builder().build()
+        ).collect(Collectors.toList());
     }
 
     // repository 접근 메서드
