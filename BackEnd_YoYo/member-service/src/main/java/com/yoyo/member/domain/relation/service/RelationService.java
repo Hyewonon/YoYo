@@ -2,6 +2,7 @@ package com.yoyo.member.domain.relation.service;
 
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.MemberException;
+import com.yoyo.common.kafka.dto.MemberTagDTO;
 import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.domain.relation.dto.RelationDTO;
 import com.yoyo.member.domain.relation.dto.UpdateRelationDTO;
@@ -115,5 +116,11 @@ public class RelationService {
                        .totalReceivedAmount(0L)
                        .totalSentAmount(0L)
                        .build();
+    }
+
+    public MemberTagDTO findRelationTag(Long memberId, Long oppositeId) {
+        Relation relation = relationRepository.findByMemberAndOppositeId(memberId, oppositeId)
+                                             .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+        return new MemberTagDTO(relation.getMember().getMemberId(), relation.getOppositeId(), relation.getRelationType().toString());
     }
 }
