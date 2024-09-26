@@ -21,7 +21,9 @@ public class Relation {
     private Long oppositeId;
     private String oppositeName;
     @Enumerated(EnumType.STRING)
+    @Setter
     private RelationType relationType;
+    @Setter
     private String description;
     @Setter
     private long totalReceivedAmount;
