@@ -93,9 +93,9 @@ public class EventService {
         return EventDTO.Response.of(eventRepository.save(event));
     }
 
-    public Slice<EventDTO.Response> searchEvent(Long memberId, String keyword, int pageNumber) {
-        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by("title"));
-        return eventRepository.searchEventByTitle(memberId, keyword, pageable);
+    public List<EventDTO.Response> searchEvent(Long memberId, String keyword) {
+//        Pageable pageable = PageRequest.of(pageNumber, PAGE_SIZE, Sort.by("title"));
+        return eventRepository.searchEventByTitle(memberId, keyword);
     }
 
     public void completeTransactionSummary(AmountResponseDTO summary) {
