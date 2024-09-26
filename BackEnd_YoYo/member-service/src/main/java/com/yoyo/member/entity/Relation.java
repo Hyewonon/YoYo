@@ -29,5 +29,5 @@ public class Relation {
     private long totalReceivedAmount;
     @Setter
     private long totalSentAmount;
-    private boolean isRegister;
+    private boolean isMember;
 }
