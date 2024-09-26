@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +30,7 @@ public class AccountController {
 
     //임시 멤버
 //    private Long memberId = 999999999L;
-//    private Long memberId = 999999998L;
+    private Long memberId = 999999998L;
 
     /**
      *  [ssafy 금융 API] user key 생성 및 저장
@@ -40,8 +39,9 @@ public class AccountController {
      * */
     @PostMapping("/user-key")
     @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
-    ResponseEntity<?> createUserKey(@RequestHeader("memberId") Long memberId) {
-        return ssafyBankService.createUserKey(memberId);
+    ResponseEntity<?> createUserKey() {
+        Long currentMemberId = memberId;
+        return ssafyBankService.createUserKey(currentMemberId);
     }
 
     /**
@@ -49,8 +49,9 @@ public class AccountController {
      * */
     @GetMapping("/user-key")
     @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
-    ResponseEntity<?> getUserKey(@RequestHeader("memberId") Long memberId) {
-        return ssafyBankService.getUserKey(memberId);
+    ResponseEntity<?> getUserKey() {
+        Long currentMemberId = memberId;
+        return ssafyBankService.getUserKey(currentMemberId);
     }
 
     /**
@@ -58,9 +59,9 @@ public class AccountController {
      * */
     @PostMapping("/open")
     @Operation(summary = "계좌 1원 송금", description = "입력 계좌에 1원 송금한다.")
-    ResponseEntity<?> openAccountAuth(@RequestHeader("memberId") Long memberId,
-                                      @RequestBody @Valid AccountAuthDTO.Request request) {
-        return ssafyBankService.openAccountAuth(request, memberId);
+    ResponseEntity<?> openAccountAuth(@RequestBody @Valid AccountAuthDTO.Request request) {
+        Long currentMemberId = memberId;
+        return ssafyBankService.openAccountAuth(request, currentMemberId);
     }
 
     /**
@@ -68,9 +69,9 @@ public class AccountController {
      * */
     @PostMapping("/check")
     @Operation(summary = "계좌 1원 송금 확인", description = "1원 송금 코드를 확인한다.")
-    ResponseEntity<?> checkAccountAuth(@RequestHeader("memberId") Long memberId,
-                                       @RequestBody @Valid AccountAuthDTO.Request request) {
-        return ssafyBankService.checkAccountAuth(request, memberId);
+    ResponseEntity<?> checkAccountAuth(@RequestBody @Valid AccountAuthDTO.Request request) {
+        Long currentMemberId = memberId;
+        return ssafyBankService.checkAccountAuth(request, currentMemberId);
     }
 
     /**
@@ -86,10 +87,10 @@ public class AccountController {
             @ApiResponse(responseCode = "201", description = "계좌 등록(수정) 성공"),
             @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류")
     })
-    ResponseEntity<CommonResponse> createAccount(@RequestHeader("memberId") Long memberId,
-                                                 @RequestBody @Valid AccountCreateDTO.Request request) {
+    ResponseEntity<CommonResponse> createAccount(@RequestBody @Valid AccountCreateDTO.Request request) {
 //        log.info("----------------계좌 생성------------------");
-        CommonResponse response = accountService.createAccount(request, memberId);
+        Long currentMemberId = memberId;
+        CommonResponse response = accountService.createAccount(request, currentMemberId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

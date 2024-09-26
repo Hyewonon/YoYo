@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +28,7 @@ public class PayController {
     private final PayService payService;
     //임시 멤버
 //    private Long memberId = 999999999L;
-//    private Long memberId = 999999998L;
+    private Long memberId = 999999998L;
 
     /**
      * * 페이 머니 충전
@@ -39,9 +38,9 @@ public class PayController {
      * */
     @PostMapping("/charge")
     @Operation(summary = "페이 머니 충전", description = "페이 머니를 충전한다. (대금 출금 요청)")
-    ResponseEntity<?> chargePayment(@RequestHeader("memberId") Long memberId,
-                                    @RequestBody PayDTO.Request request) {
-        return payService.chargeOrRefundPayBalance(request, memberId, false);
+    ResponseEntity<?> chargePayment(@RequestBody PayDTO.Request request) {
+        Long currentMemberId = memberId;
+        return payService.chargeOrRefundPayBalance(request, currentMemberId, false);
     }
     /**
      * * 페이 머니 환불
@@ -51,9 +50,9 @@ public class PayController {
      * */
     @PostMapping("/refund")
     @Operation(summary = "페이 머니 환불", description = "페이 머니를 환불한다. (대금 입금 요청)")
-    ResponseEntity<?> refundPayment(@RequestHeader("memberId") Long memberId,
-                                    @RequestBody PayDTO.Request request) {
-        return payService.chargeOrRefundPayBalance(request, memberId, true);
+    ResponseEntity<?> refundPayment(@RequestBody PayDTO.Request request) {
+        Long currentMemberId = memberId;
+        return payService.chargeOrRefundPayBalance(request, currentMemberId, true);
     }
 
     /**
@@ -64,9 +63,9 @@ public class PayController {
      * */
     @PostMapping("/transfer")
     @Operation(summary = "페이 거래", description = "친구 페이머니로 송금")
-    ResponseEntity<?> transferPayment(@RequestHeader("memberId") Long memberId,
-                                      @RequestBody PayTransferDTO.Request request) {
-        return payService.transferPayment(request, memberId);
+    ResponseEntity<?> transferPayment(@RequestBody PayTransferDTO.Request request) {
+        Long currentMemberId = memberId;
+        return payService.transferPayment(request, currentMemberId);
     }
 
     /**
@@ -77,11 +76,11 @@ public class PayController {
      * */
     @GetMapping("/transaction")
     @Operation(summary = "페이 거래 내역 조회", description = "페이 거래 내역 조회")
-    ResponseEntity<?> getPayTransaction(@RequestHeader("memberId") Long memberId,
-                                        @RequestParam
+    ResponseEntity<?> getPayTransaction(@RequestParam
                                         @Parameter(name="payType", description = "거래 타입", example = "DEPOSIT/WITHDRAW", required = true)
                                         String transactionType) {
-        return payService.getPayTransactions(transactionType, memberId);
+        Long currentMemberId = memberId;
+        return payService.getPayTransactions(transactionType, currentMemberId);
     }
 
     /**
@@ -94,7 +93,8 @@ public class PayController {
                          content = @Content(schema = @Schema(implementation = PayDTO.Response.class))),
             @ApiResponse(responseCode = "400", description = "등록되지 않은 계좌입니다.")
     })
-    public ResponseEntity<?> getPayBalance(@RequestHeader("memberId") Long memberId){
-        return payService.getPayBalance(memberId);
+    public ResponseEntity<?> getPayBalance(){
+        Long currentMemberId = memberId;
+        return payService.getPayBalance(currentMemberId);
     }
 }

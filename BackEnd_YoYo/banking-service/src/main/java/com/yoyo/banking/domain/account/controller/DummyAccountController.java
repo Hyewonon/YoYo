@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,15 +28,16 @@ public class DummyAccountController {
 
     //임시 멤버
 //    private Long memberId = 999999999L;
-//    private Long memberId = 999999998L;
+    private Long memberId = 999999998L;
 
     /**
      *  [ssafy 금융 API] 더미 계좌를 생성함.
      * */
     @PostMapping("/dummy-account")
     @Operation(summary = "더미 계좌 생성", description = "Ssafy 서버에 더미 계좌를 생성한다.")
-    ResponseEntity<?> createDummyAccount(@RequestHeader("memberId") Long memberId) {
-        return ssafyBankService.createDummyAccount(memberId);
+    ResponseEntity<?> createDummyAccount() {
+        Long currentMemberId = memberId;
+        return ssafyBankService.createDummyAccount(currentMemberId);
     }
 
     /**
@@ -45,10 +45,10 @@ public class DummyAccountController {
      * */
     @GetMapping("/dummy-transaction")
     @Operation(summary = "더미 계좌 거래 내역 조회", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
-    ResponseEntity<?> getDummyAccountTransaction(@RequestHeader("memberId") Long memberId,
-                                                 @RequestBody @Valid AccountAuthDTO.Request request){
+    ResponseEntity<?> getDummyAccountTransaction(@RequestBody @Valid AccountAuthDTO.Request request){
+        Long currentMemberId = memberId;
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        return ssafyBankService.getDummyAccountTransaction(request, memberId, today);
+        return ssafyBankService.getDummyAccountTransaction(request, currentMemberId, today);
     }
 
     /**
@@ -56,9 +56,9 @@ public class DummyAccountController {
      * */
     @PostMapping("/deposit")
     @Operation(summary = "계좌 돈 입금", description = "ssafy 서버에 있는 더미 계좌에 돈을 입금한다.")
-    ResponseEntity<?> depositDummyAccount(@RequestHeader("memberId") Long memberId,
-                                          @RequestBody DummyAccountDTO.Request request){
-        return ssafyBankService.updateDemandDeposit(memberId, request.getAmount(), true);
+    ResponseEntity<?> depositDummyAccount(@RequestBody DummyAccountDTO.Request request){
+        Long currentMemberId = memberId;
+        return ssafyBankService.updateDemandDeposit(currentMemberId, request.getAmount(), true);
     }
 
     /**
