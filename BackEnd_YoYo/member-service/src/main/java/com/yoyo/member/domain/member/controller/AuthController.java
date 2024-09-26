@@ -28,7 +28,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    @PostMapping("refresh-token")
+    @PostMapping("/refresh-token")
     public ResponseEntity<?> refreshToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken) {
         RefreshTokenDTO.Response response = authMemberService.refreshJwtTokenByRefreshToken(refreshToken);
         ApiResponse<RefreshTokenDTO.Response> res = new ApiResponse<>(
@@ -39,7 +39,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    @PostMapping("logout")
+    @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String request) {
         authMemberService.logout(request);
         ApiResponse<Void> response = new ApiResponse<>(
