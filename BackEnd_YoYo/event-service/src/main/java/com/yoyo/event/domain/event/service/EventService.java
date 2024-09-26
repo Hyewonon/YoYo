@@ -81,7 +81,7 @@ public class EventService {
         int totalReceiver = summary.getTransactionCount();
         long totalReceivedAmount = summary.getTotalAmount();
 
-        return EventDetailDTO.Response.of(event.getId(), totalReceiver, totalReceivedAmount);
+        return EventDetailDTO.Response.of(event.getId(), event.getTitle(), totalReceiver, totalReceivedAmount);
     }
 
     public EventDTO.Response updateEvent(Long memberId, Long eventId, EventUpdateDTO.Request request) {
