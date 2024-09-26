@@ -7,21 +7,16 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "member")
 @Getter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseMember{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
-
-    @Setter
-    private String name;
     @Setter
     private String phoneNumber;
     @Setter
@@ -43,7 +38,7 @@ public class Member {
 
     public Member(String naveValue, String phoneNumberValue, String passwordValue, LocalDate birthDayValue,
                            boolean isValid, String refreshToken) {
-        this.name = naveValue;
+        this.setName(naveValue);
         this.phoneNumber = phoneNumberValue;
         this.password = passwordValue;
         this.birthDay = birthDayValue;

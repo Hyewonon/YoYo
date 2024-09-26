@@ -1,6 +1,7 @@
 package com.yoyo.transaction.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.*;
 
 @Entity
@@ -22,11 +23,15 @@ public class Transaction extends AuditableEntity {
     private String receiverName;
     private Long eventId;
     private String eventName;
-    private boolean isRegister;
-    private long amount;
+    private Boolean isRegister;
+    private Long amount;
     private String memo;
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
+
+    private Boolean isSenderMember; // 발신자 회원 여부
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public Transaction(String senderName, Long receiverId, String receiverName, Long eventId, String title, long amount, String memo){
         this.senderName = senderName;
@@ -37,6 +42,7 @@ public class Transaction extends AuditableEntity {
         this.isRegister = false;
         this.amount = amount;
         this.memo = memo;
+        this.createdAt = LocalDateTime.now();
     }
 
     public Transaction(Long senderId, String senderName, Long receiverId, String receiverName, Long eventId, String title, boolean isRegister, long amount, String memo, TransactionType transactionType){
@@ -50,5 +56,6 @@ public class Transaction extends AuditableEntity {
         this.amount = amount;
         this.memo = memo;
         this.transactionType = transactionType;
+        this.createdAt = LocalDateTime.now();
     }
 }
