@@ -4,6 +4,7 @@ import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.MemberException;
 import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.domain.relation.dto.RelationDTO;
+import com.yoyo.member.domain.relation.dto.UpdateRelationDTO;
 import com.yoyo.member.domain.relation.repository.RelationRepository;
 import com.yoyo.member.entity.Member;
 import com.yoyo.member.entity.Relation;
@@ -59,22 +60,17 @@ public class RelationService {
         relationRepository.save(relationReceiver);
     }
 
-    // repository 접근 메서드
-    private Member findMemberByMemberId(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+    /**
+     * TODO 친구관계 정보 수정
+     * */
+    public void updateRelation(Long memberId, UpdateRelationDTO.Request request) {
+        Relation relation = relationRepository.findByMember_MemberIdAndOppositeId(memberId, request.getMemberId())
+                                                                 .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_RELATION));
+        relation.setRelationType(RelationType.valueOf(request.getRelationType()));
+        relation.setDescription(request.getDescription());
+        relationRepository.save(relation);
     }
 
-    private Relation toNewEntity(Member member, Long oppositeId) {
-        return Relation.builder()
-                .member(member)
-                .oppositeId(oppositeId)
-                .relationType(RelationType.NONE)
-                .description("")
-                .totalReceivedAmount(0L)
-                .totalSentAmount(0L)
-                .build();
-    }
     public List<RelationDTO.Response> findRelations(Long memberId, String tag, String search, boolean isRegister) {
         RelationType relationType = null;
         if (tag != null) {
@@ -102,5 +98,22 @@ public class RelationService {
                             .totalSentAmount(relation.getTotalSentAmount())
                             .build();
                 }).collect(Collectors.toList());
+    }
+
+    // repository 접근 메서드
+    private Member findMemberByMemberId(Long memberId) {
+        return memberRepository.findById(memberId)
+                               .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+    }
+
+    private Relation toNewEntity(Member member, Long oppositeId) {
+        return Relation.builder()
+                       .member(member)
+                       .oppositeId(oppositeId)
+                       .relationType(RelationType.NONE)
+                       .description("")
+                       .totalReceivedAmount(0L)
+                       .totalSentAmount(0L)
+                       .build();
     }
 }
