@@ -11,6 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface RelationRepository extends JpaRepository<Relation, Long> {
+    List<Relation> findByMember_MemberIdAndRelationTypeAndOppositeIdInAndIsMember(
+            Long memberId, RelationType relationType, List<Long> oppositeIds, boolean isMember);
+
     // relationType, search, isRegister로 필터링
     List<Relation> findByMember_MemberIdAndRelationTypeAndOppositeNameContaining
     (Long memberId, RelationType relationType, String oppositeName);

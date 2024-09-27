@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class MemberConsumer {
 
     private final String GROUP_ID = "member-service";
-    private final String UPDATE_TRANSACTION_MEMBER_TOPIC = "pay-update-transaction-member-topic";
+    private final String UPDATE_TRANSACTION_MEMBER_PAY_TOPIC = "pay-update-transaction-member-topic";
     private final MemberService memberService;
     private final MemberProducer memberProducer;
 
@@ -35,7 +35,7 @@ public class MemberConsumer {
      * * 페이 송금 시 거래 내역 저장을 위해 발신자 이름 요청
      * @param : reqeust 페이 송금 거래내역 저장 정보
      * */
-    @KafkaListener(topics = UPDATE_TRANSACTION_MEMBER_TOPIC, groupId = GROUP_ID)
+    @KafkaListener(topics = UPDATE_TRANSACTION_MEMBER_PAY_TOPIC, groupId = GROUP_ID)
     public void getMemberNameForPay(PayInfoDTO.RequestToTransaction request) {
         Member sender = memberService.findMemberById(request.getSenderId());
         request.setSenderName(sender.getName()); // 발신자 이름 저장

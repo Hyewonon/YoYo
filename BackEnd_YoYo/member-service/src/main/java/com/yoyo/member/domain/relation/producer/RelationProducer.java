@@ -2,6 +2,7 @@ package com.yoyo.member.domain.relation.producer;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
+import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,9 +14,16 @@ import org.springframework.stereotype.Service;
 public class RelationProducer {
 
     private final KafkaTemplate<String, KafkaJson> kafkaTemplate;
+    private final String SEND_TRANSACTION_SELF_RELATION_TOPIC = "send-transaction-self-relation-topic";
 
     public void sendMemberTag(MemberTagDTO response) {
         kafkaTemplate.send("notification-tag-topic", response);
     }
 
+    /**
+     * 요요 거래내역 직접 등록 시, 친구 관계 수정 후 상대 회원 여부 반환
+     * */
+    public void sendTransactionSelf(TransactionSelfRelationDTO.ResponseFromMember response) {
+        kafkaTemplate.send(SEND_TRANSACTION_SELF_RELATION_TOPIC, response);
+    }
 }
