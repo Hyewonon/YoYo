@@ -29,7 +29,6 @@ public class Transaction extends AuditableEntity {
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 
-    private Boolean isSenderMember; // 발신자 회원 여부
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 

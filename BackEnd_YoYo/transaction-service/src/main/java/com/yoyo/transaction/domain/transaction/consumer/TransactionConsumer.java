@@ -4,6 +4,7 @@ import com.yoyo.common.kafka.dto.AmountRequestDTO;
 import com.yoyo.common.kafka.dto.AmountResponseDTO;
 import com.yoyo.common.kafka.dto.CreateTransactionDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
+import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.common.kafka.dto.PaymentDTO;
 import com.yoyo.transaction.domain.transaction.producer.TransactionProducer;
 import com.yoyo.transaction.domain.transaction.repository.TransactionRepository;
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Component;
 public class TransactionConsumer {
 
     private final String UPDATE_TRANSACTION_TOPIC = "pay-update-transaction-topic";
+    private final String SEND_TRANSACTION_SELF_RELATION_TOPIC = "send-transaction-self-relation-topic";
+
     private final String UPDATE_TRANSACTION_NO_MEMBER_TOPIC = "pay-update-transaction-no-member-topic";
     private final TransactionRepository transactionRepository;
     private final TransactionProducer producer;
@@ -69,6 +72,14 @@ public class TransactionConsumer {
                                              .transactionType(TransactionType.AUTO)
                                              .build();
         return transactionService.createTransaction(transaction);
+    }
+
+    /**
+     * 요요 거래내역 직접 등록 시, 친구 관계 수정 후 상대 회원 여부 응답 받기
+     * */
+    @KafkaListener(topics = SEND_TRANSACTION_SELF_RELATION_TOPIC, concurrency = "3")
+    public void getTransactionSelfFromRelation(TransactionSelfRelationDTO.ResponseFromMember response) {
+        transactionService.completeMemberCheck(response);
     }
 
     /*

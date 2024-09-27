@@ -2,13 +2,17 @@ package com.yoyo.member.domain.relation.consumer;
 
 import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
-import com.yoyo.common.kafka.dto.PayInfoDTO;
-import com.yoyo.common.kafka.dto.TransactionDTO;
+import com.yoyo.common.kafka.dto.PayInfoDTO.RequestToMember;
+import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.member.domain.member.repository.MemberRepository;
+import com.yoyo.member.domain.member.repository.NoMemberRepository;
+import com.yoyo.member.domain.member.service.MemberService;
 import com.yoyo.member.domain.relation.producer.RelationProducer;
 import com.yoyo.member.domain.relation.repository.RelationRepository;
 import com.yoyo.member.domain.relation.service.RelationService;
+import com.yoyo.member.entity.NoMember;
 import com.yoyo.member.entity.Relation;
+import com.yoyo.member.entity.RelationType;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +25,17 @@ import org.springframework.stereotype.Component;
 public class RelationConsumer {
 
     private final RelationService relationService;
+    private final MemberService memberService;
+
     private final RelationRepository relationRepository;
+    private final NoMemberRepository noMemberRepository;
     private final MemberRepository memberRepository;
+
     private final String UPDATE_RELATION_TOPIC = "pay-update-relation-topic";
+    private final String CREATE_TRANSACTION_SELF_RELATION_TOPIC = "create-transaction-self-relation-topic";
 
     private final RelationProducer producer;
+    private final RelationProducer relationProducer;
 
     /**
      * * 페이 송금 시 친구 관계 정보 수정
@@ -33,14 +43,17 @@ public class RelationConsumer {
      * @param : request 페이 송금 정보
      */
     @KafkaListener(topics = UPDATE_RELATION_TOPIC, concurrency = "3")
-    public void updateRelation(PayInfoDTO.RequestToMember request) {
+    public void updateRelation(RequestToMember request) {
         // 1. realtion servie에서 친구 관계 있는지 확인
         if (!relationService.isAlreadyFriend(request.getSenderId(), request.getReceiverId())) {
             // 1.1. 없으면 생성
-            relationService.createPayRelation(request.getSenderId(), request.getReceiverId());
+            relationService.createRelation(request.getSenderId(), request.getReceiverId(), RelationType.NONE, true);
         }
         // 2 친구 관계 보낸 총금액, 받은 총금액 수정
-        relationService.updateRelationAmount(request.getSenderId(), request.getReceiverId(), request.getAmount());
+        relationService.updateRelationAmount(request.getSenderId(), request.getReceiverId(), request.getAmount(), true);
+        relationService.updateRelationAmount(request.getReceiverId(), request.getSenderId(), request.getAmount(),
+                                             false);
+
     }
 
     @KafkaListener(topics = "transaction-register-topic", concurrency = "3")
@@ -72,13 +85,47 @@ public class RelationConsumer {
         }
     }
 
-    @KafkaListener(topics = "payment-register", concurrency = "3")
-    public void setPaymentRelation(TransactionDTO transactionDTO) {
-
-    }
-
     @KafkaListener(topics = "notification-relation-topic", concurrency = "3")
     public void getMemberTagForMemberEvent(MemberTagDTO request) {
         producer.sendMemberTag(relationService.findRelationTag(request.getMemberId(), request.getOppositeId()));
+    }
+
+    /**
+     * 요요 거래내역 직접등록 시 친구 관계
+     */
+    @KafkaListener(topics = CREATE_TRANSACTION_SELF_RELATION_TOPIC, concurrency = "3")
+    public void createTransactionSelf(TransactionSelfRelationDTO.RequestToMember request) {
+        // 0. memberId null이면 비회원 등록
+        if (request.getMemberId() == null) {
+            NoMember noMember = noMemberRepository.save(NoMember.builder()
+                                                                .name(request.getOppositeName())
+                                                                .build());
+            request.setOppositeId(noMember.getMemberId());
+        }
+
+        // 1. realtion servie에서 친구 관계 있는지 확인
+        if (!relationService.isAlreadyFriend(request.getMemberId(), request.getOppositeId())) {
+            // 1.1. 없으면 생성
+            relationService.createRelation(request.getMemberId(), request.getOppositeId(),
+                                           RelationType.valueOf(request.getRelationType()), false);
+        }
+        // 2 친구 관계 보낸 총금액, 받은 총금액 수정
+        // 보낸사람이 등록하면 보낸사람 친구관계만 수정
+        relationService.updateRelationAmount(request.getMemberId(), request.getOppositeId(), request.getAmount(),
+                                             request.getTransactionType().equals("SEND"));
+
+        relationProducer.sendTransactionSelf(createResponse(request));
+    }
+
+    private TransactionSelfRelationDTO.ResponseFromMember createResponse(TransactionSelfRelationDTO.RequestToMember request) {
+        String memberName = memberService.findMemberNameById(request.getMemberId());
+        String oppositeName = memberService.findMemberNameById(request.getOppositeId());
+
+        return TransactionSelfRelationDTO.ResponseFromMember.builder()
+                                                            .memberId(request.getMemberId())
+                                                            .memberName(memberName)
+                                                            .oppositeId(request.getOppositeId())
+                                                            .oppositeName(oppositeName)
+                                                            .build();
     }
 }

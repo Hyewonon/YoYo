@@ -22,6 +22,10 @@ public class MemberService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 
+    public String findMemberNameById(Long memberId) {
+        return findMemberById(memberId).getName();
+    }
+
     public RegisterMemberDTO.Response registerMember(RegisterMemberDTO.Request request) {
         String hashedPassword = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
         if (!request.isValid()) {

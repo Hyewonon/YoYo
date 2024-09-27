@@ -3,8 +3,8 @@ package com.yoyo.member.domain.relation.service;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.MemberException;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
-import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.member.domain.member.repository.MemberRepository;
+import com.yoyo.member.domain.member.service.MemberService;
 import com.yoyo.member.domain.relation.dto.RelationDTO;
 import com.yoyo.member.domain.relation.dto.UpdateRelationDTO;
 import com.yoyo.member.domain.relation.repository.RelationRepository;
@@ -25,23 +25,31 @@ public class RelationService {
 
     private final RelationRepository relationRepository;
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
+
 
     /**
      * 페이 송금 친구 관계 저장
+     * @param memberId1 회원
+     * @param memberId2 회원 혹은 비회원
+     * @param isMember memberId2가 회원인지 비회원인지
      */
-    public void createPayRelation(Long memberId1, Long memberId2) {
-        Member member = findMemberByMemberId(memberId1);
-        relationRepository.save(toNewEntityForPay(member, memberId2));
+    public void createRelation(Long memberId1, Long memberId2, RelationType relationType, Boolean isMember){
+        Member member = memberService.findMemberById(memberId1);
+        relationRepository.save(toNewEntityForPay(member, memberId2, relationType, isMember));
 
-        member = findMemberByMemberId(memberId2);
-        relationRepository.save(toNewEntityForPay(member, memberId1));
+        if(isMember){
+            // 둘다 회원이라면 양방향으로 저장
+            member = memberService.findMemberById(memberId2);
+            relationRepository.save(toNewEntityForPay(member, memberId1, relationType, true));
+        }
     }
 
     /**
      * 비회원 결제 친구 관계 저장
      */
     public String createPaymentRelation(NoMember noMember, Long memberId, Long amount) {
-        Member member = findMemberByMemberId(memberId);
+        Member member = memberService.findMemberById(memberId);
         relationRepository.save(toNewEntityForPayment(member, noMember.getMemberId(), amount));
         return member.getName();
     }
@@ -58,25 +66,20 @@ public class RelationService {
     /**
      * 친구 관계 받은/ 보낸 총금액 수정
      */
-    public void updateRelationAmount(Long senderId, Long receiverId, Long amount) {
-        // 발신자 보낸 총 금액 수정
-        Relation relationSender = relationRepository.findByMemberAndOppositeId(senderId, receiverId)
+    public void updateRelationAmount(Long memberId1, Long memberId2, Long amount, Boolean isSender) {
+        Relation relation = relationRepository.findByMemberAndOppositeId(memberId1, memberId2)
                                                     .orElseThrow(() -> new MemberException(
                                                             ErrorCode.NOT_FOUND_RELATION));
-        relationSender.setTotalSentAmount(relationSender.getTotalSentAmount() + amount);
-        relationRepository.save(relationSender);
-
-        // 수신자 받은 총 금액 수정
-        Relation relationReceiver = relationRepository.findByMemberAndOppositeId(receiverId, senderId)
-                                                      .orElseThrow(() -> new MemberException(
-                                                              ErrorCode.NOT_FOUND_RELATION));
-        ;
-        relationReceiver.setTotalReceivedAmount(relationReceiver.getTotalReceivedAmount() + amount);
-        relationRepository.save(relationReceiver);
+        Long updatedAmount;
+        if(isSender){
+            updatedAmount = relation.getTotalSentAmount() + amount;
+        } else updatedAmount = relation.getTotalReceivedAmount() + amount;
+        relation.setTotalSentAmount(updatedAmount);
+        relationRepository.save(relation);
     }
 
     /**
-     * TODO 친구관계 정보 수정
+     * 친구관계 정보 수정
      */
     public void updateRelation(Long memberId, UpdateRelationDTO.Request request) {
         Relation relation = relationRepository.findByMember_MemberIdAndOppositeId(memberId, request.getMemberId())
@@ -118,21 +121,15 @@ public class RelationService {
         return new MemberTagDTO(relation.getMember().getMemberId(), relation.getOppositeId(), relation.getRelationType().toString());
     }
 
-    // repository 접근 메서드
-    private Member findMemberByMemberId(Long memberId) {
-        return memberRepository.findById(memberId)
-                               .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
-    }
-
-    private Relation toNewEntityForPay(Member member, Long oppositeId) {
+    private Relation toNewEntityForPay(Member member, Long oppositeId, RelationType relationType, Boolean isMember) {
         return Relation.builder()
                        .member(member)
                        .oppositeId(oppositeId)
-                       .relationType(RelationType.NONE)
+                       .relationType(relationType)
                        .description("")
                        .totalReceivedAmount(0L)
                        .totalSentAmount(0L)
-                       .isMember(true)
+                       .isMember(isMember)
                        .build();
     }
 

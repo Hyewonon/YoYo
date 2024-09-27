@@ -45,7 +45,8 @@ public class ConsumerConfig {
                 .getJsonTypeMappingInfo(CreateTransactionDTO.class,
                                         AmountRequestDTO.class,
                                         PayInfoDTO.RequestToTransaction.class,
-                                        PaymentDTO.class));
+                                        PaymentDTO.class
+                ));
 
         return props;
     }
