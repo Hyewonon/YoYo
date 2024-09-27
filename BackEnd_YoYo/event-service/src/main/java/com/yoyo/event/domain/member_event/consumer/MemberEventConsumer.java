@@ -1,9 +1,6 @@
 package com.yoyo.event.domain.member_event.consumer;
 
-import com.yoyo.common.kafka.dto.AmountResponseDTO;
-import com.yoyo.common.kafka.dto.EventMemberResponseDTO;
 import com.yoyo.common.kafka.dto.NotificationInfoDTO;
-import com.yoyo.event.domain.event.service.EventService;
 import com.yoyo.event.domain.member_event.service.MemberEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
