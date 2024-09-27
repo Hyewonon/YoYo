@@ -3,11 +3,13 @@ package com.yoyo.member.domain.relation.service;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.MemberException;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
+import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.domain.relation.dto.RelationDTO;
 import com.yoyo.member.domain.relation.dto.UpdateRelationDTO;
 import com.yoyo.member.domain.relation.repository.RelationRepository;
 import com.yoyo.member.entity.Member;
+import com.yoyo.member.entity.NoMember;
 import com.yoyo.member.entity.Relation;
 import com.yoyo.member.entity.RelationType;
 import jakarta.transaction.Transactional;
@@ -33,6 +35,15 @@ public class RelationService {
 
         member = findMemberByMemberId(memberId2);
         relationRepository.save(toNewEntityForPay(member, memberId1));
+    }
+
+    /**
+     * 비회원 결제 친구 관계 저장
+     */
+    public String createPaymentRelation(NoMember noMember, Long memberId, Long amount) {
+        Member member = findMemberByMemberId(memberId);
+        relationRepository.save(toNewEntityForPayment(member, noMember.getMemberId(), amount));
+        return member.getName();
     }
 
     /**
@@ -98,6 +109,15 @@ public class RelationService {
         ).collect(Collectors.toList());
     }
 
+    /*
+     * Get Tag For Notification
+     */
+    public MemberTagDTO findRelationTag(Long memberId, Long oppositeId) {
+        Relation relation = relationRepository.findByMemberAndOppositeId(memberId, oppositeId)
+                                              .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+        return new MemberTagDTO(relation.getMember().getMemberId(), relation.getOppositeId(), relation.getRelationType().toString());
+    }
+
     // repository 접근 메서드
     private Member findMemberByMemberId(Long memberId) {
         return memberRepository.findById(memberId)
@@ -116,9 +136,15 @@ public class RelationService {
                        .build();
     }
 
-    public MemberTagDTO findRelationTag(Long memberId, Long oppositeId) {
-        Relation relation = relationRepository.findByMemberAndOppositeId(memberId, oppositeId)
-                                             .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
-        return new MemberTagDTO(relation.getMember().getMemberId(), relation.getOppositeId(), relation.getRelationType().toString());
+    private Relation toNewEntityForPayment(Member member, Long noMemberId, Long amount) {
+        return Relation.builder()
+                       .member(member)
+                       .oppositeId(noMemberId)
+                       .relationType(RelationType.NONE)
+                       .description("")
+                       .totalReceivedAmount(amount)
+                       .totalSentAmount(0L)
+                       .isMember(false)
+                       .build();
     }
 }

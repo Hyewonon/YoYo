@@ -31,13 +31,13 @@ public interface RelationRepository extends JpaRepository<Relation, Long> {
 
     /**
      * 친구관계 존재 여부 확인
-     */
+     * */
     @Query("SELECT count(r) > 0 FROM Relation r WHERE r.member.memberId = :memberId1 AND r.oppositeId = :memberId2")
     Boolean existedByMemberIds(Long memberId1, Long memberId2);
 
     /**
      * 두 멤버아이디로 친구관계 조회
-     */
+     * */
     @Query("SELECT r FROM Relation r WHERE r.member.memberId = :memberId1 AND r.oppositeId = :memberId2")
     Optional<Relation> findByMemberAndOppositeId(Long memberId1, Long memberId2);
 }

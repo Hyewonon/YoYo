@@ -5,6 +5,7 @@ import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.EventMemberRequestDTO;
 import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
+import com.yoyo.common.kafka.dto.PaymentDTO;
 import com.yoyo.common.kafka.dto.TransactionDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -48,7 +49,8 @@ public class ConsumerConfig {
                                         EventMemberRequestDTO.class,
                                         PayInfoDTO.RequestToMember.class,
                                         PayInfoDTO.RequestToTransaction.class,
-                                        MemberTagDTO.class));
+                                        MemberTagDTO.class,
+                                        PaymentDTO.class));
 
         return props;
     }
