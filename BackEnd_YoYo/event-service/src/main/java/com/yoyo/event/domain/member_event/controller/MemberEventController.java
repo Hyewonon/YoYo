@@ -58,13 +58,13 @@ public class MemberEventController {
     @Operation(summary = "일정 등록", description = "새로운 일정을 등록한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "일정 등록 성공",
-                         content = @Content(schema = @Schema(implementation = MemberEventCreateDTO.class))),
+                         content = @Content(schema = @Schema(implementation = MemberEventCreateDTO.Request.class))),
             @ApiResponse(responseCode = "409", description = "이미 등록된 일정입니다.")
     })
     @PostMapping
     public ResponseEntity<?> createSchedule(@RequestHeader("memberId") String memberId,
-                                            @RequestBody MemberEventCreateDTO request) {
-        MemberEventCreateDTO response = memberEventService.createSchedule(Long.parseLong(memberId), request);
+                                            @RequestBody MemberEventCreateDTO.Request request) {
+        MemberEventCreateDTO.Response response = memberEventService.createSchedule(Long.parseLong(memberId), request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

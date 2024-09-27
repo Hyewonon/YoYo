@@ -44,9 +44,6 @@ public class Event {
 
     private LocalDateTime endAt;
 
-    @Column(columnDefinition = "TEXT")
-    private String sendLink;
-
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberEvent> memberEvents;
 
