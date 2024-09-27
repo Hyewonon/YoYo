@@ -118,7 +118,7 @@ public class RelationService {
     public MemberTagDTO findRelationTag(Long memberId, Long oppositeId) {
         Relation relation = relationRepository.findByMemberAndOppositeId(memberId, oppositeId)
                                               .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
-        return new MemberTagDTO(relation.getMember().getMemberId(), relation.getOppositeId(), relation.getRelationType().toString());
+        return new MemberTagDTO(relation.getMember().getMemberId(), relation.getOppositeId(), relation.getRelationType().toString(), relation.getDescription());
     }
 
     private Relation toNewEntityForPay(Member member, Long oppositeId, RelationType relationType, Boolean isMember) {

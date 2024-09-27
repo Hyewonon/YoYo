@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/*
+ * [Notification] -> [Relation] Tag, description DTO
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,6 +20,7 @@ public class MemberTagDTO implements KafkaJson {
     private Long memberId;
     private Long oppositeId;
     private String tag;
+    private String description;
 
     public MemberTagDTO(Long memberId, Long oppositeId) {
         this.memberId = memberId;
