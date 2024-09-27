@@ -2,6 +2,7 @@ package com.yoyo.member.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
+<<<<<<< Updated upstream
 import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
@@ -9,6 +10,9 @@ import com.yoyo.common.kafka.dto.PaymentDTO;
 import com.yoyo.common.kafka.dto.TransactionDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
+=======
+import com.yoyo.common.kafka.dto.*;
+>>>>>>> Stashed changes
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -51,9 +55,14 @@ public class ConsumerConfig {
                                         PayInfoDTO.RequestToMember.class,
                                         PayInfoDTO.RequestToTransaction.class,
                                         MemberTagDTO.class,
+<<<<<<< Updated upstream
                                         TransactionSelfRelationDTO.RequestToMember.class,
                                         PaymentDTO.class
                 ));
+=======
+                                        PaymentDTO.class,
+                        RelationDTO.Request.class));
+>>>>>>> Stashed changes
 
         return props;
     }

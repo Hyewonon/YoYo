@@ -6,13 +6,18 @@ import com.yoyo.common.kafka.dto.CreateTransactionDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.common.kafka.dto.PaymentDTO;
+import com.yoyo.common.kafka.dto.*;
 import com.yoyo.transaction.domain.transaction.producer.TransactionProducer;
 import com.yoyo.transaction.domain.transaction.repository.TransactionRepository;
 import com.yoyo.transaction.domain.transaction.service.TransactionService;
 import com.yoyo.transaction.entity.Transaction;
 import com.yoyo.transaction.entity.TransactionType;
+
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -30,6 +35,7 @@ public class TransactionConsumer {
     private final TransactionRepository transactionRepository;
     private final TransactionProducer producer;
     private final TransactionService transactionService;
+    private final Map<Long,String> relationTypeCache = new HashMap<>();
 
     @KafkaListener(topics = "payment-success", concurrency = "3")
     public void setTransaction(CreateTransactionDTO request) {
@@ -48,13 +54,13 @@ public class TransactionConsumer {
     @KafkaListener(topics = "transaction-topic", concurrency = "3")
     public void getEventInformation(AmountRequestDTO message) {
         List<Transaction> transactions = transactionRepository.findByReceiverIdAndEventId(message.getReceiverId(),
-                                                                                          message.getEventId());
+                message.getEventId());
         int transactionCount = transactions.size();
         long totalAmount = transactions.stream().mapToLong(Transaction::getAmount).sum();
         log.info("Event ID: {}, Receiver ID: {}, Total Transactions: {}, Total Amount: {}",
-                 message.getEventId(), message.getReceiverId(), transactionCount, totalAmount);
+                message.getEventId(), message.getReceiverId(), transactionCount, totalAmount);
         AmountResponseDTO summary = new AmountResponseDTO(message.getReceiverId(), message.getEventId(),
-                                                          transactionCount, totalAmount);
+                transactionCount, totalAmount);
         producer.sendTransactionSummary(summary);
     }
 
@@ -74,6 +80,14 @@ public class TransactionConsumer {
         return transactionService.createTransaction(transaction);
     }
 
+    @KafkaListener(topics = "relation-response-topic", groupId = "transaction-group")
+    public void consumeRelationResponse(RelationDTO.Response response) {
+        relationTypeCache.put(response.getOppositeId(), response.getRelationType());
+    }
+    public String getRelationType(Long id) {
+        return relationTypeCache.get(id);
+    }
+
     /**
      * 요요 거래내역 직접 등록 시, 친구 관계 수정 후 상대 회원 여부 응답 받기
      * */
@@ -88,18 +102,18 @@ public class TransactionConsumer {
     @KafkaListener(topics = UPDATE_TRANSACTION_NO_MEMBER_TOPIC, concurrency = "3")
     public void createTransactionForPayment(PaymentDTO request) {
         Transaction transaction = Transaction.builder()
-                                             .senderId(request.getSenderId())
-                                             .senderName(request.getSenderName())
-                                             .receiverId(request.getReceiverId())
-                                             .receiverName(request.getReceiverName())
-                                             .eventId(request.getEventId())
-                                             .eventName(request.getTitle())
-                                             .isRegister(false)
-                                             .amount(request.getAmount())
-                                             .memo(request.getMemo())
-                                             .transactionType(TransactionType.RECEIVE)
-                                             .createdAt(LocalDateTime.now())
-                                             .build();
+                .senderId(request.getSenderId())
+                .senderName(request.getSenderName())
+                .receiverId(request.getReceiverId())
+                .receiverName(request.getReceiverName())
+                .eventId(request.getEventId())
+                .eventName(request.getTitle())
+                .isRegister(false)
+                .amount(request.getAmount())
+                .memo(request.getMemo())
+                .transactionType(TransactionType.RECEIVE)
+                .createdAt(LocalDateTime.now())
+                .build();
         transactionService.createTransaction(transaction);
     }
 }

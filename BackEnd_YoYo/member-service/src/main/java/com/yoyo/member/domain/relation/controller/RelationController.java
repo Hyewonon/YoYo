@@ -17,21 +17,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RelationController {
     private final RelationService relationService;
+
     /**
-     * @Header memberId 현재 사용자
-     * @param tag 태그
+     * @param tag    태그
      * @param search 이름 검색
-     * @param isRegister 등록 대기
      * @return 리스트 조회
+     * @Header memberId 현재 사용자
      */
     @GetMapping("/members-relations")
     public ResponseEntity<?> getRelationList(@RequestHeader("memberId") String memberId,
                                              @RequestParam(required = false) String tag,
                                              @RequestParam(required = false) String search) {
-        ApiResponse<List<RelationDTO.Response>> response = new ApiResponse<>(
+        ApiResponse<List<RelationDTO.Response>> response;
+        List<RelationDTO.Response> relations = relationService.findRelations(Long.parseLong(memberId), tag, search);
+        if (relations.isEmpty()) {
+            response = new ApiResponse<>(
+                    HttpStatus.NO_CONTENT.value(),
+                    "데이터 없음",
+                    relations
+            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).body(response);
+        }
+        response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "리스트 조회 성공",
-                relationService.findRelations(Long.parseLong(memberId), tag, search)
+                relations
         );
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
