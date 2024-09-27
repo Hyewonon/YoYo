@@ -12,6 +12,7 @@ import com.yoyo.banking.entity.PayTransaction;
 import com.yoyo.banking.entity.PayType;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.BankingException;
+import com.yoyo.common.kafka.dto.PaymentDTO;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
@@ -167,6 +168,15 @@ public class PayService {
     public ResponseEntity<?> getPayBalance(Long memberId) {
         Account account = findAccountByMemberId(memberId);
         return ResponseEntity.ok(PayDTO.Response.of(account));
+    }
+
+    /**
+     * TODO : 비회원 거래
+     * */
+    public ResponseEntity<?> noMemberPayment(PaymentDTO request) {
+        updatePayBalance(request.getReceiverId(), request.getAmount(), false); // 발신자 페이 잔액 변경
+        payProducer.sendPaymentInfoToTransaction(request);
+        return null;
     }
 
     private Account findAccountByMemberId(Long memberId) {

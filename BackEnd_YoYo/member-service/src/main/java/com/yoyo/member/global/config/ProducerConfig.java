@@ -5,6 +5,7 @@ import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.EventMemberResponseDTO;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
+import com.yoyo.common.kafka.dto.PaymentDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RoundRobinPartitioner;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -34,7 +35,8 @@ public class ProducerConfig {
         config.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         config.put(JsonSerializer.TYPE_MAPPINGS, KafkaUtils.getJsonTypeMappingInfo(EventMemberResponseDTO.class,
                                                                                    PayInfoDTO.RequestToTransaction.class,
-                                                                                   MemberTagDTO.class));
+                                                                                   MemberTagDTO.class,
+                                                                                   PaymentDTO.class));
         return new DefaultKafkaProducerFactory<>(config);
     }
 

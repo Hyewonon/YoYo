@@ -1,6 +1,8 @@
 package com.yoyo.payment.controller;
 
+import com.yoyo.common.kafka.dto.PaymentDTO;
 import com.yoyo.common.kafka.dto.TransactionDTO;
+import com.yoyo.payment.producer.PaymentProducer;
 import com.yoyo.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
@@ -10,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final PaymentProducer producer;
 
     @Value("${payment.secret}")
     private String SECRETKEY;
@@ -73,10 +77,18 @@ public class PaymentController {
 
         InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
 
-        // TODO: 결제 성공 및 실패 비즈니스 로직을 구현
+        // TODO: 결제 성공 비즈니스 로직 구현
         /*
-        1. 결제 성공 시 -> 받는 사람의 계좌에 돈 올려주기
-        2. 내역 기록 : 받은 사람 ID, 금액, 메모
+        1. PaymentDTO(senderName, receiverId, eventId, title, amount, memo) 생성
+        2. [NoMember] 비회원 생성 -> Relation 생성
+        -> [Banking] 받은 사람 Pay 값 올려주기
+        -> [Transaction] 기록 : 받은 사람 ID, 금액, 메모
+         */
+        PaymentDTO request = new PaymentDTO();
+        producer.sendNoMemberPayment(request);
+
+        /*
+         * TODO : 결제 실패 비즈니스 로직 구현 
          */
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
@@ -89,6 +101,12 @@ public class PaymentController {
     public ResponseEntity<?> createTransaction(@RequestBody TransactionDTO transaction) {
         paymentService.sendTransaction(transaction);
         paymentService.sendRelation(transaction);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/yoyo/payment/test")
+    public ResponseEntity<?> paymentTest(){
+        producer.sendNoMemberPayment(PaymentDTO.of("이찬진", 999999998L, 10L, "나의 결혼식", 500000L, "추카추카"));
         return ResponseEntity.ok().build();
     }
 }
