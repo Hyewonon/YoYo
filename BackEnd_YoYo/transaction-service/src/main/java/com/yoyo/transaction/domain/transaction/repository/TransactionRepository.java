@@ -11,7 +11,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT t FROM Transaction t WHERE t.receiverId = :receiverId AND t.eventId = :eventId")
     List<Transaction> findByReceiverIdAndEventId(@Param("receiverId") Long receiverId, @Param("eventId") Long eventId);
 
-    List<Transaction> findBySenderIdAndReceiverId(Long senderId, Long receiverId);
+    List<Transaction> findByEventIdAndReceiverId(Long eventId, Long receiverId);
 
     @Query("SELECT t FROM Transaction  t WHERE t.receiverId = :receiverId AND t.eventId = :eventId AND (:search IS NULL OR t.senderName LIKE %:search%)" +
             "AND (:isRegister IS NULL OR t.isRegister = :isRegister)")

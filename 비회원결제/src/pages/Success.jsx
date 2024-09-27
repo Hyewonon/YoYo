@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 
 export function Success() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [responseData, setResponseData] = useState(null);
+  const { senderName, description } = location.state;
 
   useEffect(() => {
     async function confirm() {
@@ -12,6 +14,10 @@ export function Success() {
         orderId: searchParams.get("orderId"),
         amount: searchParams.get("amount"),
         paymentKey: searchParams.get("paymentKey"),
+        senderName: senderName,
+        receiverId : 59,
+        eventId: 1,
+        desciption : description
       };
 
       const response = await fetch("/api/confirm/payment", {

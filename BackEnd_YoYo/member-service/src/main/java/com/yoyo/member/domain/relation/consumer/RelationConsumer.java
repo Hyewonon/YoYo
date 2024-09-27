@@ -1,22 +1,35 @@
 package com.yoyo.member.domain.relation.consumer;
 
+<<<<<<< Updated upstream
 import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO.RequestToMember;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
+=======
+import com.yoyo.common.kafka.KafkaJson;
+import com.yoyo.common.kafka.dto.*;
+>>>>>>> Stashed changes
 import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.domain.member.repository.NoMemberRepository;
 import com.yoyo.member.domain.member.service.MemberService;
 import com.yoyo.member.domain.relation.producer.RelationProducer;
 import com.yoyo.member.domain.relation.repository.RelationRepository;
 import com.yoyo.member.domain.relation.service.RelationService;
+<<<<<<< Updated upstream
 import com.yoyo.member.entity.NoMember;
 import com.yoyo.member.entity.Relation;
 import com.yoyo.member.entity.RelationType;
+=======
+import com.yoyo.member.entity.Member;
+import com.yoyo.member.entity.Relation;
+
+import java.util.List;
+>>>>>>> Stashed changes
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,7 +45,11 @@ public class RelationConsumer {
     private final MemberRepository memberRepository;
 
     private final String UPDATE_RELATION_TOPIC = "pay-update-relation-topic";
+<<<<<<< Updated upstream
     private final String CREATE_TRANSACTION_SELF_RELATION_TOPIC = "create-transaction-self-relation-topic";
+=======
+    private final KafkaTemplate<String, KafkaJson> kafkaTemplate;
+>>>>>>> Stashed changes
 
     private final RelationProducer producer;
     private final RelationProducer relationProducer;
@@ -85,6 +102,25 @@ public class RelationConsumer {
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    @KafkaListener(topics = "relation-request-topic", concurrency = "3")
+    public void relationResponse(RelationDTO.Request request) {
+        Long memberId = request.getMemberId();
+        Member member = memberRepository.findByMemberId(memberId);
+        List<Relation> relations = member.getRelations();
+        for(Relation relation : relations) {
+            Long oppositeId = relation.getOppositeId();
+            String relationType = relation.getRelationType().toString();
+            RelationDTO.Response response = RelationDTO.Response.builder()
+                    .oppositeId(oppositeId)
+                    .relationType(relationType)
+                    .build();
+            kafkaTemplate.send("relation-response-topic", response);
+        }
+    }
+
+>>>>>>> Stashed changes
     @KafkaListener(topics = "notification-relation-topic", concurrency = "3")
     public void getMemberTagForMemberEvent(MemberTagDTO request) {
         producer.sendMemberTag(relationService.findRelationTag(request.getMemberId(), request.getOppositeId()));

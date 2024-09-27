@@ -22,9 +22,12 @@ public class Transaction extends AuditableEntity {
     private Long receiverId;
     private String receiverName;
     private Long eventId;
+    @Setter
     private String eventName;
     private Boolean isRegister;
-    private Long amount;
+    @Setter
+    private long amount;
+    @Setter
     private String memo;
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;

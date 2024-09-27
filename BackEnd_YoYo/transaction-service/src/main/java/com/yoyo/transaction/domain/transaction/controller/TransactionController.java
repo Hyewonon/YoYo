@@ -2,7 +2,9 @@ package com.yoyo.transaction.domain.transaction.controller;
 
 import com.yoyo.common.dto.response.CommonResponse;
 import com.yoyo.common.response.ApiResponse;
+import com.yoyo.transaction.domain.transaction.dto.FindTransactionDTO;
 import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
+import com.yoyo.transaction.domain.transaction.dto.UpdateTransactionDTO;
 import com.yoyo.transaction.domain.transaction.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,19 +16,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/yoyo/transaction")
+@RequestMapping("/yoyo/transactions")
 @RequiredArgsConstructor
 public class TransactionController {
     private final TransactionService transactionService;
 
     /**
      * 보냈어요 받았어요 직접 등록
-     * **/
+     **/
     @PostMapping
     public ResponseEntity<?> createTransactionSelf(@RequestHeader("memberId") Long memberId,
-            @RequestBody TransactionCreateDTO.Request request) {
+                                                   @RequestBody TransactionCreateDTO.Request request) {
         transactionService.createTransactionSelf(memberId, request);
         CommonResponse response = CommonResponse.of(true, "요요 거래내역이 등록되었습니다.");
 
@@ -39,8 +44,7 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
 
-
-    @DeleteMapping("{transactionId}")
+    @DeleteMapping("/{transactionId}")
     public ResponseEntity<?> deleteTransaction(@PathVariable Long transactionId) {
         transactionService.deleteTransaction(transactionId);
         ApiResponse<Void> response = new ApiResponse<>(
@@ -49,5 +53,38 @@ public class TransactionController {
                 null
         );
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).body(response);
+    }
+
+    @PatchMapping("/{transactionId}")
+    public ResponseEntity<?> updateTransaction(@PathVariable Long transactionId, @RequestBody UpdateTransactionDTO.Request request) {
+        ApiResponse<UpdateTransactionDTO.Response> response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "수정 완료",
+                transactionService.updateTransaction(transactionId, request)
+        );
+        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
+    }
+
+    @GetMapping("/event/{eventId}")
+    public ResponseEntity<?> getTransactions(@RequestHeader("memberId") Long memberId, @PathVariable("eventId") Long eventId,
+                                             @RequestParam(required = false) String search,
+                                             @RequestParam(required = false) String relationType,
+                                             @RequestParam(defaultValue = "true") boolean isRegister) {
+        ApiResponse<List<FindTransactionDTO.Response>> response;
+        List<FindTransactionDTO.Response> transactions = transactionService.findTransactions(memberId, eventId, search, relationType, isRegister);
+        if (transactions.isEmpty()) {
+            response = new ApiResponse<>(
+                    HttpStatus.NO_CONTENT.value(),
+                    "데이터 없음",
+                    transactions
+            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).body(response);
+        }
+        response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "리스트 필터 조회",
+                transactions
+        );
+        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
 }

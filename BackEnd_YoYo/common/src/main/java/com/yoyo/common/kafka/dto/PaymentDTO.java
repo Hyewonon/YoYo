@@ -26,13 +26,12 @@ public class PaymentDTO implements KafkaJson {
     private Long amount;
     private String memo;
 
-    public static PaymentDTO of(String senderName, Long receiverId, Long eventId, String title, Long amount,
+    public static PaymentDTO of(String senderName, Long receiverId, Long eventId, Long amount,
                                 String memo) {
         return PaymentDTO.builder()
                          .senderName(senderName)
                          .receiverId(receiverId)
                          .eventId(eventId)
-                         .title(title)
                          .amount(amount)
                          .memo(memo)
                          .build();

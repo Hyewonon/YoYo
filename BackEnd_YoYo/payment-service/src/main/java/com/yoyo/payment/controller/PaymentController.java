@@ -5,6 +5,7 @@ import com.yoyo.common.kafka.dto.TransactionDTO;
 import com.yoyo.payment.producer.PaymentProducer;
 import com.yoyo.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class PaymentController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -43,12 +45,20 @@ public class PaymentController {
         String orderId;
         String amount;
         String paymentKey;
+        String senderName;
+        Long receiverId;
+        Long eventId;
+        String description;
         try {
             // 클라이언트에서 받은 JSON 요청 바디입니다.
             JSONObject requestData = (JSONObject) parser.parse(jsonBody);
             paymentKey = (String) requestData.get("paymentKey");
             orderId = (String) requestData.get("orderId");
             amount = (String) requestData.get("amount");
+            senderName = (String) requestData.get("senderName");
+            receiverId = (Long) requestData.get("receiverId");
+            eventId = (Long) requestData.get("eventId");
+            description = (String) requestData.get("description");
         } catch (ParseException e) {
             throw new RuntimeException(e);
         };
@@ -84,8 +94,9 @@ public class PaymentController {
         -> [Banking] 받은 사람 Pay 값 올려주기
         -> [Transaction] 기록 : 받은 사람 ID, 금액, 메모
          */
-        PaymentDTO request = new PaymentDTO();
-        producer.sendNoMemberPayment(request);
+        log.info("들어오는 데이터 : {}", jsonBody );
+        log.info("데이터 : {}",obj);
+        producer.sendNoMemberPayment(PaymentDTO.of(senderName, receiverId, eventId, Long.parseLong(amount), description));
 
         /*
          * TODO : 결제 실패 비즈니스 로직 구현 
@@ -106,7 +117,7 @@ public class PaymentController {
 
     @GetMapping("/yoyo/payment/test")
     public ResponseEntity<?> paymentTest(){
-        producer.sendNoMemberPayment(PaymentDTO.of("이찬진", 999999998L, 10L, "나의 결혼식", 500000L, "추카추카"));
+        producer.sendNoMemberPayment(PaymentDTO.of("이찬진", 999999998L, 10L, 500000L, "추카추카"));
         return ResponseEntity.ok().build();
     }
 }
