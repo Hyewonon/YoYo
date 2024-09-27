@@ -1,8 +1,7 @@
 package com.yoyo.member.domain.member.producer;
 
 import com.yoyo.common.kafka.KafkaJson;
-import com.yoyo.common.kafka.dto.EventMemberResponseDTO;
-import com.yoyo.common.kafka.dto.PayInfoDTO;
+
 import com.yoyo.common.kafka.dto.PaymentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;

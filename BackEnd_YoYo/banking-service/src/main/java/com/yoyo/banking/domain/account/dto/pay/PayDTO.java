@@ -50,10 +50,19 @@ public class PayDTO {
     public static class Response {
 
         private Long balance;
+        private String memberName;
 
-        public static Response of(Account account) {
+        public static Response of(Account account, String name) {
             return PayDTO.Response.builder()
                                   .balance(account.getBalance())
+                                  .memberName(name)
+                                  .build();
+        }
+
+        public static Response of(String name) {
+            return PayDTO.Response.builder()
+                                  .balance(-1L)
+                                  .memberName(name)
                                   .build();
         }
     }

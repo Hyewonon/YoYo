@@ -27,10 +27,6 @@ public class DummyAccountController {
     private final SsafyBankService ssafyBankService;
     private final DummyAccountService dummyAccountService;
 
-    //임시 멤버
-//    private Long memberId = 999999999L;
-//    private Long memberId = 999999998L;
-
     /**
      *  [ssafy 금융 API] 더미 계좌를 생성함.
      * */

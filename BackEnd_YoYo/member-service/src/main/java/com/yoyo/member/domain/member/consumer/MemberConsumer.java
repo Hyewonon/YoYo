@@ -1,7 +1,7 @@
 package com.yoyo.member.domain.member.consumer;
 
-import com.yoyo.common.kafka.dto.EventMemberRequestDTO;
-import com.yoyo.common.kafka.dto.EventMemberResponseDTO;
+import com.yoyo.common.kafka.dto.MemberRequestDTO;
+import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.member.domain.member.producer.MemberProducer;
 import com.yoyo.member.domain.member.service.MemberService;
@@ -18,24 +18,31 @@ import org.springframework.stereotype.Component;
 public class MemberConsumer {
 
     private final String GROUP_ID = "member-service";
-    private final String UPDATE_TRANSACTION_MEMBER_PAY_TOPIC = "pay-update-transaction-member-topic";
+    private final String UPDATE_TRANSACTION_MEMBER_TOPIC = "pay-update-transaction-member-topic";
+    private final String GET_PAY_MEMBER_NAME = "pay-get-pay-member-name";
+
     private final MemberService memberService;
     private final MemberProducer memberProducer;
 
+    /**
+     * 회원 이름 조회
+     * */
     @KafkaListener(topics = "event-member-name-topic")
-    public void getMemberName(EventMemberRequestDTO message) {
+    public void getEventMemberName(MemberRequestDTO message) {
         Member member = memberService.findMemberById(message.getMemberId());
-        memberProducer.sendMemberName(EventMemberResponseDTO.builder()
-                                                      .memberId(member.getMemberId())
-                                                      .name(member.getName())
-                                                      .build());
+        memberProducer.sendMemberNameToEvent(MemberResponseDTO.of(member.getMemberId(), member.getName()));
     }
 
+    @KafkaListener(topics = GET_PAY_MEMBER_NAME)
+    public void getPayMemberName(MemberRequestDTO message) {
+        Member member = memberService.findMemberById(message.getMemberId());
+        memberProducer.sendMemberNameToPay(MemberResponseDTO.of(member.getMemberId(), member.getName()));
+    }
     /**
      * * 페이 송금 시 거래 내역 저장을 위해 발신자 이름 요청
      * @param : reqeust 페이 송금 거래내역 저장 정보
      * */
-    @KafkaListener(topics = UPDATE_TRANSACTION_MEMBER_PAY_TOPIC, groupId = GROUP_ID)
+    @KafkaListener(topics = UPDATE_TRANSACTION_MEMBER_TOPIC, groupId = GROUP_ID)
     public void getMemberNameForPay(PayInfoDTO.RequestToTransaction request) {
         Member sender = memberService.findMemberById(request.getSenderId());
         request.setSenderName(sender.getName()); // 발신자 이름 저장

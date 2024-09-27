@@ -1,6 +1,7 @@
 package com.yoyo.banking.domain.account.service;
 
 import com.yoyo.banking.domain.account.dto.pay.PayDTO;
+import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.banking.domain.account.dto.pay.PayTransactionDTO;
 import com.yoyo.banking.domain.account.dto.pay.PayTransferDTO;
@@ -16,6 +17,10 @@ import com.yoyo.common.kafka.dto.PaymentDTO;
 import jakarta.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +38,8 @@ public class PayService {
     private final PayTransactionRepository payTransactionRepository;
 
     private final PayProducer payProducer;
+
+    private final Map<Long, CompletableFuture<MemberResponseDTO>> names = new ConcurrentHashMap<>();
 
     /**
      * * 페이 머니 충전 / 환불
@@ -166,8 +173,21 @@ public class PayService {
      * * 페이 잔액 조회
      */
     public ResponseEntity<?> getPayBalance(Long memberId) {
-        Account account = findAccountByMemberId(memberId);
-        return ResponseEntity.ok(PayDTO.Response.of(account));
+        Account account = accountRepository.findByMemberId(memberId).orElse(null);
+
+        payProducer.sendPayToMemberForName(memberId);
+        CompletableFuture<MemberResponseDTO> future = new CompletableFuture<>();
+        names.put(memberId, future);
+        String memberName;
+        try{
+            memberName = future.get(10, TimeUnit.SECONDS).getName();
+        } catch (Exception e){
+            throw new BankingException(ErrorCode.KAFKA_ERROR);
+        }
+
+        PayDTO.Response response = (account == null)? PayDTO.Response.of(memberName)
+                                                    : PayDTO.Response.of(account, memberName);
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -182,5 +202,12 @@ public class PayService {
     private Account findAccountByMemberId(Long memberId) {
         return accountRepository.findByMemberId(memberId)
                                 .orElseThrow(() -> new BankingException(ErrorCode.NOT_FOUND_ACCOUNT));
+    }
+
+    public void completeMemberName(MemberResponseDTO response) {
+        CompletableFuture<MemberResponseDTO> future = names.remove(response.getMemberId());
+        if (future != null) {
+            future.complete(response);
+        }
     }
 }

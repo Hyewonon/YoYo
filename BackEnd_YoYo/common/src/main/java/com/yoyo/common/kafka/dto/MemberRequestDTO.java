@@ -16,9 +16,14 @@ import lombok.Setter;
 @JsonSerialize
 @JsonDeserialize
 @Builder
-public class EventMemberResponseDTO implements KafkaJson {
+public class MemberRequestDTO implements KafkaJson {
 
     private Long memberId;
-    private String name;
+
+    public static MemberRequestDTO of(Long memberId){
+        return MemberRequestDTO.builder()
+                               .memberId(memberId)
+                               .build();
+    }
 
 }

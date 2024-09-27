@@ -3,7 +3,7 @@ package com.yoyo.event.config;
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.AmountResponseDTO;
-import com.yoyo.common.kafka.dto.EventMemberResponseDTO;
+import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -43,7 +43,7 @@ public class ConsumerConfig {
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.TYPE_MAPPINGS, KafkaUtils
                 .getJsonTypeMappingInfo(AmountResponseDTO.class,
-                                        EventMemberResponseDTO.class));
+                                        MemberResponseDTO.class));
 
         return props;
     }
