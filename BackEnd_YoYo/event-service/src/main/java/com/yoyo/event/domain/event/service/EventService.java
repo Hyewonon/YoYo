@@ -50,10 +50,7 @@ public class EventService {
             throw new RuntimeException("Failed Kafka", e);
         }
 
-        // TODO : sendLink 생성 로직
-        // 링크 눌렀을 때 - eventId, title, memberId, memberName 함께 반환
-        String sendLink = "";
-        Event event = EventDTO.Request.toEntity(request, memberId, name, sendLink);
+        Event event = EventDTO.Request.toEntity(request, memberId, name);
         return EventDTO.Response.of(eventRepository.save(event));
     }
 
