@@ -1,7 +1,7 @@
 package com.yoyo.event.domain.event.consumer;
 
 import com.yoyo.common.kafka.dto.AmountResponseDTO;
-import com.yoyo.common.kafka.dto.EventMemberResponseDTO;
+import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.event.domain.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class EventConsumer {
     }
 
     @KafkaListener(topics = "member-name-topic", concurrency = "3")
-    public void getTransactionSummary(EventMemberResponseDTO name) {
+    public void getTransactionSummary(MemberResponseDTO name) {
         log.info("RECEIVE MEMBER NAME");
         eventService.completeMemberName(name);
     }

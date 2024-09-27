@@ -70,6 +70,8 @@ public class SsafyBankService {
     @Value("${ssafy.bank.account.demand-deposit.withdrawal}")
     private String bankDemandDepositWithdrawalUrl;
 
+    private final Long DUMMY_MONEY_AMOUNT = 10000000L;
+
     /**
      * [ssafy 금융 API]더미 계좌 생성
      */
@@ -93,6 +95,9 @@ public class SsafyBankService {
             String account = (String) tmp.get("accountNo");
             String bankCode = (String) tmp.get("bankCode");
             String bankName = bankingUtil.findBankNameByBankCode(bankCode);
+
+            // 더미 계좌 생성 시 돈 입금
+            updateDemandDeposit(memberId, DUMMY_MONEY_AMOUNT, true);
 
             return new ResponseEntity<>(DummyAccountDTO.Response.of(account, bankName, memberId), HttpStatus.CREATED);
         } else {
