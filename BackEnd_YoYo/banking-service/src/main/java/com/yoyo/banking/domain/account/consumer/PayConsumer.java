@@ -1,6 +1,7 @@
 package com.yoyo.banking.domain.account.consumer;
 
 import com.yoyo.banking.domain.account.service.PayService;
+import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.PaymentDTO;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class PayConsumer {
 
     private final String UPDATE_YOYO_PAY_BY_NO_MEMBER = "update-yoyo-pay-by-no-member";
     private final String MEMBER_NAME_TO_PAY_TOPIC = "member-name-to-pay-topic";
+    private final String USER_KEY_TO_BANKING_TOPIC = "user-key-to-banking-topic";
 
     private final PayService payService;
 
@@ -26,5 +28,10 @@ public class PayConsumer {
     @KafkaListener(topics = MEMBER_NAME_TO_PAY_TOPIC, concurrency = "3")
     public void getMemberName(MemberResponseDTO response) {
         payService.completeMemberName(response);
+    }
+
+    @KafkaListener(topics = USER_KEY_TO_BANKING_TOPIC, concurrency = "3")
+    public void createUserKey(MemberRequestDTO request) {
+        payService.createUserKey(request);
     }
 }

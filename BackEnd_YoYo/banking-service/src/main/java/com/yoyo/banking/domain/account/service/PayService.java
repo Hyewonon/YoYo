@@ -1,6 +1,7 @@
 package com.yoyo.banking.domain.account.service;
 
 import com.yoyo.banking.domain.account.dto.pay.PayDTO;
+import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.banking.domain.account.dto.pay.PayTransactionDTO;
@@ -202,6 +203,10 @@ public class PayService {
     private Account findAccountByMemberId(Long memberId) {
         return accountRepository.findByMemberId(memberId)
                                 .orElseThrow(() -> new BankingException(ErrorCode.NOT_FOUND_ACCOUNT));
+    }
+
+    public void createUserKey(MemberRequestDTO request) {
+        ssafyBankService.createUserKey(request.getMemberId());
     }
 
     public void completeMemberName(MemberResponseDTO response) {

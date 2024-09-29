@@ -4,18 +4,22 @@ import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.member.domain.member.dto.RegisterMemberDTO;
 import com.yoyo.member.domain.member.dto.UpdateMemberDTO;
+import com.yoyo.member.domain.member.producer.MemberProducer;
 import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.entity.Member;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final MemberProducer memberProducer;
 
     public Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
@@ -39,6 +43,9 @@ public class MemberService {
                 .isValid(request.isValid())
                 .build();
         Member savedMember = memberRepository.save(member);
+
+        // 회원가입 시, 싸피 금융 API userkey 생성 및 저장
+        memberProducer.sendBankingUserkey(savedMember.getMemberId());
 
         return new RegisterMemberDTO.Response(
                 savedMember.getMemberId(),
