@@ -1,2 +1,2 @@
-CREATE DATABASE IF NOT EXISTS banking-db;
-USE banking-db;
+CREATE DATABASE IF NOT EXISTS banking_db;
+USE banking_db;

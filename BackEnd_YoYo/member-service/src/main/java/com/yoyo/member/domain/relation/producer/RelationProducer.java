@@ -4,6 +4,7 @@ import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
 import com.yoyo.common.kafka.dto.RelationResponseDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
+import com.yoyo.common.kafka.dto.UpdateTransactionRelationTypeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -31,5 +32,9 @@ public class RelationProducer {
 
     public void sendRelationIds(RelationResponseDTO response){
         kafkaTemplate.send(SEND_RELATION_ID_LIST, response);
+    }
+
+    public void sendUpdateTransactionRelationType(UpdateTransactionRelationTypeDTO request) {
+        kafkaTemplate.send("update-transaction-relation-type-topic", request);
     }
 }

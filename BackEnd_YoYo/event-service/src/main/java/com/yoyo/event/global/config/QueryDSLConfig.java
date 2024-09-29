@@ -1,4 +1,4 @@
-package com.yoyo.event.config;
+package com.yoyo.event.global.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

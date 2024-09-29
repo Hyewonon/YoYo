@@ -1,12 +1,9 @@
 package com.yoyo.transaction.global.config;
 
-import com.yoyo.common.kafka.dto.PayInfoDTO;
-import com.yoyo.common.kafka.dto.PaymentDTO;
+import com.yoyo.common.kafka.dto.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import com.yoyo.common.kafka.dto.CreateTransactionDTO;
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
-import com.yoyo.common.kafka.dto.AmountRequestDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,9 +40,9 @@ public class ConsumerConfig {
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.TYPE_MAPPINGS, KafkaUtils
                 .getJsonTypeMappingInfo(CreateTransactionDTO.class,
-                                        AmountRequestDTO.class,
-                                        PayInfoDTO.RequestToTransaction.class,
-                                        PaymentDTO.class
+                        AmountRequestDTO.class,
+                        PayInfoDTO.RequestToTransaction.class,
+                        PaymentDTO.class, UpdateTransactionRelationTypeDTO.class
                 ));
 
         return props;

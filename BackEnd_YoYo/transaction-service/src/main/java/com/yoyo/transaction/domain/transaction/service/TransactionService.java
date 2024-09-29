@@ -1,5 +1,6 @@
 package com.yoyo.transaction.domain.transaction.service;
 
+import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.TransactionException;
 import com.yoyo.common.kafka.dto.RelationDTO;
@@ -21,10 +22,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,15 +36,12 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionProducer transactionProducer;
     private final Map<Long, CompletableFuture<TransactionSelfRelationDTO.ResponseFromMember>> summaries = new ConcurrentHashMap<>();
-    private final TransactionConsumer transactionConsumer;
 
     @Autowired
     public TransactionService(TransactionRepository transactionRepository,
-                              TransactionProducer transactionProducer,
-                              @Lazy TransactionConsumer transactionConsumer) {
+                              TransactionProducer transactionProducer) {
         this.transactionRepository = transactionRepository;
         this.transactionProducer = transactionProducer;
-        this.transactionConsumer = transactionConsumer;
     }
 
     public void deleteTransaction(Long transactionId) {
@@ -57,7 +53,7 @@ public class TransactionService {
     }
 
     public UpdateTransactionDTO.Response updateTransaction(Long transactionId, UpdateTransactionDTO.Request request) {
-        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new NullPointerException("Transaction not found"));
+        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_TRANSACTION));
         transaction.setEventName(request.getTitle());
         transaction.setAmount(request.getAmount());
         transaction.setMemo(request.getMemo());
@@ -159,24 +155,20 @@ public class TransactionService {
     }
 
     public List<FindTransactionDTO.Response> findTransactions(Long memberId, Long eventId, String search, String relationType, boolean isRegister) {
+        String validatedSearch = (search == null || search.trim().isEmpty()) ? null : search;
+        String validatedRelationType = (relationType == null || relationType.trim().isEmpty()) ? null : relationType;
         List<Transaction> transactions = transactionRepository.findByEventIdAndReceiverId(eventId, memberId);
         return transactions.stream()
-                .filter(transaction -> {
-                    RelationDTO.Request request = new RelationDTO.Request(memberId);
-                    transactionProducer.sendRelationRequest(request);
-                    String fetchedRelationType = transactionConsumer.getRelationType(transaction.getSenderId());
-                    return (relationType == null || fetchedRelationType.equals(relationType));
-                })
-                .filter(transaction -> (search == null || transaction.getReceiverName().contains(search)))
-                .filter(transaction -> transaction.getIsRegister() == isRegister)
+                .filter(transaction -> validatedSearch == null || transaction.getSenderName().contains(validatedSearch))
+                .filter(transaction -> validatedRelationType == null || transaction.getRelationType().toString().equals(validatedRelationType))
+                .filter(transaction -> transaction.getIsRegister().equals(isRegister))
                 .map(transaction -> FindTransactionDTO.Response.builder()
                         .transactionId(transaction.getTransactionId())
                         .senderName(transaction.getSenderName())
-                        .relationType(relationType)
+                        .relationType(transaction.getRelationType().toString())
                         .memo(transaction.getMemo())
                         .amount(transaction.getAmount())
-                        .time(transaction.getCreatedAt())
-                        .build())
-                .collect(Collectors.toList());
+                        .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt())
+                        .build()).collect(Collectors.toList());
     }
 }

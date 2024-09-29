@@ -28,7 +28,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=member-db
+      - MYSQL_DATABASE=member_db
   # banking-db
   banking-db:
     image: mysql:8.0
@@ -46,7 +46,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=banking-db
+      - MYSQL_DATABASE=banking_db
   # transaction-db
   transaction-db:
     image: mysql:8.0
@@ -64,7 +64,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=transaction-db
+      - MYSQL_DATABASE=transaction_db
   # notification-db
   notification-db:
     image: mysql:8.0
@@ -82,7 +82,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=notification-db
+      - MYSQL_DATABASE=notification_db
   # event-db
   event-db:
     image: mysql:8.0
@@ -100,7 +100,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=event-db
+      - MYSQL_DATABASE=event_db
 
   redis:
     image: redis:alpine
