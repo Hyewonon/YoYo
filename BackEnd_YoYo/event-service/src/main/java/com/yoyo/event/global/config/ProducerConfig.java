@@ -1,4 +1,4 @@
-package com.yoyo.event.config;
+package com.yoyo.event.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;

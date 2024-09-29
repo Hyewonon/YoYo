@@ -1,2 +1,2 @@
-CREATE DATABASE IF NOT EXISTS member-db;
-USE member-db;
+CREATE DATABASE IF NOT EXISTS member_db;
+USE member_db;

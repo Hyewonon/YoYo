@@ -6,7 +6,6 @@ import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
 import com.yoyo.common.kafka.dto.PaymentDTO;
-import com.yoyo.common.kafka.dto.RelationResponseDTO;
 import com.yoyo.common.kafka.dto.TransactionDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;

@@ -1,12 +1,12 @@
 package com.yoyo.member.domain.relation.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 
-public class RelationDTO {
+public class FindRelationDTO {
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor
     @Builder
+    @Getter
     public static class Response {
         private Long relationId;
         private Long oppositeId;

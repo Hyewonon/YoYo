@@ -1,2 +1,2 @@
-CREATE DATABASE IF NOT EXISTS event-db;
-USE event-db;
+CREATE DATABASE IF NOT EXISTS event_db;
+USE event_db;

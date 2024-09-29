@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     @Query("SELECT t FROM Transaction t WHERE t.receiverId = :receiverId AND t.eventId = :eventId")
@@ -13,7 +14,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     List<Transaction> findByEventIdAndReceiverId(Long eventId, Long receiverId);
 
-    @Query("SELECT t FROM Transaction  t WHERE t.receiverId = :receiverId AND t.eventId = :eventId AND (:search IS NULL OR t.senderName LIKE %:search%)" +
-            "AND (:isRegister IS NULL OR t.isRegister = :isRegister)")
-    List<Transaction> findTransactionEvent(@Param("receiverId") Long receiverId, @Param("eventId") Long eventId, @Param("search") String search, @Param("isRegister") Boolean isRegister);
+    Optional<Transaction> findBySenderIdAndReceiverId(Long senderId, Long receiverId);
+    Optional<Transaction> findByReceiverIdAndSenderId(Long receiverId, Long senderId);
 }

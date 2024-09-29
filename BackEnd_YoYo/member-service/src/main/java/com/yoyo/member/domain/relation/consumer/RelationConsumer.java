@@ -1,11 +1,9 @@
 package com.yoyo.member.domain.relation.consumer;
 
-import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO.RequestToMember;
-import com.yoyo.common.kafka.dto.RelationDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.domain.member.repository.NoMemberRepository;
@@ -13,16 +11,14 @@ import com.yoyo.member.domain.member.service.MemberService;
 import com.yoyo.member.domain.relation.producer.RelationProducer;
 import com.yoyo.member.domain.relation.repository.RelationRepository;
 import com.yoyo.member.domain.relation.service.RelationService;
-import com.yoyo.member.entity.Member;
 import com.yoyo.member.entity.NoMember;
 import com.yoyo.member.entity.Relation;
 import com.yoyo.member.entity.RelationType;
-import java.util.List;
+
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -40,9 +36,6 @@ public class RelationConsumer {
     private final String UPDATE_RELATION_TOPIC = "pay-update-relation-topic";
     private final String CREATE_TRANSACTION_SELF_RELATION_TOPIC = "create-transaction-self-relation-topic";
     private final String GET_RELATION_IDS = "get-relations-ids";
-
-    private final KafkaTemplate<String, KafkaJson> kafkaTemplate;
-
     private final RelationProducer producer;
 
     /**
@@ -61,7 +54,6 @@ public class RelationConsumer {
         relationService.updateRelationAmount(request.getSenderId(), request.getReceiverId(), request.getAmount(), true);
         relationService.updateRelationAmount(request.getReceiverId(), request.getSenderId(), request.getAmount(),
                                              false);
-
     }
 
     @KafkaListener(topics = "transaction-register-topic", concurrency = "3")
@@ -75,37 +67,21 @@ public class RelationConsumer {
                 entity.get().setTotalReceivedAmount(entity.get().getTotalReceivedAmount() + amount.getAmount());
             }
         } else {
+            Relation jpa;
             if (amount.isSend()) {
-                Relation jpa = Relation.builder()
-                                       .oppositeId(amount.getOppositeId())
-                                       .totalSentAmount(amount.getAmount())
-                                       .member(memberRepository.findByMemberId(amount.getMemberId()))
-                                       .build();
-                relationRepository.save(jpa);
+                jpa = Relation.builder()
+                        .oppositeId(amount.getOppositeId())
+                        .totalSentAmount(amount.getAmount())
+                        .member(memberRepository.findByMemberId(amount.getMemberId()))
+                        .build();
             } else {
-                Relation jpa = Relation.builder()
-                                       .oppositeId(amount.getOppositeId())
-                                       .totalReceivedAmount(amount.getAmount())
-                                       .member(memberRepository.findByMemberId(amount.getMemberId()))
-                                       .build();
-                relationRepository.save(jpa);
+                jpa = Relation.builder()
+                        .oppositeId(amount.getOppositeId())
+                        .totalReceivedAmount(amount.getAmount())
+                        .member(memberRepository.findByMemberId(amount.getMemberId()))
+                        .build();
             }
-        }
-    }
-
-    @KafkaListener(topics = "relation-request-topic", concurrency = "3")
-    public void relationResponse(RelationDTO.Request request) {
-        Long memberId = request.getMemberId();
-        Member member = memberRepository.findByMemberId(memberId);
-        List<Relation> relations = member.getRelations();
-        for (Relation relation : relations) {
-            Long oppositeId = relation.getOppositeId();
-            String relationType = relation.getRelationType().toString();
-            RelationDTO.Response response = RelationDTO.Response.builder()
-                                                                .oppositeId(oppositeId)
-                                                                .relationType(relationType)
-                                                                .build();
-            kafkaTemplate.send("relation-response-topic", response);
+            relationRepository.save(jpa);
         }
     }
 

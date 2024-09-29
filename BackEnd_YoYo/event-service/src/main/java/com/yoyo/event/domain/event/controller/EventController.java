@@ -87,7 +87,7 @@ public class EventController {
     })
     @GetMapping("/search")
     public ResponseEntity<?> searchEvent(@RequestHeader("memberId") String memberId,
-                                         @RequestParam("keyword") String keyword) {
+                                         @RequestParam(value = "keyword", required = false) String keyword) {
         List<Response> responses = eventService.searchEvent(Long.parseLong(memberId), keyword);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }

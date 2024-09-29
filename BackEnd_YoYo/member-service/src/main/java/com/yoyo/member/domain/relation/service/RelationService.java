@@ -4,10 +4,12 @@ import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.MemberException;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
 import com.yoyo.common.kafka.dto.RelationResponseDTO;
+import com.yoyo.common.kafka.dto.UpdateTransactionRelationTypeDTO;
 import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.domain.member.service.MemberService;
-import com.yoyo.member.domain.relation.dto.RelationDTO;
+import com.yoyo.member.domain.relation.dto.FindRelationDTO;
 import com.yoyo.member.domain.relation.dto.UpdateRelationDTO;
+import com.yoyo.member.domain.relation.producer.RelationProducer;
 import com.yoyo.member.domain.relation.repository.RelationRepository;
 import com.yoyo.member.entity.Member;
 import com.yoyo.member.entity.NoMember;
@@ -17,17 +19,18 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class RelationService {
 
     private final RelationRepository relationRepository;
-    private final MemberRepository memberRepository;
     private final MemberService memberService;
-
+    private final RelationProducer relationProducer;
 
     /**
      * 페이 송금 친구 관계 저장
@@ -82,35 +85,37 @@ public class RelationService {
     /**
      * 친구관계 정보 수정
      */
-    public void updateRelation(Long memberId, UpdateRelationDTO.Request request) {
+    public Relation updateRelation(Long memberId, UpdateRelationDTO.Request request) {
         Relation relation = relationRepository.findByMember_MemberIdAndOppositeId(memberId, request.getMemberId())
                                               .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_RELATION));
         relation.setRelationType(RelationType.valueOf(request.getRelationType()));
         relation.setDescription(request.getDescription());
-        relationRepository.save(relation);
+        Relation updatedRelation= relationRepository.save(relation);
+        UpdateTransactionRelationTypeDTO updateTransactionRelationTypeDTO = UpdateTransactionRelationTypeDTO.builder()
+                .memberId(memberId)
+                .oppositeId(updatedRelation.getOppositeId())
+                .relationType(updatedRelation.getRelationType().toString())
+                .build();
+        relationProducer.sendUpdateTransactionRelationType(updateTransactionRelationTypeDTO);
+        return updatedRelation;
     }
 
-    public List<RelationDTO.Response> findRelations(Long memberId, String tag, String search) {
-        RelationType relationType = (tag != null) ? RelationType.valueOf(tag.toUpperCase()) : null;
-        List<Relation> relations;
-        if (relationType != null && search != null) {
-            relations = relationRepository.findByMember_MemberIdAndRelationTypeAndOppositeNameContaining(
-                    memberId, relationType, search
-            );
-        } else if (relationType != null) {
-            relations = relationRepository.findByMember_MemberIdAndRelationType(
-                    memberId, relationType
-            );
-        } else if (search != null) {
-            relations = relationRepository.findByMember_MemberIdAndOppositeNameContaining(
-                    memberId, search
-            );
-        } else {
-            relations = relationRepository.findByMember_MemberId(memberId);
-        }
-        return relations.stream().map(
-                relation -> RelationDTO.Response.builder().build()
-        ).collect(Collectors.toList());
+    public List<FindRelationDTO.Response> findRelations(Long memberId, String tag, String search) {
+        String validatedTag = (tag == null || tag.trim().isEmpty()) ? null : tag;
+        String validatedSearch = (search == null || search.trim().isEmpty()) ? null : search;
+        List<Relation> relations = relationRepository.findByMember_MemberId(memberId);
+        return relations.stream()
+                .filter(relation -> validatedTag == null || relation.getRelationType().toString().equals(validatedTag))
+                .filter(relation -> validatedSearch == null || relation.getOppositeName().contains(validatedSearch))
+                .map(relation -> FindRelationDTO.Response.builder()
+                        .relationId(relation.getRelationId())
+                        .oppositeId(relation.getOppositeId())
+                        .oppositeName(relation.getOppositeName())
+                        .relationType(relation.getRelationType().toString())
+                        .description(relation.getDescription())
+                        .totalReceivedAmount(relation.getTotalSentAmount())
+                        .totalSentAmount(relation.getTotalReceivedAmount())
+                        .build()).collect(Collectors.toList());
     }
 
     /*
