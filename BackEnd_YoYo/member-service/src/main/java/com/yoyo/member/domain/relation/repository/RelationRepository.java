@@ -29,6 +29,8 @@ public interface RelationRepository extends JpaRepository<Relation, Long> {
     // isRegister 필터링
     List<Relation> findByMember_MemberId(Long memberId);
 
+    // memberId와 isMember로 필터링
+    List<Relation> findByMember_MemberIdAndIsMemberTrue(Long memberId);
 
     Optional<Relation> findByMember_MemberIdAndOppositeId(Long memberId, Long oppositeId);
 
