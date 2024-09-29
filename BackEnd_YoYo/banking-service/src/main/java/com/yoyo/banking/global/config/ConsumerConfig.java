@@ -2,6 +2,7 @@ package com.yoyo.banking.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
+import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.PaymentDTO;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ public class ConsumerConfig {
         props.put(JsonDeserializer.TYPE_MAPPINGS, KafkaUtils
                 .getJsonTypeMappingInfo(PaymentDTO.class
                         , MemberResponseDTO.class
+                        , MemberRequestDTO.class
                 ));
 
         return props;
