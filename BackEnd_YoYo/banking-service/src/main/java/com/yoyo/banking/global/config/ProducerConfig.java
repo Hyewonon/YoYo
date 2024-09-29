@@ -3,6 +3,7 @@ package com.yoyo.banking.global.config;
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
+import com.yoyo.common.kafka.dto.NotificationCreateDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.common.kafka.dto.PaymentDTO;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class ProducerConfig {
                 PayInfoDTO.RequestToMember.class
                 , PaymentDTO.class
                 , MemberRequestDTO.class
+                , NotificationCreateDTO.class
         ));
         return new DefaultKafkaProducerFactory<>(config);
     }

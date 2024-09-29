@@ -3,6 +3,7 @@ package com.yoyo.member.domain.relation.service;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.MemberException;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
+import com.yoyo.common.kafka.dto.RelationResponseDTO;
 import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.domain.member.service.MemberService;
 import com.yoyo.member.domain.relation.dto.RelationDTO;
@@ -119,6 +120,14 @@ public class RelationService {
         Relation relation = relationRepository.findByMemberAndOppositeId(memberId, oppositeId)
                                               .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
         return new MemberTagDTO(relation.getMember().getMemberId(), relation.getOppositeId(), relation.getRelationType().toString(), relation.getDescription());
+    }
+
+    public RelationResponseDTO findRelationIds(Long memberId){
+        List<Relation> relations = relationRepository.findByMember_MemberIdAndIsMemberTrue(memberId);
+        List<Long> oppositeIds = relations.stream()
+                                          .map(Relation::getOppositeId)
+                                          .toList();
+        return RelationResponseDTO.of(memberId, oppositeIds);
     }
 
     private Relation toNewEntityForPay(Member member, Long oppositeId, RelationType relationType, Boolean isMember) {

@@ -6,6 +6,8 @@ import com.yoyo.common.kafka.dto.AmountRequestDTO;
 import com.yoyo.common.kafka.dto.AmountResponseDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
+import com.yoyo.common.kafka.dto.NotificationCreateDTO;
+import com.yoyo.common.kafka.dto.RelationResponseDTO;
 import com.yoyo.event.domain.event.producer.EventProducer;
 import com.yoyo.event.domain.event.dto.EventDTO;
 import com.yoyo.event.domain.event.dto.EventDetailDTO;
@@ -13,6 +15,8 @@ import com.yoyo.event.domain.event.dto.EventDetailDTO.Response;
 import com.yoyo.event.domain.event.dto.EventUpdateDTO;
 import com.yoyo.event.domain.event.repository.EventRepository;
 import com.yoyo.event.entity.Event;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -34,11 +38,12 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventProducer eventProducer;
-    private final int PAGE_SIZE = 10;
     private final Map<Long, CompletableFuture<AmountResponseDTO>> summaries = new ConcurrentHashMap<>();
     private final Map<Long, CompletableFuture<MemberResponseDTO>> names = new ConcurrentHashMap<>();
+    private final Map<Long, CompletableFuture<RelationResponseDTO>> relationIds = new ConcurrentHashMap<>();
 
     public EventDTO.Response createEvent(Long memberId, EventDTO.Request request) {
+        // MyName Get
         MemberRequestDTO message = new MemberRequestDTO(memberId);
         eventProducer.getMemberName(message);
         CompletableFuture<MemberResponseDTO> future = new CompletableFuture<>();
@@ -49,9 +54,29 @@ public class EventService {
         } catch (Exception e){
             throw new RuntimeException("Failed Kafka", e);
         }
-
+        
+        // Event 생성
         Event event = EventDTO.Request.toEntity(request, memberId, name);
-        return EventDTO.Response.of(eventRepository.save(event));
+        Event savedEvent = eventRepository.save(event);
+
+        // Relation 리스트 Get
+        eventProducer.getRelationIds(message);
+        CompletableFuture<RelationResponseDTO> relationFuture = new CompletableFuture<>();
+        relationIds.put(memberId, relationFuture);
+        List<Long> IdList;
+        try{
+            IdList = relationFuture.get(10, TimeUnit.SECONDS).getRelationIds();
+        } catch (Exception e){
+            throw new RuntimeException("Failed Kafka", e);
+        }
+
+        // Relation Member에게 알림 생성
+        for(Long receiverId : IdList){
+            eventProducer.sendEventNotification(
+                    NotificationCreateDTO.of(memberId, name, receiverId, savedEvent.getId(),
+                                             savedEvent.getTitle(), "EVENT"));
+        }
+        return EventDTO.Response.of(savedEvent);
     }
 
     public List<EventDTO.Response> getEventList(Long memberId) {
@@ -106,6 +131,13 @@ public class EventService {
         CompletableFuture<MemberResponseDTO> future = names.remove(name.getMemberId());
         if (future != null) {
             future.complete(name);
+        }
+    }
+
+    public void completeRelationId(RelationResponseDTO relation) {
+        CompletableFuture<RelationResponseDTO> relationFuture = relationIds.remove(relation.getMemberId());
+        if (relationFuture != null) {
+            relationFuture.complete(relation);
         }
     }
 

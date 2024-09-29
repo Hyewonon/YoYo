@@ -3,8 +3,8 @@ package com.yoyo.notification.domain.notification.service;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.NotificationException;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
+import com.yoyo.common.kafka.dto.NotificationCreateDTO;
 import com.yoyo.common.kafka.dto.NotificationInfoDTO;
-import com.yoyo.notification.domain.notification.dto.NotificationCreateDTO;
 import com.yoyo.notification.domain.notification.dto.NotificationDTO;
 import com.yoyo.notification.domain.notification.dto.NotificationUpdateDTO;
 import com.yoyo.notification.domain.notification.producer.NotificationProducer;
@@ -32,12 +32,11 @@ public class NotificationService {
 
     private final Map<String, CompletableFuture<MemberTagDTO>> tags = new ConcurrentHashMap<>();
 
-    public NotificationCreateDTO.Response createNotification(Long memberId, NotificationCreateDTO.Request request) {
-        Notification notification = NotificationCreateDTO.Request.toEntity(request, memberId, LocalDateTime.now());
-
+    public void createNotification(NotificationCreateDTO request) {
+        Notification notification = NotificationDTO.toEntity(request, LocalDateTime.now());
         // TODO: [FCM Server] Push알림 전송
 
-        return NotificationCreateDTO.Response.of(notificationRepository.save(notification));
+        notificationRepository.save(notification);
     }
 
     public NotificationUpdateDTO updateNotification(Long memberId, NotificationUpdateDTO request) {
@@ -53,13 +52,11 @@ public class NotificationService {
     }
 
     public List<NotificationDTO.Response> getNotificationList(Long memberId, String type) {
-        List<Notification> notifications = notificationRepository.findAllByReceiverIdAndTypeOrderByCreatedAtDesc(
+        List<Notification> notifications = notificationRepository.findAllByReceiverIdAndTypeAndIsRegisterFalseOrderByCreatedAtDesc(
                 memberId,
                 NotificationType.valueOf(
                         type.toUpperCase()));
         return notifications.stream()
-                            .filter(notification -> NotificationType.EVENT.equals(notification.getType())
-                                    && !notification.getIsRegister())
                             .map(notification -> {
                                 // Tag & Description Get
                                 MemberTagDTO message = new MemberTagDTO(memberId, notification.getSenderId());

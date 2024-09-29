@@ -4,6 +4,7 @@ import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.AmountRequestDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
+import com.yoyo.common.kafka.dto.NotificationCreateDTO;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,8 @@ public class ProducerConfig {
         config.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         config.put(JsonSerializer.TYPE_MAPPINGS, KafkaUtils.getJsonTypeMappingInfo(AmountRequestDTO.class,
-                                                                                   MemberRequestDTO.class));
+                                                                                   MemberRequestDTO.class,
+                                                                                   NotificationCreateDTO.class));
         return new DefaultKafkaProducerFactory<>(config);
     }
 
