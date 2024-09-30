@@ -79,7 +79,7 @@ public class PayController {
     @Operation(summary = "페이 거래 내역 조회", description = "페이 거래 내역 조회")
     ResponseEntity<?> getPayTransaction(@RequestHeader("memberId") Long memberId,
                                         @RequestParam
-                                        @Parameter(name="payType", description = "거래 타입", example = "DEPOSIT/WITHDRAW", required = true)
+                                        @Parameter(name="transactionType", description = "거래 타입", example = "DEPOSIT/WITHDRAW", required = true)
                                         String transactionType) {
         return payService.getPayTransactions(transactionType, memberId);
     }
