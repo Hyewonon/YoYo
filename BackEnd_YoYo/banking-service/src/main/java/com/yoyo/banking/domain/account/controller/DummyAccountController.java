@@ -76,4 +76,25 @@ public class DummyAccountController {
 //        log.info("-----------------은행코드 저장--------------------");
         dummyAccountService.은행_데이터_생성();
     }
+
+    /**
+     *  [ssafy 금융 API] user key 생성 및 저장
+     * <p>
+     *  - 회원가입 시 userkey 생성 및 저장
+     * */
+    @PostMapping("/user-key")
+    @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
+    ResponseEntity<?> createUserKey(@RequestHeader("memberId") Long memberId) {
+        return ssafyBankService.createUserKey(memberId);
+    }
+
+    /**
+     *  [ssafy 금융 API] user key 조회 및 저장
+     * */
+    @GetMapping("/user-key")
+    @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
+    ResponseEntity<?> getUserKey(@RequestHeader("memberId") Long memberId) {
+        return ssafyBankService.getUserKey(memberId);
+    }
+
 }

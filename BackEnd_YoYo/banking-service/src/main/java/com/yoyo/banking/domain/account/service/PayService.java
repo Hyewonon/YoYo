@@ -79,8 +79,8 @@ public class PayService {
     }
 
     /**
-     * * TODO : 페이 거래
-     */
+    * * 페이 거래
+    * */
     public ResponseEntity<?> transferPayment(PayTransferDTO.Request request, Long currMemberId) {
         // 1. 페이머니 충분한지 확인
         // 1.1 충분하지 않으면 충전
@@ -185,12 +185,20 @@ public class PayService {
      * * 페이 잔액 조회
      */
     public ResponseEntity<?> getPayBalance(Long memberId) {
-        Account account = accountRepository.findByMemberId(memberId).orElse(null);
+        Account account = findAccountByMemberId(memberId);
 
-        String memberName = getNameFromMember(memberId);
+        payProducer.sendPayToMemberForName(memberId);
+        CompletableFuture<MemberResponseDTO> future = new CompletableFuture<>();
+        names.put(memberId, future);
+        String memberName;
+        try{
+            memberName = future.get(10, TimeUnit.SECONDS).getName();
+        } catch (Exception e){
+            throw new BankingException(ErrorCode.KAFKA_ERROR);
+        }
 
-        PayDTO.Response response = (account == null) ? PayDTO.Response.of(memberName)
-                                                     : PayDTO.Response.of(account, memberName);
+        PayDTO.Response response = (account.getAccountNumber() == null)? PayDTO.Response.of(memberName)
+                                                    : PayDTO.Response.of(account, memberName);
         return ResponseEntity.ok(response);
     }
 
