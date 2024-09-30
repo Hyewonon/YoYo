@@ -327,8 +327,8 @@ public class SsafyBankService {
         }catch(HttpClientErrorException e){
             // 클라이언트에게 오류 응답 반환
             Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("responseCode", e.getStatusCode().toString());
-            errorResponse.put("responseMessage", (String) e.getResponseBodyAs(Map.class).get("responseMessage"));
+            errorResponse.put("code", e.getStatusCode().toString());
+            errorResponse.put("message", (String) e.getResponseBodyAs(Map.class).get("responseMessage"));
 
             return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
         }
