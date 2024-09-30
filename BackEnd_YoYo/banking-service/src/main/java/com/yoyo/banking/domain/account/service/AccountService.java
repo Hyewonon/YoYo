@@ -9,7 +9,6 @@ import com.yoyo.banking.global.util.BankingUtil;
 import com.yoyo.common.dto.response.CommonResponse;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.BankingException;
-import com.yoyo.common.response.ApiResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,12 +62,7 @@ public class AccountService {
         account.setPin(hashedPin);
 
         accountRepository.save(account);
-        ApiResponse<CommonResponse> res = new ApiResponse<>(
-                HttpStatus.OK.value(),
-                "PIN 수정 성공",
-                CommonResponse.of(true, "PIN 수정 성공")
-        );
-        return ResponseEntity.status(HttpStatus.OK).body(res);
+        return ResponseEntity.status(HttpStatus.OK).body(CommonResponse.of(true, "PIN 번호 수정 성공"));
     }
 
 

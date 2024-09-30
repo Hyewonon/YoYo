@@ -101,7 +101,7 @@ public class SsafyBankService {
 
             return new ResponseEntity<>(DummyAccountDTO.Response.of(account, bankName, memberId), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(response, response.getStatusCode());
+            return response;
         }
     }
 
@@ -146,7 +146,7 @@ public class SsafyBankService {
         if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
             return new ResponseEntity<>(CommonResponse.of(true, "1원 송금에 성공했습니다."), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseFromSsafy, responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
 
@@ -170,7 +170,7 @@ public class SsafyBankService {
             List<DummyTransactionDTO> transactions = extractTransactions(rec);
             return new ResponseEntity<>(DummyTransactionDTOs.of(totalCount, transactions), responseFromSsafy.getStatusCode());
         } else {
-            return new ResponseEntity<>(responseFromSsafy, responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
     /*
@@ -216,7 +216,7 @@ public class SsafyBankService {
         if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
             return new ResponseEntity<>(CommonResponse.of(true, successMessage), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseFromSsafy, responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
 
@@ -242,7 +242,7 @@ public class SsafyBankService {
             accountRepository.save(account);
             return new ResponseEntity<>(CommonResponse.of(true, "유저 키를 등록했습니다."), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseFromSsafy, responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
 
@@ -269,7 +269,7 @@ public class SsafyBankService {
             accountRepository.save(account);
             return new ResponseEntity<>(userKey, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseFromSsafy.getBody(), responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
 
@@ -302,7 +302,7 @@ public class SsafyBankService {
         if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
             return new ResponseEntity<>(CommonResponse.of(true, successMessage), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseFromSsafy.getBody(), responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
 
@@ -327,10 +327,10 @@ public class SsafyBankService {
         }catch(HttpClientErrorException e){
             // 클라이언트에게 오류 응답 반환
             Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("code", e.getStatusCode().toString());
-            errorResponse.put("message", (String) e.getResponseBodyAs(Map.class).get("responseMessage"));
-
-            return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
+            errorResponse.put("status", String.valueOf(400));
+            errorResponse.put("errorCode", ErrorCode.SSAFY_API_ERROR.toString());
+            errorResponse.put("errorMessage", (String) e.getResponseBodyAs(Map.class).get("responseMessage"));
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
 }
