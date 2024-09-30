@@ -74,7 +74,7 @@ public class PayService {
             savePayTransaction(request, memberId, payType);
             return ResponseEntity.ok(response.getBody());
         } else {
-            return ResponseEntity.status(response.getStatusCode()).body(response);
+            return response;
         }
     }
 

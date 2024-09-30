@@ -3,10 +3,12 @@ package com.yoyo.banking.domain.account.controller;
 import com.yoyo.banking.domain.account.dto.account.AccountAuthDTO;
 import com.yoyo.banking.domain.account.dto.account.AccountCreateDTO;
 import com.yoyo.banking.domain.account.dto.account.AccountPinDTO;
+import com.yoyo.banking.domain.account.dto.pay.PayTransactionDTO;
 import com.yoyo.banking.domain.account.service.AccountService;
 import com.yoyo.banking.domain.account.service.SsafyBankService;
 import com.yoyo.common.dto.response.BodyValidationExceptionResopnse;
 import com.yoyo.common.dto.response.CommonResponse;
+import com.yoyo.common.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -72,6 +74,12 @@ public class AccountController {
      * */
     @PostMapping("/open")
     @Operation(summary = "계좌 1원 송금", description = "입력 계좌에 1원 송금한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "1원 송금 성공",
+                         content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "1원 송금 실패",
+                         content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+    })
     ResponseEntity<?> openAccountAuth(@RequestHeader("memberId") Long memberId,
                                       @RequestBody @Valid AccountAuthDTO.Request request) {
         return ssafyBankService.openAccountAuth(request, memberId);
@@ -82,6 +90,12 @@ public class AccountController {
      * */
     @PostMapping("/check")
     @Operation(summary = "계좌 1원 송금 확인", description = "1원 송금 코드를 확인한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "1원 송금 코드를 확인 성공",
+                         content = @Content(schema = @Schema(implementation = PayTransactionDTO.Response.class))),
+            @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류",
+                         content = @Content(schema = @Schema(implementation = BodyValidationExceptionResopnse.class))),
+    })
     ResponseEntity<?> checkAccountAuth(@RequestHeader("memberId") Long memberId,
                                        @RequestBody @Valid AccountAuthDTO.Request request) {
         return ssafyBankService.checkAccountAuth(request, memberId);
@@ -97,8 +111,10 @@ public class AccountController {
     @PostMapping
     @Operation(summary = "계좌 등록, 수정", description = "계좌를 등록(수정)한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "계좌 등록(수정) 성공"),
-            @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류")
+            @ApiResponse(responseCode = "201", description = "계좌 등록(수정) 성공",
+                content = @Content(schema = @Schema(implementation = PayTransactionDTO.Response.class))),
+            @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류",
+                         content = @Content(schema = @Schema(implementation = BodyValidationExceptionResopnse.class))),
     })
     ResponseEntity<CommonResponse> createAccount(@RequestHeader("memberId") Long memberId,
                                                  @RequestBody @Valid AccountCreateDTO.Request request) {
@@ -119,9 +135,5 @@ public class AccountController {
     ResponseEntity<AccountCreateDTO.Response> getAccount(@RequestHeader("memberId") Long memberId){
         return accountService.getAccount(memberId);
     }
-
-    /**
-    * * TODO : 계좌 삭제
-    * */
-
 }
+
