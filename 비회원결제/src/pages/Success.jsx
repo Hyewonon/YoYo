@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
 
 export function Success() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [responseData, setResponseData] = useState(null);
+  const senderName = location.state || {};
+  const description = location.state || {};
 
   useEffect(() => {
     async function confirm() {
@@ -12,10 +15,10 @@ export function Success() {
         orderId: searchParams.get("orderId"),
         amount: searchParams.get("amount"),
         paymentKey: searchParams.get("paymentKey"),
-        senderName: searchParams.get("senderName"),
-        receiverId : searchParams.get("receiverId"),
-        eventId: searchParams.get("eventId"),
-        description : searchParams.get("description")
+        senderName: senderName,
+        receiverId : 1, // 링크에서 가져올 수 잇나
+        eventId: 1, // 링크에서 가져올 수 잇나
+        description : description
       };
 
       const response = await fetch("/api/confirm/payment", {

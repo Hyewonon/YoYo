@@ -14,7 +14,6 @@ public class UpdateTransactionDTO {
     @Builder
     public static class Request {
         private String title;
-        private LocalDateTime createdAt;
         private String memo;
         private long amount;
     }

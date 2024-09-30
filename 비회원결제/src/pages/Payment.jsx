@@ -1,17 +1,16 @@
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useNavigate } from "react";
 const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
 const customerKey = generateRandomString();
 
 export function Payment() {
   const [payment, setPayment] = useState(null);
+  const navigate = useNavigate();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
-  const [senderName, setSenderName] = useState("");
-  const [price, setPrice] = useState();
   const [phoneNumber, setPhoneNumber] = useState("");
+  // 두개 값 보내기 /payment/success
+  const [senderName, setSenderName] = useState("");
   const [description, setDescription] = useState("");
-  const receiverId = 1;
-  const eventId = 1;
 
   function selectPaymentMethod(method) {
     setSelectedPaymentMethod(method);
@@ -39,14 +38,15 @@ export function Payment() {
       value: price,
     };
 
-    try{switch (selectedPaymentMethod) {
+    try {
+      switch (selectedPaymentMethod) {
       case "CARD":
         await payment.requestPayment({
           method: "CARD", // 카드 및 간편결제
           amount,
           orderId: generateRandomString(), // 받는 사람 + 고유 주문번호
           orderName: description,
-          successUrl: window.location.origin + `/payment/success?senderName=${senderName}&description=${description}&receiverId=${receiverId}&eventId=${eventId}`, 
+          successUrl: window.location.origin + "/payment/success", 
           failUrl: window.location.origin + "/fail",
           customerEmail: "",
           customerName: "",
@@ -65,7 +65,7 @@ export function Payment() {
           amount, 
           orderId: generateRandomString(),
           orderName: "마음 보내기",
-          successUrl: window.location.origin + `/payment/success?senderName=${senderName}&description=${description}&receiverId=${receiverId}&eventId=${eventId}`, 
+          successUrl: window.location.origin + "/payment/success",
           failUrl: window.location.origin + "/fail",
           customerEmail: "",
           customerName: "",
@@ -80,7 +80,9 @@ export function Payment() {
         break;
       default:
         alert("결제 수단을 선택해주세요.");
-    }
+      }
+      // "/payment/success" 페이지로 값 보내기
+navigate("/payment/success", { state: { senderName: senderName, description: description } });
     }
     catch (error) {
       console.log("결제 에러", error);

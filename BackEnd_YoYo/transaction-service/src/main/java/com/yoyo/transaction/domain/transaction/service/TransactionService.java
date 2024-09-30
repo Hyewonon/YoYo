@@ -3,6 +3,7 @@ package com.yoyo.transaction.domain.transaction.service;
 import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.TransactionException;
+import com.yoyo.common.kafka.dto.FindDescriptionDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO.ResponseFromMember;
 import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
@@ -18,10 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +37,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionProducer transactionProducer;
     private final Map<Long, CompletableFuture<TransactionSelfRelationDTO.ResponseFromMember>> summaries = new ConcurrentHashMap<>();
+    private final CountDownLatch latch = new CountDownLatch(1);
 
     @Autowired
     public TransactionService(TransactionRepository transactionRepository,
@@ -162,6 +166,7 @@ public class TransactionService {
                 .filter(transaction -> transaction.getIsRegister().equals(isRegister))
                 .map(transaction -> FindTransactionDTO.Response.builder()
                         .transactionId(transaction.getTransactionId())
+                        .oppositeId(transaction.getSenderId())
                         .senderName(transaction.getSenderName())
                         .relationType(transaction.getRelationType().toString())
                         .memo(transaction.getMemo())
@@ -169,9 +174,22 @@ public class TransactionService {
                         .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt())
                         .build()).collect(Collectors.toList());
     }
-    public Map<String,List<?>> findTransactions(Long memberId, Long oppositeId) {
+    private String description;
+
+    public Map<String, Object> findTransactions(Long memberId, Long oppositeId) {
+        CountDownLatch latch = new CountDownLatch(1);
         List<Transaction> sendTransaction = transactionRepository.findAllBySenderIdAndReceiverId(memberId, oppositeId);
         List<Transaction> receiveTransaction = transactionRepository.findAllBySenderIdAndReceiverId(oppositeId, memberId);
+        String oppositeName = receiveTransaction.get(0).getSenderName();
+        FindDescriptionDTO.Request request = FindDescriptionDTO.Request.builder().memberId(memberId).oppositeId(oppositeId).build();
+        transactionProducer.sendRelationDescription(request);
+        try {
+            latch.await(5, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        long totalReceivedAmount = receiveTransaction.stream().mapToLong(Transaction::getAmount).sum();
+        long totalSentAmount = sendTransaction.stream().mapToLong(Transaction::getAmount).sum();
         List<FindTransactionDTO.RelationReceiveResponse> receiveResponse = receiveTransaction.stream().map(transaction -> FindTransactionDTO.RelationReceiveResponse.builder()
                 .transactionId(transaction.getTransactionId())
                 .senderName(transaction.getSenderName())
@@ -188,9 +206,18 @@ public class TransactionService {
                 .amount(transaction.getAmount())
                 .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt())
                 .build()).toList();
-        Map<String,List<?>> responseMap = new HashMap<>();
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("oppositeName", oppositeName);
+        responseMap.put("description", description);
+        responseMap.put("totalReceivedAmount", totalReceivedAmount);
+        responseMap.put("totalSentAmount", totalSentAmount);
         responseMap.put("receive", receiveResponse);
         responseMap.put("send", sendResponse);
         return responseMap;
+    }
+    @KafkaListener(topics = "description-response-topic", concurrency = "3")
+    public void getDescriptionResponse(FindDescriptionDTO.Response response) {
+        this.description = response.getDescription();
+        latch.countDown();
     }
 }

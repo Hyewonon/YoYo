@@ -35,7 +35,7 @@ public class ProducerConfig {
                 MemberTagDTO.class,
                 PaymentDTO.class,
                 RelationResponseDTO.class,
-                UpdateTransactionRelationTypeDTO.class));
+                UpdateTransactionRelationTypeDTO.class, FindDescriptionDTO.Response.class));
         return new DefaultKafkaProducerFactory<>(config);
     }
 

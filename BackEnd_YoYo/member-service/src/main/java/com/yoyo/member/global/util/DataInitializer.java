@@ -66,6 +66,7 @@ public class DataInitializer implements CommandLineRunner {
                 .password(BCrypt.hashpw("Dydy1234!", BCrypt.gensalt()))
                 .birthDay(LocalDate.of(1998, 1, 19))
                 .build();
+
         members.add(ckl);
         members.add(kht);
         members.add(lcj);
@@ -94,6 +95,68 @@ public class DataInitializer implements CommandLineRunner {
                 }
             }
         }
+        Member unknown = Member.builder()
+                .name("김싸피")
+                .phoneNumber("01012345678")
+                .password(BCrypt.hashpw("Dydy1234!", BCrypt.gensalt()))
+                .birthDay(LocalDate.of(2000, 1, 19))
+                .build();
+        Member unknown2 = Member.builder()
+                .name("이택근")
+                .phoneNumber("01087654312")
+                .password(BCrypt.hashpw("Dydy1234!", BCrypt.gensalt()))
+                .birthDay(LocalDate.of(2004, 1, 19))
+                .build();
+        members.add(unknown2);
+        members.add(unknown);
+        Relation relation1 = Relation.builder()
+                .member(members.get(1))
+                .oppositeId(unknown.getMemberId())
+                .oppositeName(unknown.getName())
+                .relationType(RelationType.NONE)
+                .description("누구세요")
+                .totalReceivedAmount(20000L)
+                .totalSentAmount(0L)
+                .isMember(false)
+                .build();
+        Relation relation2 = Relation.builder()
+                .member(members.get(1))
+                .oppositeId(unknown2.getMemberId())
+                .oppositeName(unknown2.getName())
+                .relationType(RelationType.NONE)
+                .description("WHO?")
+                .totalReceivedAmount(50000L)
+                .totalSentAmount(0L)
+                .isMember(false)
+                .build();
+        Relation relation3 = Relation.builder()
+                .member(members.get(2))
+                .oppositeId(unknown.getMemberId())
+                .oppositeName(unknown.getName())
+                .relationType(RelationType.NONE)
+                .description("누구슈?")
+                .totalReceivedAmount(20000L)
+                .totalSentAmount(0L)
+                .isMember(false)
+                .build();
+        Relation relation4 = Relation.builder()
+                .member(members.get(2))
+                .oppositeId(unknown2.getMemberId())
+                .oppositeName(unknown2.getName())
+                .relationType(RelationType.NONE)
+                .description("WHO?")
+                .totalReceivedAmount(50000L)
+                .totalSentAmount(0L)
+                .isMember(false)
+                .build();
+        relations.add(relation1);
+        relations.add(relation2);
+        relations.add(relation3);
+        relations.add(relation4);
+        members.get(1).getRelations().add(relation1);
+        members.get(1).getRelations().add(relation2);
+        members.get(2).getRelations().add(relation1);
+        members.get(2).getRelations().add(relation2);
         return relations;
     }
 }
