@@ -2,10 +2,14 @@ package com.yoyo.banking.domain.account.controller;
 
 import com.yoyo.banking.domain.account.dto.account.AccountAuthDTO;
 import com.yoyo.banking.domain.account.dto.account.AccountCreateDTO;
+import com.yoyo.banking.domain.account.dto.account.AccountPinDTO;
 import com.yoyo.banking.domain.account.service.AccountService;
 import com.yoyo.banking.domain.account.service.SsafyBankService;
+import com.yoyo.common.dto.response.BodyValidationExceptionResopnse;
 import com.yoyo.common.dto.response.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -14,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -30,23 +35,36 @@ public class AccountController {
     private final SsafyBankService ssafyBankService;
 
     /**
-     *  [ssafy 금융 API] user key 생성 및 저장
-     * <p>
-     *  - 회원가입 시 userkey 생성 및 저장
+     * PIN 번호 수정
      * */
-    @PostMapping("/user-key")
-    @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
-    ResponseEntity<?> createUserKey(@RequestHeader("memberId") Long memberId) {
-        return ssafyBankService.createUserKey(memberId);
+    @PatchMapping("/pin/update")
+    @Operation(summary = "계좌 PIN 번호 수정", description = "계좌 PIN 번호를 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "PIN 수정 성공",
+            content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+    @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류",
+                         content = @Content(schema = @Schema(implementation = BodyValidationExceptionResopnse.class))),
+    })
+    ResponseEntity<?> updateAccountPin(@RequestHeader("memberId") Long memberId,
+                                      @RequestBody @Valid AccountPinDTO.Request request) {
+        return accountService.updateAccountPin(request, memberId);
     }
-
     /**
-     *  [ssafy 금융 API] user key 조회 및 저장
+     * PIN 번호 확인
      * */
-    @GetMapping("/user-key")
-    @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
-    ResponseEntity<?> getUserKey(@RequestHeader("memberId") Long memberId) {
-        return ssafyBankService.getUserKey(memberId);
+    @PostMapping("/pin/check")
+    @Operation(summary = "계좌 PIN 번호 확인", description = "계좌 PIN 번호를 확인한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "PIN 번호 일치",
+                         content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "401", description = "PIN 번호 일치하지 않음",
+                         content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류",
+                         content = @Content(schema = @Schema(implementation = BodyValidationExceptionResopnse.class))),
+    })
+    ResponseEntity<?> checkAccountPin(@RequestHeader("memberId") Long memberId,
+                                      @RequestBody @Valid AccountPinDTO.Request request) {
+        return accountService.checkAccountPin(request, memberId);
     }
 
     /**
