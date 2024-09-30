@@ -91,8 +91,7 @@ public class PayController {
     @Operation(summary = "페이 잔액 조회", description = "페이 잔액 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "페이 잔액 조회 성공",
-                         content = @Content(schema = @Schema(implementation = PayDTO.Response.class))),
-            @ApiResponse(responseCode = "400", description = "등록되지 않은 계좌입니다.")
+                         content = @Content(schema = @Schema(implementation = PayDTO.Response.class)))
     })
     public ResponseEntity<?> getPayBalance(@RequestHeader("memberId") Long memberId){
         return payService.getPayBalance(memberId);
