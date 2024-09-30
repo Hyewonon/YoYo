@@ -31,7 +31,6 @@ public class AccountService {
      * * 계좌 생성
      */
     public CommonResponse createAccount(AccountCreateDTO.Request request, Long memberId) {
-
         String bankCode = bankingUtil.findBankCodeByBankName(request.getBankName());
         Account account = accountRepository.findByMemberId(memberId)
                                            .map((existingAccount) -> updateAccount(existingAccount,
@@ -43,10 +42,23 @@ public class AccountService {
     }
 
     /**
+     * * 등록된 계좌 조회
+     */
+    public ResponseEntity<AccountCreateDTO.Response> getAccount(Long memberId) {
+        Account account = findAccountByMemberId(memberId);
+        checkAccountRegister(account);
+        String bankName = bankingUtil.findBankNameByBankCode(account.getBankCode());
+        AccountCreateDTO.Response response = AccountCreateDTO.Response.of(account.getAccountNumber(), bankName);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    /**
      * 계좌 결제 비밀번호 (PIN 번호) 수정
      * */
     public ResponseEntity<?> updateAccountPin(AccountPinDTO.Request request, Long memberId) {
-        Account account = findValidAccountByMemberId(memberId);
+        Account account = findAccountByMemberId(memberId);
+        checkAccountRegister(account);
         String hashedPin = BCrypt.hashpw(request.getPin(), BCrypt.gensalt());
         account.setPin(hashedPin);
 
@@ -59,11 +71,13 @@ public class AccountService {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
+
     /**
      * 계좌 결제 비밀번호 (PIN 번호) 확인
      * */
     public ResponseEntity<?> checkAccountPin(AccountPinDTO.Request request, Long memberId) {
-        Account account = findValidAccountByMemberId(memberId);
+        Account account = findAccountByMemberId(memberId);
+
         if (!BCrypt.checkpw(request.getPin(), account.getPin())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(CommonResponse.of(false,"PIN 번호가 일치하지 않습니다."));
         }
@@ -87,13 +101,16 @@ public class AccountService {
     }
 
     /*
+     * 회원 id로 account 객체가 생성됐는지 확인
+     * */
+    private Account findAccountByMemberId(Long memberId) {
+        return accountRepository.findByMemberId(memberId)
+                                .orElseThrow(() -> new BankingException(ErrorCode.NOT_FOUND_MEMBER));
+    }
+    /*
      * 등록된 계좌인지 확인
      * */
-    private Account findValidAccountByMemberId(Long memberId) {
-        Account account = accountRepository.findByMemberId(memberId)
-                                           .orElseThrow(() -> new BankingException(ErrorCode.NOT_FOUND_MEMBER));
-
+    private void checkAccountRegister(Account account) {
         if(account.getAccountNumber() == null) throw new BankingException(ErrorCode.NOT_FOUND_ACCOUNT);
-        return account;
     }
 }

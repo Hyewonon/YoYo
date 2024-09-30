@@ -108,6 +108,20 @@ public class AccountController {
     }
 
     /**
-     * * TODO : 계좌 삭제
+     * 계좌 조회
      * */
+    @GetMapping
+    @Operation(summary = "등록된 계좌 조회", description = "계좌를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "계좌 조회 성공",
+                         content = @Content(schema = @Schema(implementation = AccountCreateDTO.Response.class))),
+    })
+    ResponseEntity<AccountCreateDTO.Response> getAccount(@RequestHeader("memberId") Long memberId){
+        return accountService.getAccount(memberId);
+    }
+
+    /**
+    * * TODO : 계좌 삭제
+    * */
+
 }
