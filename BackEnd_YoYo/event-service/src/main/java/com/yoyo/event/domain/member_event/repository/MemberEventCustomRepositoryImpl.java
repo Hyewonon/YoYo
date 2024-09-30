@@ -19,7 +19,7 @@ public class MemberEventCustomRepositoryImpl implements MemberEventCustomReposit
     public List<Response> customFindAllByMemberId(Long memberId, LocalDateTime now) {
         return queryFactory
                 .select(Projections.constructor(Response.class,
-                                                memberEvent.memberId,
+                                                event.memberId,
                                                 event.name,
                                                 event.id,
                                                 event.title,
