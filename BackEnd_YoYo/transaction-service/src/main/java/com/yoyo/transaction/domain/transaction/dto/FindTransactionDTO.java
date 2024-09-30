@@ -12,8 +12,26 @@ public class FindTransactionDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class Request{
-        private Long eventId;
+    public static class RelationSendResponse{
+        private Long transactionId;
+        private String receiveName;
+        private String relationType;
+        private String memo;
+        private long amount;
+        private LocalDateTime time;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class RelationReceiveResponse{
+        private Long transactionId;
+        private String senderName;
+        private String relationType;
+        private String memo;
+        private long amount;
+        private LocalDateTime time;
     }
     @Getter
     @AllArgsConstructor

@@ -10,7 +10,7 @@ export function FailPage() {
 
       <div className="p-grid typography--p" style={{ marginTop: "50px" }}>
         <div className="p-grid-col text--left">
-          <b>에러메시지</b>
+          <b>에러!!</b>
         </div>
         <div className="p-grid-col text--right" id="message">{`${searchParams.get("message")}`}</div>
       </div>

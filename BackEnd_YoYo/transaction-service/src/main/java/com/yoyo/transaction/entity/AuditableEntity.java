@@ -23,6 +23,6 @@ public class AuditableEntity {
     @Column(updatable = false)
     private LocalDateTime createdAt;
     @LastModifiedDate
-    @Column(updatable = true)
+    @Column
     private LocalDateTime updatedAt;
 }

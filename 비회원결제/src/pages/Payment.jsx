@@ -1,6 +1,5 @@
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
 const customerKey = generateRandomString();
 
@@ -9,8 +8,10 @@ export function Payment() {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [senderName, setSenderName] = useState("");
   const [price, setPrice] = useState();
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [description, setDescription] = useState("");
-  const navigate = useNavigate();
+  const receiverId = 1;
+  const eventId = 1;
 
   function selectPaymentMethod(method) {
     setSelectedPaymentMethod(method);
@@ -38,18 +39,18 @@ export function Payment() {
       value: price,
     };
 
-    switch (selectedPaymentMethod) {
+    try{switch (selectedPaymentMethod) {
       case "CARD":
         await payment.requestPayment({
           method: "CARD", // 카드 및 간편결제
           amount,
           orderId: generateRandomString(), // 받는 사람 + 고유 주문번호
           orderName: description,
-          successUrl: window.location.origin + "/payment/success", 
+          successUrl: window.location.origin + `/payment/success?senderName=${senderName}&description=${description}&receiverId=${receiverId}&eventId=${eventId}`, 
           failUrl: window.location.origin + "/fail",
           customerEmail: "",
           customerName: "",
-          customerMobilePhone: "01000000000",
+          customerMobilePhone: phoneNumber,
           card: {
             useEscrow: false,
             flowMode: "DEFAULT",
@@ -57,7 +58,6 @@ export function Payment() {
             useAppCardOnly: false,
           },
         });
-        navigate(successUrl, { state: { senderName, description } });
         break; 
       case "TRANSFER":
         await payment.requestPayment({
@@ -65,11 +65,11 @@ export function Payment() {
           amount, 
           orderId: generateRandomString(),
           orderName: "마음 보내기",
-          successUrl: window.location.origin + "/payment/success",
+          successUrl: window.location.origin + `/payment/success?senderName=${senderName}&description=${description}&receiverId=${receiverId}&eventId=${eventId}`, 
           failUrl: window.location.origin + "/fail",
           customerEmail: "",
           customerName: "",
-          customerMobilePhone: "01000000000",
+          customerMobilePhone: phoneNumber,
           transfer: {
             cashReceipt: {
               type: "소득공제",
@@ -77,10 +77,13 @@ export function Payment() {
             useEscrow: false,
           },
         });
-        navigate(successUrl, { state: { senderName, description } });
         break;
       default:
         alert("결제 수단을 선택해주세요.");
+    }
+    }
+    catch (error) {
+      console.log("결제 에러", error);
     }
   }
 
@@ -104,6 +107,15 @@ export function Payment() {
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
             placeholder="가격을 입력하세요"
+          />
+        </div>
+        <div>
+          <label>전화번호:</label>
+          <input
+            type="tel"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            placeholder="전화번호를 입력하세요"
           />
         </div>
         <div>

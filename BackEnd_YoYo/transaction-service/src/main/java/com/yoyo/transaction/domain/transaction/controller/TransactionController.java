@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/yoyo/transactions")
@@ -72,6 +73,26 @@ public class TransactionController {
                                              @RequestParam(defaultValue = "true") boolean isRegister) {
         ApiResponse<List<FindTransactionDTO.Response>> response;
         List<FindTransactionDTO.Response> transactions = transactionService.findTransactions(memberId, eventId, search, relationType, isRegister);
+        if (transactions.isEmpty()) {
+            response = new ApiResponse<>(
+                    HttpStatus.NO_CONTENT.value(),
+                    "데이터 없음",
+                    transactions
+            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).body(response);
+        }
+        response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "리스트 필터 조회",
+                transactions
+        );
+        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
+    }
+
+    @GetMapping("/relation/{oppositeId}")
+    public ResponseEntity<?> getTransactions(@RequestHeader("memberId") Long memberId, @PathVariable("oppositeId") Long oppositeId) {
+        ApiResponse<Map<String, List<?>>> response;
+        Map<String, List<?>> transactions = transactionService.findTransactions(memberId, oppositeId);
         if (transactions.isEmpty()) {
             response = new ApiResponse<>(
                     HttpStatus.NO_CONTENT.value(),

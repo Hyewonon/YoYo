@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 export function Success() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [responseData, setResponseData] = useState(null);
-  const { senderName, description } = location.state;
 
   useEffect(() => {
     async function confirm() {
@@ -14,10 +12,10 @@ export function Success() {
         orderId: searchParams.get("orderId"),
         amount: searchParams.get("amount"),
         paymentKey: searchParams.get("paymentKey"),
-        senderName: senderName,
-        receiverId : 59,
-        eventId: 1,
-        desciption : description
+        senderName: searchParams.get("senderName"),
+        receiverId : searchParams.get("receiverId"),
+        eventId: searchParams.get("eventId"),
+        description : searchParams.get("description")
       };
 
       const response = await fetch("/api/confirm/payment", {
@@ -60,12 +58,12 @@ export function Success() {
         </div>
     </div>
     </div>
-      <div className="box_section" style={{ width: "600px", textAlign: "left" }}>
+      {/* <div className="box_section" style={{ width: "600px", textAlign: "left" }}>
         <b>Response Data :</b>
         <div id="response" style={{ whiteSpace: "initial" }}>
           {responseData && <pre>{JSON.stringify(responseData, null, 4)}</pre>}
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

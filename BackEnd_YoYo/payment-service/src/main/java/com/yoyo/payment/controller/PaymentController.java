@@ -22,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,8 +47,8 @@ public class PaymentController {
         String amount;
         String paymentKey;
         String senderName;
-        Long receiverId;
-        Long eventId;
+        String receiverId;
+        String eventId;
         String description;
         try {
             // 클라이언트에서 받은 JSON 요청 바디입니다.
@@ -56,12 +57,13 @@ public class PaymentController {
             orderId = (String) requestData.get("orderId");
             amount = (String) requestData.get("amount");
             senderName = (String) requestData.get("senderName");
-            receiverId = (Long) requestData.get("receiverId");
-            eventId = (Long) requestData.get("eventId");
+            receiverId = (String) requestData.get("receiverId");
+            eventId = (String) requestData.get("eventId");
             description = (String) requestData.get("description");
         } catch (ParseException e) {
             throw new RuntimeException(e);
-        };
+        }
+        ;
         JSONObject obj = new JSONObject();
         obj.put("orderId", orderId);
         obj.put("amount", amount);
@@ -94,12 +96,12 @@ public class PaymentController {
         -> [Banking] 받은 사람 Pay 값 올려주기
         -> [Transaction] 기록 : 받은 사람 ID, 금액, 메모
          */
-        log.info("들어오는 데이터 : {}", jsonBody );
-        log.info("데이터 : {}",obj);
-        producer.sendNoMemberPayment(PaymentDTO.of(senderName, receiverId, eventId, Long.parseLong(amount), description));
+        log.info("들어오는 데이터 : {}", jsonBody);
+        log.info("데이터 : {}", obj);
+        producer.sendNoMemberPayment(PaymentDTO.of(senderName, Long.parseLong(receiverId), Long.parseLong(eventId), Long.parseLong(amount), description));
 
         /*
-         * TODO : 결제 실패 비즈니스 로직 구현 
+         * TODO : 결제 실패 비즈니스 로직 구현
          */
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
@@ -116,7 +118,7 @@ public class PaymentController {
     }
 
     @GetMapping("/yoyo/payment/test")
-    public ResponseEntity<?> paymentTest(){
+    public ResponseEntity<?> paymentTest() {
         producer.sendNoMemberPayment(PaymentDTO.of("이찬진", 999999998L, 10L, 500000L, "추카추카"));
         return ResponseEntity.ok().build();
     }
