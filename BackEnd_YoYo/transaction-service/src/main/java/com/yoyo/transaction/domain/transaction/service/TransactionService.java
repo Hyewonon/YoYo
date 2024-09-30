@@ -3,12 +3,10 @@ package com.yoyo.transaction.domain.transaction.service;
 import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.TransactionException;
-import com.yoyo.common.kafka.dto.RelationDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO.ResponseFromMember;
 import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
 import com.yoyo.transaction.domain.transaction.producer.TransactionProducer;
-import com.yoyo.transaction.domain.transaction.consumer.TransactionConsumer;
 import com.yoyo.transaction.domain.transaction.dto.FindTransactionDTO;
 import com.yoyo.transaction.domain.transaction.dto.UpdateTransactionDTO;
 import com.yoyo.transaction.domain.transaction.repository.TransactionRepository;
@@ -170,5 +168,29 @@ public class TransactionService {
                         .amount(transaction.getAmount())
                         .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt())
                         .build()).collect(Collectors.toList());
+    }
+    public Map<String,List<?>> findTransactions(Long memberId, Long oppositeId) {
+        List<Transaction> sendTransaction = transactionRepository.findAllBySenderIdAndReceiverId(memberId, oppositeId);
+        List<Transaction> receiveTransaction = transactionRepository.findAllBySenderIdAndReceiverId(oppositeId, memberId);
+        List<FindTransactionDTO.RelationReceiveResponse> receiveResponse = receiveTransaction.stream().map(transaction -> FindTransactionDTO.RelationReceiveResponse.builder()
+                .transactionId(transaction.getTransactionId())
+                .senderName(transaction.getSenderName())
+                .relationType(transaction.getRelationType().toString())
+                .memo(transaction.getMemo())
+                .amount(transaction.getAmount())
+                .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt())
+                .build()).toList();
+        List<FindTransactionDTO.RelationSendResponse> sendResponse = sendTransaction.stream().map(transaction -> FindTransactionDTO.RelationSendResponse.builder()
+                .transactionId(transaction.getTransactionId())
+                .receiveName(transaction.getReceiverName())
+                .relationType(transaction.getRelationType().toString())
+                .memo(transaction.getMemo())
+                .amount(transaction.getAmount())
+                .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt())
+                .build()).toList();
+        Map<String,List<?>> responseMap = new HashMap<>();
+        responseMap.put("receive", receiveResponse);
+        responseMap.put("send", sendResponse);
+        return responseMap;
     }
 }

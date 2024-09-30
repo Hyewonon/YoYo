@@ -15,5 +15,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findByEventIdAndReceiverId(Long eventId, Long receiverId);
 
     Optional<Transaction> findBySenderIdAndReceiverId(Long senderId, Long receiverId);
-    Optional<Transaction> findByReceiverIdAndSenderId(Long receiverId, Long senderId);
+    List<Transaction> findAllBySenderIdAndReceiverId(Long senderId, Long receiverId);
 }

@@ -5,7 +5,6 @@ import com.yoyo.common.exception.exceptionType.MemberException;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
 import com.yoyo.common.kafka.dto.RelationResponseDTO;
 import com.yoyo.common.kafka.dto.UpdateTransactionRelationTypeDTO;
-import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.domain.member.service.MemberService;
 import com.yoyo.member.domain.relation.dto.FindRelationDTO;
 import com.yoyo.member.domain.relation.dto.UpdateRelationDTO;
