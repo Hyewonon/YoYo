@@ -1,6 +1,9 @@
-package com.yoyo.common.exception;
+package com.yoyo.member.global.exception;
 
 import com.yoyo.common.dto.response.BodyValidationExceptionResopnse;
+import com.yoyo.common.exception.CustomException;
+import com.yoyo.common.exception.ErrorCode;
+import com.yoyo.common.exception.ErrorResponse;
 import com.yoyo.common.exception.exceptionType.BankingException;
 import com.yoyo.common.exception.exceptionType.EventException;
 import com.yoyo.common.exception.exceptionType.MemberException;
@@ -12,8 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
