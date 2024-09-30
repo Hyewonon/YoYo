@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+#  vault:
+#    image: vault:1.13.3
+#    container_name: vault
+#    ports:
+#      - "8200:8200"
+#    environment:
+#      VAULT_DEV_ROOT_TOKEN_ID: myroot
+#      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+#    command: vault server -dev -dev-root-token-id=myroot -dev-listen-address=0.0.0.0:8200
   # MySQL Database
   # member-db
   member-db:
@@ -19,7 +28,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=member-db
+      - MYSQL_DATABASE=member_db
   # banking-db
   banking-db:
     image: mysql:8.0
@@ -37,7 +46,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=banking-db
+      - MYSQL_DATABASE=banking_db
   # transaction-db
   transaction-db:
     image: mysql:8.0
@@ -55,7 +64,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=transaction-db
+      - MYSQL_DATABASE=transaction_db
   # notification-db
   notification-db:
     image: mysql:8.0
@@ -73,7 +82,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=notification-db
+      - MYSQL_DATABASE=notification_db
   # event-db
   event-db:
     image: mysql:8.0
@@ -91,7 +100,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=event-db
+      - MYSQL_DATABASE=event_db
 
   redis:
     image: redis:alpine

@@ -1,6 +1,7 @@
 package com.yoyo.member.domain.relation.consumer;
 
 import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
+import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO.RequestToMember;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
@@ -13,6 +14,7 @@ import com.yoyo.member.domain.relation.service.RelationService;
 import com.yoyo.member.entity.NoMember;
 import com.yoyo.member.entity.Relation;
 import com.yoyo.member.entity.RelationType;
+
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,9 +35,8 @@ public class RelationConsumer {
 
     private final String UPDATE_RELATION_TOPIC = "pay-update-relation-topic";
     private final String CREATE_TRANSACTION_SELF_RELATION_TOPIC = "create-transaction-self-relation-topic";
-
+    private final String GET_RELATION_IDS = "get-relations-ids";
     private final RelationProducer producer;
-    private final RelationProducer relationProducer;
 
     /**
      * * 페이 송금 시 친구 관계 정보 수정
@@ -53,7 +54,6 @@ public class RelationConsumer {
         relationService.updateRelationAmount(request.getSenderId(), request.getReceiverId(), request.getAmount(), true);
         relationService.updateRelationAmount(request.getReceiverId(), request.getSenderId(), request.getAmount(),
                                              false);
-
     }
 
     @KafkaListener(topics = "transaction-register-topic", concurrency = "3")
@@ -67,21 +67,21 @@ public class RelationConsumer {
                 entity.get().setTotalReceivedAmount(entity.get().getTotalReceivedAmount() + amount.getAmount());
             }
         } else {
+            Relation jpa;
             if (amount.isSend()) {
-                Relation jpa = Relation.builder()
-                                       .oppositeId(amount.getOppositeId())
-                                       .totalSentAmount(amount.getAmount())
-                                       .member(memberRepository.findByMemberId(amount.getMemberId()))
-                                       .build();
-                relationRepository.save(jpa);
+                jpa = Relation.builder()
+                        .oppositeId(amount.getOppositeId())
+                        .totalSentAmount(amount.getAmount())
+                        .member(memberRepository.findByMemberId(amount.getMemberId()))
+                        .build();
             } else {
-                Relation jpa = Relation.builder()
-                                       .oppositeId(amount.getOppositeId())
-                                       .totalReceivedAmount(amount.getAmount())
-                                       .member(memberRepository.findByMemberId(amount.getMemberId()))
-                                       .build();
-                relationRepository.save(jpa);
+                jpa = Relation.builder()
+                        .oppositeId(amount.getOppositeId())
+                        .totalReceivedAmount(amount.getAmount())
+                        .member(memberRepository.findByMemberId(amount.getMemberId()))
+                        .build();
             }
+            relationRepository.save(jpa);
         }
     }
 
@@ -114,10 +114,16 @@ public class RelationConsumer {
         relationService.updateRelationAmount(request.getMemberId(), request.getOppositeId(), request.getAmount(),
                                              request.getTransactionType().equals("SEND"));
 
-        relationProducer.sendTransactionSelf(createResponse(request));
+        producer.sendTransactionSelf(createResponse(request));
     }
 
-    private TransactionSelfRelationDTO.ResponseFromMember createResponse(TransactionSelfRelationDTO.RequestToMember request) {
+    @KafkaListener(topics = GET_RELATION_IDS, concurrency = "3")
+    public void getRelationIDList(MemberRequestDTO request) {
+        producer.sendRelationIds(relationService.findRelationIds(request.getMemberId()));
+    }
+
+    private TransactionSelfRelationDTO.ResponseFromMember createResponse(
+            TransactionSelfRelationDTO.RequestToMember request) {
         String memberName = memberService.findMemberNameById(request.getMemberId());
         String oppositeName = memberService.findMemberNameById(request.getOppositeId());
 

@@ -1,11 +1,26 @@
 package com.yoyo.notification.domain.notification.dto;
 
+import com.yoyo.common.kafka.dto.NotificationCreateDTO;
 import com.yoyo.notification.entity.Notification;
+import com.yoyo.notification.entity.NotificationType;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
 public class NotificationDTO {
+
+    public static Notification toEntity(NotificationCreateDTO request, LocalDateTime now) {
+        return Notification.builder()
+                           .senderId(request.getSenderId())
+                           .name(request.getName())
+                           .receiverId(request.getReceiverId())
+                           .eventId(request.getEventId())
+                           .title(request.getTitle())
+                           .createdAt(now)
+                           .type(NotificationType.valueOf(request.getType().toUpperCase()))
+                           .isRegister(false)
+                           .build();
+    }
 
     @Getter
     @Builder

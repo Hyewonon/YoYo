@@ -9,6 +9,7 @@ import com.yoyo.common.kafka.dto.PaymentDTO;
 import com.yoyo.common.kafka.dto.TransactionDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
+import com.yoyo.common.kafka.dto.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +53,9 @@ public class ConsumerConfig {
                                         PayInfoDTO.RequestToTransaction.class,
                                         MemberTagDTO.class,
                                         TransactionSelfRelationDTO.RequestToMember.class,
-                                        PaymentDTO.class
+                                        PaymentDTO.class,
+                                        RelationDTO.Request.class,
+                                        RelationResponseDTO.class
                 ));
 
         return props;

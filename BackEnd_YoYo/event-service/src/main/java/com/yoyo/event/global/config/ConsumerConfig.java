@@ -1,10 +1,11 @@
-package com.yoyo.event.config;
+package com.yoyo.event.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.AmountResponseDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.NotificationInfoDTO;
+import com.yoyo.common.kafka.dto.RelationResponseDTO;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -45,7 +46,8 @@ public class ConsumerConfig {
         props.put(JsonDeserializer.TYPE_MAPPINGS, KafkaUtils
                 .getJsonTypeMappingInfo(AmountResponseDTO.class,
                                         MemberResponseDTO.class,
-                                        NotificationInfoDTO.class));
+                                        NotificationInfoDTO.class,
+                                        RelationResponseDTO.class));
 
         return props;
     }

@@ -2,7 +2,9 @@ package com.yoyo.member.domain.relation.producer;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
+import com.yoyo.common.kafka.dto.RelationResponseDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
+import com.yoyo.common.kafka.dto.UpdateTransactionRelationTypeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -15,6 +17,7 @@ public class RelationProducer {
 
     private final KafkaTemplate<String, KafkaJson> kafkaTemplate;
     private final String SEND_TRANSACTION_SELF_RELATION_TOPIC = "send-transaction-self-relation-topic";
+    private final String SEND_RELATION_ID_LIST = "send-relation-id-list";
 
     public void sendMemberTag(MemberTagDTO response) {
         kafkaTemplate.send("notification-tag-topic", response);
@@ -25,5 +28,13 @@ public class RelationProducer {
      * */
     public void sendTransactionSelf(TransactionSelfRelationDTO.ResponseFromMember response) {
         kafkaTemplate.send(SEND_TRANSACTION_SELF_RELATION_TOPIC, response);
+    }
+
+    public void sendRelationIds(RelationResponseDTO response){
+        kafkaTemplate.send(SEND_RELATION_ID_LIST, response);
+    }
+
+    public void sendUpdateTransactionRelationType(UpdateTransactionRelationTypeDTO request) {
+        kafkaTemplate.send("update-transaction-relation-type-topic", request);
     }
 }

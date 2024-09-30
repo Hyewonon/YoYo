@@ -17,15 +17,15 @@ public class EventCustomRepositoryImpl implements EventCustomRepository {
     public List<Response> searchEventByTitle(Long memberId, String keyword) {
         return queryFactory
                 .select(Projections.constructor(Response.class,
-                                                event.id,
-                                                event.title,
-                                                event.location,
-                                                event.startAt,
-                                                event.endAt))
+                        event.id,
+                        event.title,
+                        event.location,
+                        event.startAt,
+                        event.endAt))
                 .from(event)
                 .where(
                         event.memberId.eq(memberId),
-                        event.title.contains(keyword)
+                        keyword != null ? event.title.contains(keyword) : null
                 )
 //                .offset(pageable.getOffset())
 //                .limit(pageable.getPageSize() + 1)

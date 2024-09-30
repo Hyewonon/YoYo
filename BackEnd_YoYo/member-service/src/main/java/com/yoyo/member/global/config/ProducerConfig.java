@@ -2,10 +2,7 @@ package com.yoyo.member.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
-import com.yoyo.common.kafka.dto.MemberResponseDTO;
-import com.yoyo.common.kafka.dto.MemberTagDTO;
-import com.yoyo.common.kafka.dto.PayInfoDTO;
-import com.yoyo.common.kafka.dto.PaymentDTO;
+import com.yoyo.common.kafka.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RoundRobinPartitioner;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -34,14 +31,16 @@ public class ProducerConfig {
         config.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         config.put(JsonSerializer.TYPE_MAPPINGS, KafkaUtils.getJsonTypeMappingInfo(MemberResponseDTO.class,
-                                                                                   PayInfoDTO.RequestToTransaction.class,
-                                                                                   MemberTagDTO.class,
-                                                                                   PaymentDTO.class));
+                PayInfoDTO.RequestToTransaction.class,
+                MemberTagDTO.class,
+                PaymentDTO.class,
+                RelationResponseDTO.class,
+                UpdateTransactionRelationTypeDTO.class));
         return new DefaultKafkaProducerFactory<>(config);
     }
 
     @Bean
-    public KafkaTemplate<String, KafkaJson> kafkaTemplate(){
+    public KafkaTemplate<String, KafkaJson> kafkaTemplate() {
         return new KafkaTemplate<>(factory());
     }
 }

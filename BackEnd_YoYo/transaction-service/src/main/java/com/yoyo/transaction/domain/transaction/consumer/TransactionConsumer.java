@@ -1,18 +1,16 @@
 package com.yoyo.transaction.domain.transaction.consumer;
 
-import com.yoyo.common.kafka.dto.AmountRequestDTO;
-import com.yoyo.common.kafka.dto.AmountResponseDTO;
-import com.yoyo.common.kafka.dto.CreateTransactionDTO;
-import com.yoyo.common.kafka.dto.PayInfoDTO;
-import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
-import com.yoyo.common.kafka.dto.PaymentDTO;
+import com.yoyo.common.kafka.dto.*;
 import com.yoyo.transaction.domain.transaction.producer.TransactionProducer;
 import com.yoyo.transaction.domain.transaction.repository.TransactionRepository;
 import com.yoyo.transaction.domain.transaction.service.TransactionService;
+import com.yoyo.transaction.entity.RelationType;
 import com.yoyo.transaction.entity.Transaction;
 import com.yoyo.transaction.entity.TransactionType;
-import java.time.LocalDateTime;
+
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -33,50 +31,52 @@ public class TransactionConsumer {
 
     @KafkaListener(topics = "payment-success", concurrency = "3")
     public void setTransaction(CreateTransactionDTO request) {
-        Transaction jpaEntity = new Transaction(
-                request.getSenderName(),
-                request.getReceiverId(),
-                request.getReceiverName(),
-                request.getEventId(),
-                request.getTitle(),
-                request.getAmount(),
-                request.getMemo()
-        );
+        Transaction jpaEntity = Transaction.builder()
+                .senderName(request.getSenderName())
+                .receiverId(request.getReceiverId())
+                .receiverName(request.getReceiverName())
+                .eventId(request.getEventId())
+                .eventName(request.getTitle())
+                .amount(request.getAmount())
+                .memo(request.getMemo())
+                .relationType(RelationType.NONE)
+                .build();
         transactionRepository.save(jpaEntity);
     }
 
     @KafkaListener(topics = "transaction-topic", concurrency = "3")
     public void getEventInformation(AmountRequestDTO message) {
         List<Transaction> transactions = transactionRepository.findByReceiverIdAndEventId(message.getReceiverId(),
-                                                                                          message.getEventId());
+                message.getEventId());
         int transactionCount = transactions.size();
         long totalAmount = transactions.stream().mapToLong(Transaction::getAmount).sum();
-        log.info("Event ID: {}, Receiver ID: {}, Total Transactions: {}, Total Amount: {}",
-                 message.getEventId(), message.getReceiverId(), transactionCount, totalAmount);
         AmountResponseDTO summary = new AmountResponseDTO(message.getReceiverId(), message.getEventId(),
-                                                          transactionCount, totalAmount);
+                transactionCount, totalAmount);
         producer.sendTransactionSummary(summary);
     }
 
     @KafkaListener(topics = UPDATE_TRANSACTION_TOPIC, concurrency = "3")
     public Transaction createTransactionForPay(PayInfoDTO.RequestToTransaction request) {
+        Optional<Transaction> existingTransaction = transactionRepository.findBySenderIdAndReceiverId(request.getSenderId(), request.getReceiverId());
+        RelationType relationType = existingTransaction.map(Transaction::getRelationType).orElse(RelationType.NONE);
         Transaction transaction = Transaction.builder()
-                                             .senderId(request.getSenderId())
-                                             .senderName(request.getSenderName())
-                                             .receiverId(request.getReceiverId())
-                                             .receiverName(request.getReceiverName())
-                                             .eventId(request.getEventId())
-                                             .eventId(request.getEventId())
-                                             .eventName(request.getTitle())
-                                             .amount(request.getAmount())
-                                             .transactionType(TransactionType.AUTO)
-                                             .build();
+                .senderId(request.getSenderId())
+                .senderName(request.getSenderName())
+                .receiverId(request.getReceiverId())
+                .receiverName(request.getReceiverName())
+                .eventId(request.getEventId())
+                .eventId(request.getEventId())
+                .eventName(request.getTitle())
+                .amount(request.getAmount())
+                .transactionType(TransactionType.AUTO)
+                .relationType(relationType)
+                .build();
         return transactionService.createTransaction(transaction);
     }
 
     /**
      * 요요 거래내역 직접 등록 시, 친구 관계 수정 후 상대 회원 여부 응답 받기
-     * */
+     */
     @KafkaListener(topics = SEND_TRANSACTION_SELF_RELATION_TOPIC, concurrency = "3")
     public void getTransactionSelfFromRelation(TransactionSelfRelationDTO.ResponseFromMember response) {
         transactionService.completeMemberCheck(response);
@@ -88,19 +88,33 @@ public class TransactionConsumer {
     @KafkaListener(topics = UPDATE_TRANSACTION_NO_MEMBER_TOPIC, concurrency = "3")
     public void createTransactionForPayment(PaymentDTO request) {
         Transaction transaction = Transaction.builder()
-                                             .senderId(request.getSenderId())
-                                             .senderName(request.getSenderName())
-                                             .receiverId(request.getReceiverId())
-                                             .receiverName(request.getReceiverName())
-                                             .eventId(request.getEventId())
-                                             .eventName(request.getTitle())
-                                             .isRegister(false)
-                                             .amount(request.getAmount())
-                                             .memo(request.getMemo())
-                                             .transactionType(TransactionType.RECEIVE)
-                                             .createdAt(LocalDateTime.now())
-                                             .build();
+                .senderId(request.getSenderId())
+                .senderName(request.getSenderName())
+                .receiverId(request.getReceiverId())
+                .receiverName(request.getReceiverName())
+                .eventId(request.getEventId())
+                .eventName(request.getTitle())
+                .isRegister(false)
+                .amount(request.getAmount())
+                .memo(request.getMemo())
+                .transactionType(TransactionType.RECEIVE)
+                .relationType(RelationType.NONE)
+                .build();
         transactionService.createTransaction(transaction);
+    }
+
+    @KafkaListener(topics = "update-transaction-relation-type-topic", concurrency = "3")
+    public void updateTransactionRelationType(UpdateTransactionRelationTypeDTO updateTransactionRelationTypeDTO) {
+        Optional<Transaction> existingTransaction1 = transactionRepository.findBySenderIdAndReceiverId(updateTransactionRelationTypeDTO.getMemberId(), updateTransactionRelationTypeDTO.getOppositeId());
+        Optional<Transaction> existingTransaction2 = transactionRepository.findBySenderIdAndReceiverId(updateTransactionRelationTypeDTO.getOppositeId(), updateTransactionRelationTypeDTO.getMemberId());
+        existingTransaction1.ifPresent(transaction -> {
+            transaction.setRelationType(RelationType.valueOf(updateTransactionRelationTypeDTO.getRelationType()));
+            transactionRepository.save(transaction);
+        });
+        existingTransaction2.ifPresent(transaction -> {
+            transaction.setRelationType(RelationType.valueOf(updateTransactionRelationTypeDTO.getRelationType()));
+            transactionRepository.save(transaction);
+        });
     }
 }
 

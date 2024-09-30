@@ -29,8 +29,17 @@ public class MemberController {
 
     @GetMapping("")
     public ResponseEntity<?> getMember(@RequestHeader("memberId") String memberId) {
+        ApiResponse<Member> res;
         Member response = memberService.findMemberById(Long.parseLong(memberId));
-        ApiResponse<Member> res = new ApiResponse<>(
+        if (response == null) {
+            res = new ApiResponse<>(
+                    HttpStatus.NO_CONTENT.value(),
+                    "조회 실패",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(res);
+        }
+        res = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "조회 성공",
                 response
@@ -41,7 +50,7 @@ public class MemberController {
     @PatchMapping("/update")
     ResponseEntity<?> updateMember(@RequestHeader("memberId") String memberId, @RequestBody UpdateMemberDTO.Request request) {
 
-        Member member  = memberService.updateMember(Long.parseLong(memberId),request);
+        Member member = memberService.updateMember(Long.parseLong(memberId), request);
         ApiResponse<Member> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "수정 성공",

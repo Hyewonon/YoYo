@@ -1,34 +1,48 @@
 package com.yoyo.transaction.domain.transaction.service;
 
+import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.TransactionException;
+import com.yoyo.common.kafka.dto.RelationDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO.ResponseFromMember;
 import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
 import com.yoyo.transaction.domain.transaction.producer.TransactionProducer;
+import com.yoyo.transaction.domain.transaction.consumer.TransactionConsumer;
+import com.yoyo.transaction.domain.transaction.dto.FindTransactionDTO;
+import com.yoyo.transaction.domain.transaction.dto.UpdateTransactionDTO;
 import com.yoyo.transaction.domain.transaction.repository.TransactionRepository;
 import com.yoyo.transaction.entity.Transaction;
 import com.yoyo.transaction.entity.TransactionType;
 import jakarta.transaction.Transactional;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@RequiredArgsConstructor
 @Slf4j
 public class TransactionService {
-
     private final TransactionRepository transactionRepository;
     private final TransactionProducer transactionProducer;
-
     private final Map<Long, CompletableFuture<TransactionSelfRelationDTO.ResponseFromMember>> summaries = new ConcurrentHashMap<>();
+
+    @Autowired
+    public TransactionService(TransactionRepository transactionRepository,
+                              TransactionProducer transactionProducer) {
+        this.transactionRepository = transactionRepository;
+        this.transactionProducer = transactionProducer;
+    }
 
     public void deleteTransaction(Long transactionId) {
         transactionRepository.deleteById(transactionId);
@@ -36,6 +50,15 @@ public class TransactionService {
 
     public Transaction createTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
+    }
+
+    public UpdateTransactionDTO.Response updateTransaction(Long transactionId, UpdateTransactionDTO.Request request) {
+        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_TRANSACTION));
+        transaction.setEventName(request.getTitle());
+        transaction.setAmount(request.getAmount());
+        transaction.setMemo(request.getMemo());
+        Transaction newTransaction = transactionRepository.save(transaction);
+        return new UpdateTransactionDTO.Response(newTransaction.getTransactionId(), newTransaction.getEventName(), newTransaction.getUpdatedAt(), newTransaction.getMemo(), newTransaction.getAmount());
     }
 
     /**
@@ -54,9 +77,10 @@ public class TransactionService {
     }
 
     /**
-    * 1. 친구관계 수정 요청
-    * @return 회원 id, 이름, 상대 id, 이름 반환
-     * */
+     * 1. 친구관계 수정 요청
+     *
+     * @return 회원 id, 이름, 상대 id, 이름 반환
+     */
     private TransactionSelfRelationDTO.ResponseFromMember updateTransactionRelation(Long memberId, TransactionCreateDTO.Request request) {
         TransactionSelfRelationDTO.RequestToMember requestToMember = TransactionSelfRelationDTO.RequestToMember.of(
                 memberId, request.getMemberId(), request.getName(), request.getAmount(),
@@ -79,7 +103,7 @@ public class TransactionService {
 
     /**
      * 2. 친구관계 응답에서 직접등록 수신인 발신인 정보 추출
-     * */
+     */
     private Map<String, Object[]> extractTransactionRelationInfo(ResponseFromMember response, TransactionType transactionType) {
         Map<String, Object[]> infoMap = new HashMap<>();
         Object[] info = new Object[2];
@@ -104,22 +128,23 @@ public class TransactionService {
             infoMap.put("receiver", info);
         } else {
             throw new TransactionException(ErrorCode.NOT_FOUND);
-        } return infoMap;
+        }
+        return infoMap;
     }
 
     private Transaction toTransactionEntity(Map<String, Object[]> infoMap, TransactionCreateDTO.Request request) {
         return Transaction.builder()
-                          .senderId((Long) infoMap.get("sender")[0])
-                          .senderName((String) infoMap.get("sender")[1])
-                          .receiverId((Long) infoMap.get("receiver")[0])
-                          .receiverName((String) infoMap.get("receiver")[1])
-                          .eventId(request.getEventId())
-                          .eventName(request.getEventName())
-                          .isRegister(true)
-                          .amount(request.getAmount())
-                          .memo(request.getMemo())
-                          .transactionType(request.getTransactionType())
-                          .build();
+                .senderId((Long) infoMap.get("sender")[0])
+                .senderName((String) infoMap.get("sender")[1])
+                .receiverId((Long) infoMap.get("receiver")[0])
+                .receiverName((String) infoMap.get("receiver")[1])
+                .eventId(request.getEventId())
+                .eventName(request.getEventName())
+                .isRegister(true)
+                .amount(request.getAmount())
+                .memo(request.getMemo())
+                .transactionType(request.getTransactionType())
+                .build();
     }
 
     public void completeMemberCheck(TransactionSelfRelationDTO.ResponseFromMember response) {
@@ -127,5 +152,23 @@ public class TransactionService {
         if (future != null) {
             future.complete(response);
         }
+    }
+
+    public List<FindTransactionDTO.Response> findTransactions(Long memberId, Long eventId, String search, String relationType, boolean isRegister) {
+        String validatedSearch = (search == null || search.trim().isEmpty()) ? null : search;
+        String validatedRelationType = (relationType == null || relationType.trim().isEmpty()) ? null : relationType;
+        List<Transaction> transactions = transactionRepository.findByEventIdAndReceiverId(eventId, memberId);
+        return transactions.stream()
+                .filter(transaction -> validatedSearch == null || transaction.getSenderName().contains(validatedSearch))
+                .filter(transaction -> validatedRelationType == null || transaction.getRelationType().toString().equals(validatedRelationType))
+                .filter(transaction -> transaction.getIsRegister().equals(isRegister))
+                .map(transaction -> FindTransactionDTO.Response.builder()
+                        .transactionId(transaction.getTransactionId())
+                        .senderName(transaction.getSenderName())
+                        .relationType(transaction.getRelationType().toString())
+                        .memo(transaction.getMemo())
+                        .amount(transaction.getAmount())
+                        .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt())
+                        .build()).collect(Collectors.toList());
     }
 }
