@@ -116,6 +116,8 @@ public class TransactionConsumer {
             transactionRepository.save(transaction);
         });
     }
+
+
 }
 
 

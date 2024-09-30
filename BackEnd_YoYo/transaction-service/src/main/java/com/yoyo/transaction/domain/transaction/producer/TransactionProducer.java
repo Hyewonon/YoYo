@@ -1,10 +1,7 @@
 package com.yoyo.transaction.domain.transaction.producer;
 
 import com.yoyo.common.kafka.KafkaJson;
-import com.yoyo.common.kafka.dto.AmountResponseDTO;
-import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
-import com.yoyo.common.kafka.dto.RelationDTO;
-import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
+import com.yoyo.common.kafka.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -13,7 +10,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TransactionProducer {
     private final KafkaTemplate<String, KafkaJson> kafkaTemplate;
-    private final KafkaTemplate<String, KafkaJson> amountKafkaTemplate;
 
     private final String CREATE_TRANSACTION_SELF_RELATION_TOPIC = "create-transaction-self-relation-topic";
 
@@ -22,7 +18,7 @@ public class TransactionProducer {
     }
 
     public void sendRelation(IncreaseAmountDTO amount) {
-        amountKafkaTemplate.send("transaction-register-topic", amount);
+        kafkaTemplate.send("transaction-register-topic", amount);
     }
 
     public void sendRelationRequest(RelationDTO.Request request) {
@@ -37,4 +33,7 @@ public class TransactionProducer {
         kafkaTemplate.send(CREATE_TRANSACTION_SELF_RELATION_TOPIC, request);
     }
 
+    public void sendRelationDescription(FindDescriptionDTO.Request request) {
+        kafkaTemplate.send("relation-description-topic", request);
+    }
 }

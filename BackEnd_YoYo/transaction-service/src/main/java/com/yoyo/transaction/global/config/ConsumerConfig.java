@@ -42,7 +42,7 @@ public class ConsumerConfig {
                 .getJsonTypeMappingInfo(CreateTransactionDTO.class,
                         AmountRequestDTO.class,
                         PayInfoDTO.RequestToTransaction.class,
-                        PaymentDTO.class, UpdateTransactionRelationTypeDTO.class
+                        PaymentDTO.class, UpdateTransactionRelationTypeDTO.class,FindDescriptionDTO.Response.class
                 ));
 
         return props;

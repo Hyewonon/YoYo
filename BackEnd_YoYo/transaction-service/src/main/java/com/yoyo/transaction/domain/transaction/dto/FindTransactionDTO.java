@@ -39,6 +39,7 @@ public class FindTransactionDTO {
     @Builder
     public static class Response{
         private Long transactionId;
+        private Long oppositeId;
         private String senderName;
         private String relationType;
         private String memo;

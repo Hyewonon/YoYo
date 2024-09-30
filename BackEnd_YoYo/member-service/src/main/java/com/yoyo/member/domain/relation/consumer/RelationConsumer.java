@@ -1,10 +1,9 @@
 package com.yoyo.member.domain.relation.consumer;
 
-import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
-import com.yoyo.common.kafka.dto.MemberRequestDTO;
-import com.yoyo.common.kafka.dto.MemberTagDTO;
+import com.yoyo.common.exception.CustomException;
+import com.yoyo.common.exception.ErrorCode;
+import com.yoyo.common.kafka.dto.*;
 import com.yoyo.common.kafka.dto.PayInfoDTO.RequestToMember;
-import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.domain.member.repository.NoMemberRepository;
 import com.yoyo.member.domain.member.service.MemberService;
@@ -133,5 +132,13 @@ public class RelationConsumer {
                                                             .oppositeId(request.getOppositeId())
                                                             .oppositeName(oppositeName)
                                                             .build();
+    }
+
+    @KafkaListener(topics = "relation-description-topic", concurrency = "3")
+    public void getDescription(FindDescriptionDTO.Request request) {
+        Relation relation = relationRepository.findByMember_MemberIdAndOppositeId(request.getMemberId(), request.getOppositeId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_RELATION));
+        FindDescriptionDTO.Response response = FindDescriptionDTO.Response.builder().description(relation.getDescription()).build();
+        producer.sendDescriptionResponse(response);
     }
 }

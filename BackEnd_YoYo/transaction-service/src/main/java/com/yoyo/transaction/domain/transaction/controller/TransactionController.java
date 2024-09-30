@@ -91,8 +91,8 @@ public class TransactionController {
 
     @GetMapping("/relation/{oppositeId}")
     public ResponseEntity<?> getTransactions(@RequestHeader("memberId") Long memberId, @PathVariable("oppositeId") Long oppositeId) {
-        ApiResponse<Map<String, List<?>>> response;
-        Map<String, List<?>> transactions = transactionService.findTransactions(memberId, oppositeId);
+        ApiResponse<Map<String, Object>> response;
+        Map<String, Object> transactions = transactionService.findTransactions(memberId, oppositeId);
         if (transactions.isEmpty()) {
             response = new ApiResponse<>(
                     HttpStatus.NO_CONTENT.value(),
@@ -103,7 +103,7 @@ public class TransactionController {
         }
         response = new ApiResponse<>(
                 HttpStatus.OK.value(),
-                "리스트 필터 조회",
+                "상대와의 거래내역",
                 transactions
         );
         return ResponseEntity.status(HttpStatus.OK.value()).body(response);

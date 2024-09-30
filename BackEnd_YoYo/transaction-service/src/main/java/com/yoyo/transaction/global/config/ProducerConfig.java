@@ -2,10 +2,7 @@ package com.yoyo.transaction.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
-import com.yoyo.common.kafka.dto.IncreaseAmountDTO;
-import com.yoyo.common.kafka.dto.PayInfoDTO;
-import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
-import com.yoyo.common.kafka.dto.RelationDTO;
+import com.yoyo.common.kafka.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RoundRobinPartitioner;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -36,7 +33,8 @@ public class ProducerConfig {
         config.put(JsonSerializer.TYPE_MAPPINGS, KafkaUtils.getJsonTypeMappingInfo(IncreaseAmountDTO.class,
                 PayInfoDTO.RequestToTransaction.class,
                 TransactionSelfRelationDTO.RequestToMember.class,
-                RelationDTO.Request.class));
+                RelationDTO.Request.class,
+                FindDescriptionDTO.Request.class));
         return new DefaultKafkaProducerFactory<>(config);
     }
 

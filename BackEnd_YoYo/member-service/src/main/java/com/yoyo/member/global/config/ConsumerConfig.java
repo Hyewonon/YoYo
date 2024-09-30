@@ -47,15 +47,16 @@ public class ConsumerConfig {
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.TYPE_MAPPINGS, KafkaUtils
                 .getJsonTypeMappingInfo(IncreaseAmountDTO.class,
-                                        TransactionDTO.class,
-                                        MemberRequestDTO.class,
-                                        PayInfoDTO.RequestToMember.class,
-                                        PayInfoDTO.RequestToTransaction.class,
-                                        MemberTagDTO.class,
-                                        TransactionSelfRelationDTO.RequestToMember.class,
-                                        PaymentDTO.class,
-                                        RelationDTO.Request.class,
-                                        RelationResponseDTO.class
+                        TransactionDTO.class,
+                        MemberRequestDTO.class,
+                        PayInfoDTO.RequestToMember.class,
+                        PayInfoDTO.RequestToTransaction.class,
+                        MemberTagDTO.class,
+                        TransactionSelfRelationDTO.RequestToMember.class,
+                        PaymentDTO.class,
+                        RelationDTO.Request.class,
+                        RelationResponseDTO.class,
+                        FindDescriptionDTO.Request.class
                 ));
 
         return props;

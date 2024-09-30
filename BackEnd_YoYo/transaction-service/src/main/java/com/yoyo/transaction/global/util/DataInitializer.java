@@ -119,7 +119,7 @@ public class DataInitializer implements CommandLineRunner {
                 .receiverId(2L)
                 .receiverName("김현태")
                 .eventId(2L)
-                .eventName("생일 파티")
+                .eventName("결혼식")
                 .isRegister(true)
                 .amount(40000L)
                 .memo("최광림 -> 김현태")
@@ -133,7 +133,7 @@ public class DataInitializer implements CommandLineRunner {
                 .receiverId(1L)
                 .receiverName("최광림")
                 .eventId(2L)
-                .eventName("생일 파티")
+                .eventName("결혼식")
                 .isRegister(true)
                 .amount(45000L)
                 .memo("김현태 -> 최광림")
@@ -147,7 +147,7 @@ public class DataInitializer implements CommandLineRunner {
                 .receiverId(3L)
                 .receiverName("이찬진")
                 .eventId(3L)
-                .eventName("퇴사 기념")
+                .eventName("결혼식")
                 .isRegister(true)
                 .amount(60000L)
                 .memo("최광림 -> 이찬진")
@@ -161,12 +161,64 @@ public class DataInitializer implements CommandLineRunner {
                 .receiverId(1L)
                 .receiverName("최광림")
                 .eventId(3L)
-                .eventName("퇴사 기념")
+                .eventName("결혼식")
                 .isRegister(true)
                 .amount(65000L)
                 .memo("이찬진 -> 최광림")
                 .transactionType(TransactionType.AUTO)
                 .relationType(RelationType.FRIEND)
+                .build();
+        Transaction transaction12 = Transaction.builder()
+                .senderId(6L)
+                .senderName("김싸피")
+                .receiverId(2L)
+                .receiverName("김현태")
+                .eventId(2L)
+                .eventName("결혼식")
+                .isRegister(false)
+                .amount(2000L)
+                .memo("축하합니다.")
+                .transactionType(TransactionType.AUTO)
+                .relationType(RelationType.NONE)
+                .build();
+        Transaction transaction13 = Transaction.builder()
+                .senderId(7L)
+                .senderName("이택근")
+                .receiverId(2L)
+                .receiverName("김현태")
+                .eventId(2L)
+                .eventName("결혼식")
+                .isRegister(false)
+                .amount(50000L)
+                .memo("오랜만이다")
+                .transactionType(TransactionType.AUTO)
+                .relationType(RelationType.NONE)
+                .build();
+        Transaction transaction14 = Transaction.builder()
+                .senderId(6L)
+                .senderName("김싸피")
+                .receiverId(3L)
+                .receiverName("이찬진")
+                .eventId(3L)
+                .eventName("결혼식")
+                .isRegister(false)
+                .amount(2000L)
+                .memo("츅하요")
+                .transactionType(TransactionType.AUTO)
+                .relationType(RelationType.NONE)
+                .build();
+        Transaction transaction15 = Transaction.builder()
+                .senderId(7L)
+                .senderName("이택근")
+                .receiverId(3L)
+                .receiverName("이찬진")
+                .eventId(3L)
+                .eventName("결혼식")
+                .isRegister(false)
+                .amount(50000L)
+                .memo("오랜만이다")
+                .transactionType(TransactionType.AUTO)
+                .relationType(RelationType.NONE)
                 .build();
         transactions.add(transaction1);
         transactions.add(transaction2);
@@ -179,6 +231,10 @@ public class DataInitializer implements CommandLineRunner {
         transactions.add(transaction9);
         transactions.add(transaction10);
         transactions.add(transaction11);
+        transactions.add(transaction12);
+        transactions.add(transaction13);
+        transactions.add(transaction14);
+        transactions.add(transaction15);
         return transactions;
     }
 
