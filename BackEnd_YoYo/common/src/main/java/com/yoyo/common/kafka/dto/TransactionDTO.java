@@ -21,4 +21,19 @@ public class TransactionDTO implements KafkaJson {
     private boolean isMember;
     private long amount;
     private String memo;
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @JsonSerialize
+    @JsonDeserialize
+    @Builder
+    @ToString
+    public static class MatchRelation implements KafkaJson {
+        private RelationType relationType;
+        private String name;
+        private Long amount;
+        private boolean isRelation;
+    }
 }

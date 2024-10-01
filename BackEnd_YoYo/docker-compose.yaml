@@ -6,6 +6,8 @@ services:
     container_name: vault
     ports:
       - "8200:8200"
+    networks:
+      - yoyo_network
     environment:
       VAULT_DEV_ROOT_TOKEN_ID: myroot
       VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
@@ -116,6 +118,8 @@ services:
     container_name: config-server
     build:
       context: ./config-server
+    depends_on:
+      - vault
     ports:
       - "8888:8888"
     networks:
