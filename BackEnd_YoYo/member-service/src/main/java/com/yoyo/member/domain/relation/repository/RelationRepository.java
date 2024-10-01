@@ -30,4 +30,6 @@ public interface RelationRepository extends JpaRepository<Relation, Long> {
      * */
     @Query("SELECT r FROM Relation r WHERE r.member.memberId = :memberId1 AND r.oppositeId = :memberId2")
     Optional<Relation> findByMemberAndOppositeId(Long memberId1, Long memberId2);
+
+    List<Relation> findAllByMember_MemberIdAndOppositeName(Long memberId, String name);
 }

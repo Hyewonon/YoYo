@@ -38,4 +38,8 @@ public class RelationProducer {
     public void sendDescriptionResponse(FindDescriptionDTO.Response response) {
         kafkaTemplate.send("description-response-topic", response);
     }
+
+    public void sendResultMatch(TransactionDTO.MatchRelation response) {
+        kafkaTemplate.send("result-match-topic", response);
+    }
 }

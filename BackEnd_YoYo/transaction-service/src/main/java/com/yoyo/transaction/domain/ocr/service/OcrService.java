@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -33,15 +35,21 @@ public class OcrService {
     private String apiURL;
     @Value("${naver.ocr.secret-key}")
     private String secretKey;
+    private final List<CompletableFuture<TransactionDTO.MatchRelation>> matchRelationFutures = new ArrayList<>();
 
-    public List<TransactionDTO.MatchRelation> getText(MultipartFile imageFile) {
+    public List<TransactionDTO.MatchRelation> getText(MultipartFile imageFile, Long memberId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.set("X-OCR-SECRET", secretKey);
 
         ImageInfo imageInfo = ImageInfo.builder().format("png").name(imageFile.getOriginalFilename()).build();
 
-        NaverRequestInfo naverRequestInfo = NaverRequestInfo.builder().version("V2").requestId(UUID.randomUUID().toString()).timestamp(System.currentTimeMillis()).images(Collections.singletonList(imageInfo)).build();
+        NaverRequestInfo naverRequestInfo = NaverRequestInfo.builder()
+                .version("V2")
+                .requestId(UUID.randomUUID().toString())
+                .timestamp(System.currentTimeMillis())
+                .images(Collections.singletonList(imageInfo))
+                .build();
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         try {
@@ -61,18 +69,27 @@ public class OcrService {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         ResponseEntity<String> response = restTemplate.exchange(apiURL, HttpMethod.POST, requestEntity, String.class);
-        log.info("------------------------------------------------------------------------------------------");
-        List<TransactionDTO.MatchRelation> responseList = parseOcrResponse(response.getBody());
-        int count = 1;
-        for (TransactionDTO.MatchRelation transactionResponseDTO : responseList) {
-            log.info(String.valueOf(count++));
-            log.info(transactionResponseDTO.toString());
-            ocrProducer.sendMatchRelation(transactionResponseDTO);
-        }
-        log.info("------------------------------------------------------------------------------------------");
-        return responseList;
-    }
 
+        List<TransactionDTO.MatchRelation> responseList = parseOcrResponse(response.getBody());
+        List<TransactionDTO.MatchRelation> finalResponseList = new ArrayList<>();
+
+        for (TransactionDTO.MatchRelation transactionResponseDTO : responseList) {
+            transactionResponseDTO.setMemberId(memberId);
+            ocrProducer.sendMatchRelation(transactionResponseDTO);
+
+            CompletableFuture<TransactionDTO.MatchRelation> future = new CompletableFuture<>();
+            matchRelationFutures.add(future);
+
+            try {
+                TransactionDTO.MatchRelation matchRelation = future.get();
+                finalResponseList.add(matchRelation);
+            } catch (Exception e) {
+                log.error("Kafka response: {}", e.getMessage());
+            }
+        }
+
+        return finalResponseList;
+    }
     public List<TransactionDTO.MatchRelation> parseOcrResponse(String jsonResponse) {
         List<TransactionDTO.MatchRelation> responses = new ArrayList<>();
         try {
@@ -115,6 +132,15 @@ public class OcrService {
             log.error(e.getMessage());
         }
         return responses;
+    }
+
+    @KafkaListener(topics = "result-match-topic", concurrency = "3")
+    public void getMatchResult(TransactionDTO.MatchRelation response) {
+        log.info("Received MatchRelation from Kafka: {}", response);
+        if (!matchRelationFutures.isEmpty()) {
+            CompletableFuture<TransactionDTO.MatchRelation> future = matchRelationFutures.remove(0);
+            future.complete(response);
+        }
     }
 }
 

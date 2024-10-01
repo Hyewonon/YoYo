@@ -31,9 +31,10 @@ public class TransactionDTO implements KafkaJson {
     @Builder
     @ToString
     public static class MatchRelation implements KafkaJson {
+        private Long memberId;
         private RelationType relationType;
         private String name;
         private Long amount;
-        private boolean isRelation;
+        private int relationStatus;
     }
 }
