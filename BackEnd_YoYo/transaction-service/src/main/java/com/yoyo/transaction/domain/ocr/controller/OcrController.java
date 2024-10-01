@@ -23,11 +23,11 @@ public class OcrController {
     private final TransactionService transactionService;
 
     @PostMapping("/ocr-image")
-    public ResponseEntity<?> getText(@RequestPart MultipartFile imageFile) {
+    public ResponseEntity<?> getText(@RequestPart MultipartFile imageFile, @RequestHeader("memberId")Long memberId) {
         ApiResponse<List<TransactionDTO.MatchRelation>> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "OCR 탐색",
-                ocrService.getText(imageFile)
+                ocrService.getText(imageFile, memberId)
         );
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
