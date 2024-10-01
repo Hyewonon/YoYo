@@ -27,8 +27,8 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         if (memberRepository.count() == 0) {
         List<Member> members = generateDummyMembers();
-        memberRepository.saveAll(members);
         List<Relation> relations = generateDummyRelations(members);
+        memberRepository.saveAll(members);
         relationRepository.saveAll(relations);
         }
     }
@@ -157,6 +157,8 @@ public class DataInitializer implements CommandLineRunner {
         members.get(1).getRelations().add(relation2);
         members.get(2).getRelations().add(relation1);
         members.get(2).getRelations().add(relation2);
+        members.add(unknown);
+        members.add(unknown2);
         return relations;
     }
 }

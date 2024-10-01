@@ -141,4 +141,8 @@ public class RelationConsumer {
         FindDescriptionDTO.Response response = FindDescriptionDTO.Response.builder().description(relation.getDescription()).build();
         producer.sendDescriptionResponse(response);
     }
+    @KafkaListener(topics = "match-relation", concurrency = "3")
+    public void getMatchRelation(TransactionDTO.MatchRelation request) {
+        String name = request.getName();
+    }
 }
