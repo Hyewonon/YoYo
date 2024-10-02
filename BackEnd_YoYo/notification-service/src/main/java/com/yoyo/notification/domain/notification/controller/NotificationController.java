@@ -1,5 +1,7 @@
 package com.yoyo.notification.domain.notification.controller;
 
+import com.yoyo.common.dto.response.CommonResponse;
+import com.yoyo.common.exception.ErrorResponse;
 import com.yoyo.notification.domain.notification.dto.NotificationDTO;
 import com.yoyo.notification.domain.notification.dto.NotificationDTO.Response;
 import com.yoyo.notification.domain.notification.dto.NotificationUpdateDTO;
@@ -14,8 +16,10 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,5 +56,21 @@ public class NotificationController {
                                                 @RequestBody NotificationUpdateDTO request) {
         NotificationUpdateDTO response = notificationService.updateNotification(memberId, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Operation(summary = "이벤트 알림 삭제", description = "이벤트 알림을 삭제합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "알림 삭제 성공",
+                         content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "유효한 알림 id 아님",
+                         content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "401", description = "삭제 요청자와 알림 수신자가 다름",
+                         content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @DeleteMapping("/{notificationId}")
+    public ResponseEntity<?> deleteNotification(@RequestHeader("memberId") Long memberId,
+                                                @PathVariable("notificationId") Long notificationId) {
+        CommonResponse response = notificationService.deleteNotification(memberId, notificationId);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
     }
 }

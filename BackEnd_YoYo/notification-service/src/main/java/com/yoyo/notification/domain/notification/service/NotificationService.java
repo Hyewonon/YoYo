@@ -1,5 +1,6 @@
 package com.yoyo.notification.domain.notification.service;
 
+import com.yoyo.common.dto.response.CommonResponse;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.NotificationException;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
@@ -15,6 +16,7 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -85,4 +87,18 @@ public class NotificationService {
             future.complete(tag);
         }
     }
+
+    /**
+     * 알림 단건 삭제
+     * */
+    public CommonResponse deleteNotification(Long memberId, Long notificationId) {
+        if(!Objects.equals(findNotificationByNotificationId(notificationId).getReceiverId(),
+                           memberId)) throw new NotificationException(ErrorCode.UNAUTHORIZED_NOTIFICATION);
+        notificationRepository.deleteById(notificationId);
+        return CommonResponse.of(true, "알림 삭제가 완료되었습니다.");
+    }
+
+    private Notification findNotificationByNotificationId(Long notificationId) {
+        return notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new NotificationException(ErrorCode.NOT_FOUND_NOTIFICATION));}
 }
