@@ -5,7 +5,6 @@ import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.kafka.dto.*;
 import com.yoyo.common.kafka.dto.PayInfoDTO.RequestToMember;
 import com.yoyo.member.domain.member.repository.MemberRepository;
-import com.yoyo.member.domain.member.repository.NoMemberRepository;
 import com.yoyo.member.domain.member.service.MemberService;
 import com.yoyo.member.domain.relation.producer.RelationProducer;
 import com.yoyo.member.domain.relation.repository.RelationRepository;
@@ -31,7 +30,6 @@ public class RelationConsumer {
     private final MemberService memberService;
 
     private final RelationRepository relationRepository;
-    private final NoMemberRepository noMemberRepository;
     private final MemberRepository memberRepository;
 
     private final String UPDATE_RELATION_TOPIC = "pay-update-relation-topic";
@@ -97,10 +95,8 @@ public class RelationConsumer {
     @KafkaListener(topics = CREATE_TRANSACTION_SELF_RELATION_TOPIC, concurrency = "3")
     public void createTransactionSelf(TransactionSelfRelationDTO.RequestToMember request) {
         // 0. memberId null이면 비회원 등록
-        if (request.getMemberId() == null) {
-            NoMember noMember = noMemberRepository.save(NoMember.builder()
-                    .name(request.getOppositeName())
-                    .build());
+        if (request.getOppositeId() == null) {
+            NoMember noMember = memberService.saveNoMember(request.getOppositeName());
             request.setOppositeId(noMember.getMemberId());
         }
 
@@ -108,12 +104,12 @@ public class RelationConsumer {
         if (!relationService.isAlreadyFriend(request.getMemberId(), request.getOppositeId())) {
             // 1.1. 없으면 생성
             relationService.createRelation(request.getMemberId(), request.getOppositeId(),
-                    RelationType.valueOf(request.getRelationType()), false);
+                                           RelationType.valueOf(request.getRelationType()), false);
         }
         // 2 친구 관계 보낸 총금액, 받은 총금액 수정
         // 보낸사람이 등록하면 보낸사람 친구관계만 수정
         relationService.updateRelationAmount(request.getMemberId(), request.getOppositeId(), request.getAmount(),
-                request.getTransactionType().equals("SEND"));
+                                             request.getTransactionType().equals("SEND"));
 
         relationProducer.sendTransactionSelf(createResponse(request));
     }
@@ -125,15 +121,15 @@ public class RelationConsumer {
 
     private TransactionSelfRelationDTO.ResponseFromMember createResponse(
             TransactionSelfRelationDTO.RequestToMember request) {
-        String memberName = memberService.findMemberNameById(request.getMemberId());
-        String oppositeName = memberService.findMemberNameById(request.getOppositeId());
+        String memberName = memberService.findBaseMemberNameById(request.getMemberId());
+        String oppositeName = memberService.findBaseMemberNameById(request.getOppositeId());
 
         return TransactionSelfRelationDTO.ResponseFromMember.builder()
-                .memberId(request.getMemberId())
-                .memberName(memberName)
-                .oppositeId(request.getOppositeId())
-                .oppositeName(oppositeName)
-                .build();
+                                                            .memberId(request.getMemberId())
+                                                            .memberName(memberName)
+                                                            .oppositeId(request.getOppositeId())
+                                                            .oppositeName(oppositeName)
+                                                            .build();
     }
 
     @KafkaListener(topics = "relation-description-topic", concurrency = "3")

@@ -85,8 +85,10 @@ public class TransactionService {
      * @return 회원 id, 이름, 상대 id, 이름 반환
      */
     private TransactionSelfRelationDTO.ResponseFromMember updateTransactionRelation(Long memberId, TransactionCreateDTO.Request request) {
+        Long oppositeId = (request.getMemberId() == null)? null : request.getMemberId();
+
         TransactionSelfRelationDTO.RequestToMember requestToMember = TransactionSelfRelationDTO.RequestToMember.of(
-                memberId, request.getMemberId(), request.getName(), request.getAmount(),
+                memberId, oppositeId, request.getName(), request.getAmount(),
                 String.valueOf(request.getTransactionType()), String.valueOf(request.getRelationType()));
 
         // 1. 직접등록 친구관계 수정 요청 (+ 등록되지 않은 회원은 회원 등록)

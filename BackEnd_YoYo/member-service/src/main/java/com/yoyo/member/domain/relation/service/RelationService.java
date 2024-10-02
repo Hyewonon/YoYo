@@ -39,12 +39,14 @@ public class RelationService {
      */
     public void createRelation(Long memberId1, Long memberId2, RelationType relationType, Boolean isMember){
         Member member = memberService.findMemberById(memberId1);
-        relationRepository.save(toNewEntityForPay(member, memberId2, relationType, isMember));
+        String member2Name = memberService.findBaseMemberNameById(memberId2);
+        relationRepository.save(toNewEntityForPay(member, memberId2, member2Name, relationType, isMember));
 
         if(isMember){
             // 둘다 회원이라면 양방향으로 저장
             member = memberService.findMemberById(memberId2);
-            relationRepository.save(toNewEntityForPay(member, memberId1, relationType, true));
+            String member1Name = memberService.findBaseMemberNameById(memberId1);
+            relationRepository.save(toNewEntityForPay(member, memberId1, member1Name, relationType, true));
         }
     }
 
@@ -134,10 +136,11 @@ public class RelationService {
         return RelationResponseDTO.of(memberId, oppositeIds);
     }
 
-    private Relation toNewEntityForPay(Member member, Long oppositeId, RelationType relationType, Boolean isMember) {
+    private Relation toNewEntityForPay(Member member, Long oppositeId, String oppositeName, RelationType relationType, Boolean isMember) {
         return Relation.builder()
                        .member(member)
                        .oppositeId(oppositeId)
+                        .oppositeName(oppositeName)
                        .relationType(relationType)
                        .description("")
                        .totalReceivedAmount(0L)

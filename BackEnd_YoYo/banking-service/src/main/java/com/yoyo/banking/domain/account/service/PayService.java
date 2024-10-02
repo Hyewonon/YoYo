@@ -86,7 +86,7 @@ public class PayService {
         // 1.1 충분하지 않으면 충전
         Long insufficientAmount = getInsufficientAmount(request.getAmount(), currMemberId);
         if (insufficientAmount < 0) {
-            PayDTO.Request chargeRequest = PayDTO.Request.toDto(insufficientAmount, null); // TODO : 회원 이름 불러오기
+            PayDTO.Request chargeRequest = PayDTO.Request.toDto(Math.abs(insufficientAmount), null); // TODO : 회원 이름 불러오기
             ResponseEntity<?> chargeResult = chargeOrRefundPayBalance(chargeRequest, currMemberId, false);
 
             // 충전 실패했으면 응답반환
