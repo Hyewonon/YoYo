@@ -152,4 +152,26 @@ public class RelationConsumer {
         }
         relationProducer.sendResultMatch(request);
     }
+
+    @KafkaListener(topics = "update-relation-topic", concurrency = "3")
+    public void getUpdateRelation(UpdateRelationDTO.Request request) {
+        Relation relation;
+        // 있는 관계 덮어쓰기
+        if (request.getRelationId() != null) {
+            relation = relationRepository.findByRelationId(request.getRelationId());
+            relation.setTotalReceivedAmount(relation.getTotalReceivedAmount() + request.getAmount());
+        }
+        // 새로 저장
+        else {
+            relation = Relation.builder()
+                    .member(memberRepository.findByMemberId(request.getMemberId()))
+                    .relationType(RelationType.valueOf(request.getRelationType()))
+                    .oppositeId(request.getOppositeId())
+                    .oppositeName(request.getName())
+                    .description(request.getDescription())
+                    .totalReceivedAmount(request.getAmount())
+                    .build();
+        }
+        relationRepository.save(relation);
+    }
 }

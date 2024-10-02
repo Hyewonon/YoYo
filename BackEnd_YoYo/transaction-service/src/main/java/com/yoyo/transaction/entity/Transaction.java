@@ -1,7 +1,6 @@
 package com.yoyo.transaction.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import lombok.*;
 
 @Entity
@@ -18,12 +17,15 @@ public class Transaction extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
     private Long senderId;
+    @Setter
     private String senderName;
     private Long receiverId;
+    @Setter
     private String receiverName;
     private Long eventId;
     @Setter
     private String eventName;
+    @Setter
     private Boolean isRegister;
     @Setter
     private long amount;

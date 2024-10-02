@@ -57,11 +57,11 @@ public class TransactionController {
     }
 
     @PatchMapping("/{transactionId}")
-    public ResponseEntity<?> updateTransaction(@PathVariable Long transactionId, @RequestBody UpdateTransactionDTO.Request request) {
+    public ResponseEntity<?> updateTransaction(@RequestHeader("memberId") Long memberId, @PathVariable Long transactionId, @RequestBody UpdateTransactionDTO.Request request) {
         ApiResponse<UpdateTransactionDTO.Response> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "수정 완료",
-                transactionService.updateTransaction(transactionId, request)
+                transactionService.updateTransaction(memberId, transactionId, request)
         );
         return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
