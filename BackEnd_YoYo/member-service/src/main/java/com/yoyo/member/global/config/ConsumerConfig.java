@@ -57,7 +57,8 @@ public class ConsumerConfig {
                         RelationDTO.Request.class,
                         RelationResponseDTO.class,
                         FindDescriptionDTO.Request.class,
-                        TransactionDTO.MatchRelation.class
+                        TransactionDTO.MatchRelation.class,
+                        UpdateRelationDTO.Request.class
                 ));
 
         return props;

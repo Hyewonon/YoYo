@@ -1,5 +1,6 @@
 package com.yoyo.transaction.domain.transaction.dto;
 
+import com.yoyo.transaction.entity.RelationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +14,11 @@ public class UpdateTransactionDTO {
     @NoArgsConstructor
     @Builder
     public static class Request {
-        private String title;
-        private String memo;
+        private Long relationId;
+        private Long oppositeId;
+        private String name;
+        private RelationType relationType;
+        private String description;
         private long amount;
     }
     @Getter
@@ -25,7 +29,7 @@ public class UpdateTransactionDTO {
         private Long transactionId;
         private String title;
         private LocalDateTime updatedAt;
-        private String memo;
+        private String description;
         private long amount;
     }
 }

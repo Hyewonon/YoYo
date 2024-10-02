@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface RelationRepository extends JpaRepository<Relation, Long> {
-
+    Relation findByRelationId(Long relationId);
     List<Relation> findByMember_MemberId(Long memberId);
 
     // memberId와 isMember로 필터링

@@ -36,4 +36,8 @@ public class TransactionProducer {
     public void sendRelationDescription(FindDescriptionDTO.Request request) {
         kafkaTemplate.send("relation-description-topic", request);
     }
+
+    public void sendRelationUpdate(UpdateRelationDTO.Request request) {
+        kafkaTemplate.send("update-relation-topic", request);
+    }
 }

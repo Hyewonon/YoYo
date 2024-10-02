@@ -6,11 +6,13 @@ import com.yoyo.common.exception.exceptionType.TransactionException;
 import com.yoyo.common.kafka.dto.FindDescriptionDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO.ResponseFromMember;
+import com.yoyo.common.kafka.dto.UpdateRelationDTO;
 import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
 import com.yoyo.transaction.domain.transaction.producer.TransactionProducer;
 import com.yoyo.transaction.domain.transaction.dto.FindTransactionDTO;
 import com.yoyo.transaction.domain.transaction.dto.UpdateTransactionDTO;
 import com.yoyo.transaction.domain.transaction.repository.TransactionRepository;
+import com.yoyo.transaction.entity.RelationType;
 import com.yoyo.transaction.entity.Transaction;
 import com.yoyo.transaction.entity.TransactionType;
 import jakarta.transaction.Transactional;
@@ -55,11 +57,20 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    public UpdateTransactionDTO.Response updateTransaction(Long transactionId, UpdateTransactionDTO.Request request) {
+    public UpdateTransactionDTO.Response updateTransaction(Long memberId, Long transactionId, UpdateTransactionDTO.Request request) {
         Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_TRANSACTION));
-        transaction.setEventName(request.getTitle());
-        transaction.setAmount(request.getAmount());
-        transaction.setMemo(request.getMemo());
+        UpdateRelationDTO.Request updateRequest = UpdateRelationDTO.Request.builder()
+                .memberId(memberId)
+                .relationId(request.getRelationId())
+                .oppositeId(request.getOppositeId())
+                .name(request.getName())
+                .relationType(request.getRelationType().toString())
+                .amount(request.getAmount())
+                .build();
+        transactionProducer.sendRelationUpdate(updateRequest);
+        transaction.setSenderName(request.getName());
+        transaction.setRelationType(request.getRelationType());
+        transaction.setIsRegister(true);
         Transaction newTransaction = transactionRepository.save(transaction);
         return new UpdateTransactionDTO.Response(newTransaction.getTransactionId(), newTransaction.getEventName(), newTransaction.getUpdatedAt(), newTransaction.getMemo(), newTransaction.getAmount());
     }
@@ -184,7 +195,9 @@ public class TransactionService {
         CountDownLatch latch = new CountDownLatch(1);
         List<Transaction> sendTransaction = transactionRepository.findAllBySenderIdAndReceiverId(memberId, oppositeId);
         List<Transaction> receiveTransaction = transactionRepository.findAllBySenderIdAndReceiverId(oppositeId, memberId);
-
+        RelationType relationType = receiveTransaction.isEmpty()
+                ? (sendTransaction.isEmpty() ? null : sendTransaction.get(0).getRelationType())
+                : receiveTransaction.get(0).getRelationType();
         String oppositeName = receiveTransaction.isEmpty() ? (sendTransaction.isEmpty() ? null : sendTransaction.get(0).getSenderName()) : receiveTransaction.get(0).getSenderName();
         FindDescriptionDTO.Request request = FindDescriptionDTO.Request.builder().memberId(memberId).oppositeId(oppositeId).build();
         transactionProducer.sendRelationDescription(request);
@@ -216,6 +229,7 @@ public class TransactionService {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("oppositeName", oppositeName);
         responseMap.put("description", description);
+        responseMap.put("relationType", relationType);
         responseMap.put("totalReceivedAmount", totalReceivedAmount);
         responseMap.put("totalSentAmount", totalSentAmount);
         responseMap.put("receive", receiveResponse);
