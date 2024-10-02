@@ -5,8 +5,12 @@ import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.member.domain.member.dto.RegisterMemberDTO;
 import com.yoyo.member.domain.member.dto.UpdateMemberDTO;
 import com.yoyo.member.domain.member.producer.MemberProducer;
+import com.yoyo.member.domain.member.repository.BaseMemberRepository;
 import com.yoyo.member.domain.member.repository.MemberRepository;
+import com.yoyo.member.domain.member.repository.NoMemberRepository;
+import com.yoyo.member.entity.BaseMember;
 import com.yoyo.member.entity.Member;
+import com.yoyo.member.entity.NoMember;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +24,17 @@ import org.springframework.stereotype.Service;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberProducer memberProducer;
+    private final NoMemberRepository noMemberRepository;
+    private final BaseMemberRepository baseMemberRepository;
 
     public Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND));
     }
 
-    public String findMemberNameById(Long memberId) {
-        return findMemberById(memberId).getName();
+    public String findBaseMemberNameById(Long memberId) {
+        BaseMember baseMember = baseMemberRepository.findById(memberId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MEMBER));
+        return baseMember.getName();
     }
 
     public RegisterMemberDTO.Response registerMember(RegisterMemberDTO.Request request) {
@@ -66,5 +73,14 @@ public class MemberService {
         member.setBirthDay(request.getBirthDay());
         member.setPhoneNumber(request.getPhoneNumber());
         return memberRepository.save(member);
+    }
+
+    /**
+     * 비회원 저장
+     * */
+    public NoMember saveNoMember(String memberName) {
+        return noMemberRepository.save(NoMember.builder()
+                                        .name(memberName)
+                                        .build());
     }
 }
