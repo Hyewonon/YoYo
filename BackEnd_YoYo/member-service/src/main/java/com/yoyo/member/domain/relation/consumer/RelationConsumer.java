@@ -94,8 +94,8 @@ public class RelationConsumer {
      */
     @KafkaListener(topics = CREATE_TRANSACTION_SELF_RELATION_TOPIC, concurrency = "3")
     public void createTransactionSelf(TransactionSelfRelationDTO.RequestToMember request) {
-        // 0. memberId null이면 비회원 등록
-        if (request.getOppositeId() == null) {
+        // 0. memberId 0이면 비회원 등록
+        if (request.getOppositeId() == 0) {
             NoMember noMember = memberService.saveNoMember(request.getOppositeName());
             request.setOppositeId(noMember.getMemberId());
         }
