@@ -1,8 +1,11 @@
 package com.yoyo.event.domain.event.consumer;
 
 import com.yoyo.common.kafka.dto.AmountResponseDTO;
+import com.yoyo.common.kafka.dto.EventRequestDTO;
+import com.yoyo.common.kafka.dto.EventResponseDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.RelationResponseDTO;
+import com.yoyo.event.domain.event.producer.EventProducer;
 import com.yoyo.event.domain.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,9 @@ import org.springframework.stereotype.Service;
 public class EventConsumer {
 
     private final EventService eventService;
+    private final EventProducer eventProducer;
+
+    private final String SEND_EVENTID_EVENT_TOPIC = "send-event-id-event-topic";
 
     @KafkaListener(topics = "transaction-summary-topic", concurrency = "3")
     public void getTransactionSummary(AmountResponseDTO summary) {
@@ -30,4 +36,11 @@ public class EventConsumer {
     public void getTransactionSummary(RelationResponseDTO relation) {
         eventService.completeRelationId(relation);
     }
+
+    @KafkaListener(topics = SEND_EVENTID_EVENT_TOPIC, concurrency = "3")
+    public void getEventNameByEventId(EventRequestDTO request) {
+        String eventName = eventService.findEventById(request.getEventId());
+        eventProducer.sendEventNameToTransaction(EventResponseDTO.of(request.getEventId(), eventName));
+    }
+
 }

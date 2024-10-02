@@ -23,6 +23,7 @@ public class TransactionConsumer {
 
     private final String UPDATE_TRANSACTION_TOPIC = "pay-update-transaction-topic";
     private final String SEND_TRANSACTION_SELF_RELATION_TOPIC = "send-transaction-self-relation-topic";
+    private final String SEND_EVENT_NAME = "send-event-name";
 
     private final String UPDATE_TRANSACTION_NO_MEMBER_TOPIC = "pay-update-transaction-no-member-topic";
     private final TransactionRepository transactionRepository;
@@ -115,6 +116,11 @@ public class TransactionConsumer {
             transaction.setRelationType(RelationType.valueOf(updateTransactionRelationTypeDTO.getRelationType()));
             transactionRepository.save(transaction);
         });
+    }
+
+    @KafkaListener(topics = SEND_EVENT_NAME, concurrency = "3")
+    public void getMemberName(EventResponseDTO response) {
+        transactionService.completeEventName(response);
     }
 }
 

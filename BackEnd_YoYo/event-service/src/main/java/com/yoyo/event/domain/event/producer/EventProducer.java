@@ -2,6 +2,7 @@ package com.yoyo.event.domain.event.producer;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.dto.AmountRequestDTO;
+import com.yoyo.common.kafka.dto.EventResponseDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.NotificationCreateDTO;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class EventProducer {
     private final String MEMBER_TOPIC = "event-member-name-topic";
     private final String CREATE_NOTIFICATION = "create-notification";
     private final String GET_RELATION_IDS = "get-relations-ids";
+    private final String SEND_EVENT_NAME = "send-event-name";
 
     public void sendEventId(AmountRequestDTO event) {
         kafkaTemplate.send(TRANSACTION_TOPIC, event);
@@ -36,4 +38,7 @@ public class EventProducer {
         kafkaTemplate.send(GET_RELATION_IDS, request);
     }
 
+    public void sendEventNameToTransaction(EventResponseDTO response) {
+        kafkaTemplate.send(SEND_EVENT_NAME, response);
+    }
 }
