@@ -83,4 +83,22 @@ public class MemberService {
                                         .name(memberName)
                                         .build());
     }
+
+    /**
+     * fcm 토큰 저장
+     * **/
+    public void saveFcmToken(Long memberId, String fcmToken) {
+        Member member = findMemberById(memberId);
+        member.setFcmToken(fcmToken);
+        memberRepository.save(member);
+    }
+
+    /**
+     * fcm 토큰 삭제
+     * **/
+    public void deleteFcmToken(Long memberId) {
+        Member member = findMemberById(memberId);
+        member.setFcmToken(null);
+        memberRepository.save(member);
+    }
 }
