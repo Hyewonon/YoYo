@@ -1,5 +1,6 @@
 package com.yoyo.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,6 +17,7 @@ public class Relation {
     private Long relationId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonBackReference
     private Member member;
     private Long oppositeId;
     private String oppositeName;
