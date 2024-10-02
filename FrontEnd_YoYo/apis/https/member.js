@@ -3,10 +3,6 @@ import { axiosInstance } from "./../axiosInstance";
 
 //문자전송
 export async function sendMessage(phoneNumber) {
-    console.log("인증번호발송");
-    console.log(
-        BASE_URL + END_POINT.MEMBER("send") + `?phoneNumber=${phoneNumber}`
-    );
     const response = await axiosInstance.post(
         END_POINT.MEMBER("send") + `?phoneNumber=${phoneNumber}`
     );

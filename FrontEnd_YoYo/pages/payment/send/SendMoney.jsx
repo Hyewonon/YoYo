@@ -21,7 +21,8 @@ export default function SendMoney({ route, navigation }) {
     navigation.navigate("RegistPayPassword", {
       data: {
         title: `${title} 완료`,
-        content: `${price}원이 ${title === "충전하기" ? "충전되었습니다" : "송금되었습니다"}.`
+        content: `${price}원이 ${title === "충전하기" ? "충전되었습니다" : "송금되었습니다"}.`,
+        money: price
       },
       type: "pay"
     })

@@ -9,7 +9,6 @@ import Input from "../../../components/common/Input";
 import { useNavigation } from "@react-navigation/native";
 import useFontsLoader from "../../../constants/useFontsLoader";
 import { login } from "../../../apis/https/member";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from "../../../store/auth-context";
 
 export default function Login() {
@@ -25,7 +24,6 @@ export default function Login() {
         try {
             const response = await login(phoneNumber, password)
             authCtx.login(response.jwtToken, response.memberId)
-            navigation.navigate("Home");
         } catch (error) {
             Alert.alert(
                 "로그인 실패",

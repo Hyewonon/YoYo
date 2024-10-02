@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useState } from "react";
+import { axiosInterceptor } from "../apis/axiosInterceptor";
+import { axiosInstance } from "../apis/axiosInstance";
 
 export const AuthContext = createContext({
     token: "",
@@ -18,8 +20,10 @@ function AuthContextProvider({ children }) {
         AsyncStorage.setItem("token", token);
         AsyncStorage.setItem("memberId", id.toString());
     }
+
     function logout() {
         setAuthToken(null);
+        setMemberId(null);
         AsyncStorage.removeItem("token");
         AsyncStorage.removeItem("memberId");
     }

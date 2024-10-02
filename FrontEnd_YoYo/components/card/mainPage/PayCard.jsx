@@ -6,7 +6,7 @@ import { MainStyle } from '../../../constants/style';
 import { useNavigation } from '@react-navigation/native';
 import MoneyCard from './MoneyCard';
 
-export default function PayCard({ name, money, account, onPress }) {
+export default function PayCard({ data, account, onPress }) {
   const navigation = useNavigation();
   function clickeGiveHandler() {
     navigation.navigate("돈보내기", {
@@ -23,8 +23,8 @@ export default function PayCard({ name, money, account, onPress }) {
   }
   return (
     <View style={styles.container}>
-      <YoYoText type="subTitle" logo color={MainStyle.colors.white}>{name}님, 반갑습니다!</YoYoText>
-      <MoneyCard account={account} money={money} />
+      <YoYoText type="subTitle" logo color={MainStyle.colors.white}>{data.memberName}님, 반갑습니다!</YoYoText>
+      <MoneyCard account={account} money={data.balance} />
       {account ? <View style={styles.buttons}>
         <Pressable onPress={clickeGiveHandler}>
           <YoYoText type="md" bold color="white">옮기기</YoYoText>

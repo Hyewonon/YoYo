@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import MainPageCard from "../../components/card/mainPage/MainPageCard";
 import PayCard from "../../components/card/mainPage/PayCard";
 import Container from "../../components/common/Container";
 import { useNavigation } from "@react-navigation/native";
-import YoYoText from "../../constants/YoYoText";
 import { StyleSheet, View } from "react-native";
 import Header from "../../components/header/Header";
+import { getPay } from "../../apis/https/payApi";
 
 export default function MainPage() {
+    const [payInfo, setPayInfo] = useState()
     const navigation = useNavigation();
     function clickPayCardHandler() {
         navigation.navigate("계좌등록");
@@ -18,15 +19,23 @@ export default function MainPage() {
     function clickYoyoHandler() {
         navigation.navigate("GiveAndTake");
     }
+    async function getPayInfo() {
+        const response = await getPay();
+        setPayInfo(response)
+
+    }
+    useEffect(() => {
+        getPayInfo();
+    }, [])
     return (
         <Container>
             <Header />
-            <PayCard
-                name="김현태"
-                money={1000000}
-                onPress={clickPayCardHandler}
-                account={true}
-            />
+            {payInfo &&
+                <PayCard
+                    data={payInfo}
+                    onPress={clickPayCardHandler}
+                    account={payInfo}
+                />}
             <MainPageCard
                 title={"Event"}
                 subTitle={"경조사를 추가하Go" + "\n" + "경조사비를 관리해Yo!"}

@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import Container from "./../../../components/common/Container";
 import YoYoText from "../../../constants/YoYoText";
 import { MainStyle } from "../../../constants/style";
@@ -10,60 +10,15 @@ import EventAfterRegist from "../../../components/card/Event/EventAfterRegist";
 import IconButton from "../../../components/common/IconButton";
 import TagList from "../../../components/common/TagList";
 import Button from "./../../../components/common/Button";
+import { getEventDetail } from "../../../apis/https/eventApi";
 
-const event = {
-    eventId: 1,
-    totalReceiver: 5,
-    totalReceivedAmount: 1000000,
-    eventTitle: "이벤트1",
-    transactions: [
-        {
-            id: 1,
-            name: "이찬진",
-            tag: "friend",
-            detail: "고등학교 친구",
-            date: "2024.09.11",
-            price: 50000,
-        },
-        {
-            id: 2,
-            name: "이찬진",
-            tag: "friend",
-            detail: "고등학교 친구",
-            date: "2024.09.11",
-            price: 50000,
-        },
-        {
-            id: 3,
-            name: "이찬진",
-            tag: "friend",
-            detail: "고등학교 친구",
-            date: "2024.09.11",
-            price: 50000,
-        },
-        {
-            id: 4,
-            name: "이찬진",
-            tag: "friend",
-            detail: "고등학교 친구",
-            date: "2024.09.11",
-            price: 50000,
-        },
-        {
-            id: 5,
-            name: "이찬진",
-            tag: "friend",
-            detail: "고등학교 친구",
-            date: "2024.09.11",
-            price: 50000,
-        },
-    ],
-};
 
-export default function EventDetail({ navigation }) {
+
+export default function EventDetail({ navigation, route }) {
+    const [event, setEvent] = useState()
+    const eventId = route.params.id
     const [selectedTag, setSelectedTag] = useState("all");
     const [isWait, setIsWait] = useState(true);
-
     function clickWaitCard(friend) {
         navigation.navigate("지인선택", { friend: friend });
     }
@@ -89,20 +44,29 @@ export default function EventDetail({ navigation }) {
             <EventAfterRegist event={item} />
         );
     };
-
+    useEffect(() => {
+        async function fetchEvent() {
+            const data = await getEventDetail(eventId)
+            setEvent(data)
+        }
+        fetchEvent()
+    }, [])
     useLayoutEffect(() => {
-        navigation.setOptions({
-            title: event.eventTitle,
-            headerRight: () => (
-                <IconButton
-                    icon="create-outline"
-                    size={24}
-                    onPress={() => alert("Header Button Pressed")}
-                />
-            ),
-        });
-    }, [navigation]);
-
+        if (event) {
+            navigation.setOptions({
+                title: event.title || "",
+                headerRight: () => (
+                    <IconButton
+                        icon="create-outline"
+                        size={24}
+                        onPress={() => alert("Header Button Pressed")}
+                    />
+                ),
+            })
+        };
+    }, [navigation, event]);
+    if (!event)
+        return <View><Text>없어</Text></View>
     return (
         <>
             <Container>
@@ -122,7 +86,7 @@ export default function EventDetail({ navigation }) {
                         bold
                         color={MainStyle.colors.main}
                     >
-                        {event.totalReceivedAmount.toLocaleString()}
+                        {event.totalReceivedAmount}
                     </YoYoText>
                     <YoYoText type="md">원의 마음을 전해주었어요.</YoYoText>
                 </View>

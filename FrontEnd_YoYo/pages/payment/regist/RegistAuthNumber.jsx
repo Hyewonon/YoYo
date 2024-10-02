@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import YoYoText from '../../../constants/YoYoText';
 import { MainStyle } from '../../../constants/style';
@@ -6,6 +6,7 @@ import Detail from '../../../assets/svg/계좌인증예시.svg';
 import AccountAuthInput from '../../../components/pay/AccountAuthInput';
 import Container from '../../../components/common/Container';
 import Button from '../../../components/common/Button';
+import { checkWon } from '../../../apis/https/payApi';
 
 
 export default function RegistAuthNumber({ bank, accountNumber, setAccountAuthNumber, onPress, bankImg }) {
@@ -51,10 +52,25 @@ export default function RegistAuthNumber({ bank, accountNumber, setAccountAuthNu
   function isValid() {
     return first && second && third && fourth;
   }
+  async function checkAuth() {
+    const auth = first.toString() + second.toString() + third.toString() + fourth.toString()
+    try {
+      const response = await checkWon({ accountNumber: accountNumber, authCode: auth });
+      if (response.isSuccess) {
+        setAccountAuthNumber(auth)
+        onPress();
+      } else {
+        Alert.alert("인증번호를 확인해주세요.")
+      }
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   function clickButton() {
     if (isValid()) {
-      setAccountAuthNumber(first.toString() + second.toString() + third.toString() + fourth.toString())
-      onPress();
+      checkAuth()
     }
   }
   return (
@@ -112,7 +128,6 @@ export default function RegistAuthNumber({ bank, accountNumber, setAccountAuthNu
     </>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -131,3 +146,4 @@ const styles = StyleSheet.create({
     gap: 16
   }
 });
+

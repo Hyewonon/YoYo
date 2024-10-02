@@ -8,11 +8,11 @@ export default function PayListCard({ data, type }) {
   return (
     <Card height={96}>
       <View style={styles.rowContainer}>
-        <YoYoText type="md" bold>{data.title}</YoYoText>
-        <YoYoText type="content">{data.date}</YoYoText>
+        <YoYoText type="md" bold>{data.name !== null ? data.name : type ? "충전" : "옮기기"}</YoYoText>
+        <YoYoText type="content">{data.createdAt}</YoYoText>
       </View>
       <View style={styles.moneyContainer}>
-        <YoYoText type="subTitle" bold color={type ? MainStyle.colors.main : MainStyle.colors.red}>{data.money}원</YoYoText>
+        <YoYoText type="subTitle" bold color={type ? MainStyle.colors.main : MainStyle.colors.red}>{data.payAmount}원</YoYoText>
       </View>
     </Card>
   )

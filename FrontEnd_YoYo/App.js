@@ -43,6 +43,7 @@ import OcrSelect from "./pages/ocr/select/OcrSelect";
 import { useContext, useEffect } from "react";
 import AuthContextProvider, { AuthContext } from "./store/auth-context.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { axiosInterceptor } from "./apis/axiosInterceptor.js";
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -149,11 +150,6 @@ function AuthStack() {
                     // headerShown: false,
                     title: "",
                 }}
-            />
-            <Stack.Screen
-                name="Home"
-                component={MainPage}
-                options={{ title: "홈" }}
             />
         </Stack.Navigator>
     );
@@ -326,13 +322,6 @@ function AuthenticatedStack() {
                     title: "",
                 }}
             />
-            <Stack.Screen
-                name="Login"
-                component={Login}
-                options={{
-                    headerShown: false,
-                }}
-            />
         </Stack.Navigator>
     );
 }
@@ -357,9 +346,9 @@ function Root() {
         }
         fetchToken();
     }, []);
-    useEffect(() => {
-        setupInterceptors(authCtx);
-    }, [authCtx]);
+    // useEffect(() => {
+    //     axiosInterceptor(authCtx);
+    // }, [authCtx.token]);
     return <Navigation />;
 }
 export default function App() {

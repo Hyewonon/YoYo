@@ -3,6 +3,7 @@ import React from "react";
 import Card from "../Card";
 import YoYoText from "../../../constants/YoYoText";
 import { CheckBox } from "../../common/CheckBox";
+import { formatDate } from "../../../util/date";
 
 export default function EventListCard({ event, onPress, type, selectedCard }) {
     return (
@@ -11,15 +12,15 @@ export default function EventListCard({ event, onPress, type, selectedCard }) {
                 <View style={styles.innerContainer}>
                     <View style={styles.titleContainer}>
                         <YoYoText type="subTitle" bold>
-                            {event.name}
+                            {event.title}
                         </YoYoText>
                         {type === "select" && (
                             <CheckBox checked={event.id === selectedCard} />
                         )}
                     </View>
-                    <YoYoText type="content">{event.date}</YoYoText>
+                    <YoYoText type="content">{formatDate(event.startAt)}</YoYoText>
                 </View>
-                <YoYoText type="desc">{event.position}</YoYoText>
+                <YoYoText type="desc">{event.location}</YoYoText>
             </View>
         </Card>
     );

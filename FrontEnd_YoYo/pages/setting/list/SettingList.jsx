@@ -8,21 +8,16 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../../store/auth-context";
 
 export default function SettingList() {
-    const authCtx = useContext(AuthContext)
+    const authCtx = useContext(AuthContext);
     const navigation = useNavigation();
     const settingList = [
         { id: "1", title: "개인정보 처리방침" },
-        { id: "2", title: "로그인" },
-        { id: "3", title: "로그아웃" },
+        { id: "2", title: "로그아웃" },
     ];
 
     const navigationList = {
         1: () => navigation.navigate("Private"), // 실제 네비게이션 이동
-        2: () => navigation.navigate("Login"), // 로그아웃을 처리할 함수
-        3: () => {
-            authCtx.logout()
-            navigation.navigate("Login")
-        }
+        2: () => authCtx.logout(), // 로그아웃을 처리할 함수
     };
 
     function clickItem(item) {
