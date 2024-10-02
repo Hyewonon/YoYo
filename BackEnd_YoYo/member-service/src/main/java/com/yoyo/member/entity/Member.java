@@ -31,6 +31,8 @@ public class Member extends BaseMember{
     private String accountNumber;
     @Setter
     private String bankCode;
+    @Setter
+    private String fcmToken;
 
     @OneToMany(mappedBy = "member" ,cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
