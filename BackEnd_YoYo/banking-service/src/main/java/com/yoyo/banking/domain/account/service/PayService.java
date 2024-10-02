@@ -86,7 +86,8 @@ public class PayService {
         // 1.1 충분하지 않으면 충전
         Long insufficientAmount = getInsufficientAmount(request.getAmount(), currMemberId);
         if (insufficientAmount < 0) {
-            PayDTO.Request chargeRequest = PayDTO.Request.toDto(Math.abs(insufficientAmount), null); // TODO : 회원 이름 불러오기
+            String memberName = getNameFromMember(currMemberId);
+            PayDTO.Request chargeRequest = PayDTO.Request.toDto(Math.abs(insufficientAmount), memberName);
             ResponseEntity<?> chargeResult = chargeOrRefundPayBalance(chargeRequest, currMemberId, false);
 
             // 충전 실패했으면 응답반환
@@ -153,7 +154,8 @@ public class PayService {
      * */
     private void savePayTransaction(PayDTO.Request request, Long memberId, PayType payType) {
         Account account = findAccountByMemberId(memberId);
-        PayTransaction payTransaction = PayDTO.Request.toEntity(request, account.getAccountId(), null,
+        String memberName = getNameFromMember(memberId);
+        PayTransaction payTransaction = PayDTO.Request.toEntity(request, account.getAccountId(), memberName,
                                                                 payType); // 회원 이름 필요
 
         payTransactionRepository.save(payTransaction);
@@ -187,15 +189,7 @@ public class PayService {
     public ResponseEntity<?> getPayBalance(Long memberId) {
         Account account = findAccountByMemberId(memberId);
 
-        payProducer.sendPayToMemberForName(memberId);
-        CompletableFuture<MemberResponseDTO> future = new CompletableFuture<>();
-        names.put(memberId, future);
-        String memberName;
-        try{
-            memberName = future.get(10, TimeUnit.SECONDS).getName();
-        } catch (Exception e){
-            throw new BankingException(ErrorCode.KAFKA_ERROR);
-        }
+        String memberName = getNameFromMember(memberId);
 
         PayDTO.Response response = (account.getAccountNumber() == null)? PayDTO.Response.of(memberName)
                                                     : PayDTO.Response.of(account, memberName);
