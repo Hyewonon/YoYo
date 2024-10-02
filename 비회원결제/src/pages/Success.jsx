@@ -3,12 +3,14 @@ import { Link, useNavigate, useSearchParams, useLocation } from "react-router-do
 
 export function Success() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [responseData, setResponseData] = useState(null);
-  const senderName = location.state || {};
-  const description = location.state || {};
-
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const senderName = params.get("senderName");
+  const description = params.get("description");
+  const eventId = params.get("eventId");
+  console.log(senderName, description, eventId)
   useEffect(() => {
     async function confirm() {
       const requestData = {
@@ -16,9 +18,8 @@ export function Success() {
         amount: searchParams.get("amount"),
         paymentKey: searchParams.get("paymentKey"),
         senderName: senderName,
-        receiverId : 1, // 링크에서 가져올 수 잇나
-        eventId: 1, // 링크에서 가져올 수 잇나
-        description : description
+        eventId: eventId,
+        description: description
       };
 
       const response = await fetch("/api/confirm/payment", {
@@ -50,17 +51,17 @@ export function Success() {
   return (
     <>
       <div className="box_section" style={{ width: "600px" }}>
-    <img width="100px" src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" />
-    <h2>결제를 완료했어요</h2>
-    <div className="p-grid typography--p" style={{ marginTop: "50px" }}>
-        <div className="p-grid-col text--left">
+        <img width="100px" src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" />
+        <h2>결제를 완료했어요</h2>
+        <div className="p-grid typography--p" style={{ marginTop: "50px" }}>
+          <div className="p-grid-col text--left">
             <b>결제금액</b>
-        </div>
-        <div className="p-grid-col text--right" id="amount">
+          </div>
+          <div className="p-grid-col text--right" id="amount">
             {`${Number(searchParams.get("amount")).toLocaleString()}원`}
+          </div>
         </div>
-    </div>
-    </div>
+      </div>
       {/* <div className="box_section" style={{ width: "600px", textAlign: "left" }}>
         <b>Response Data :</b>
         <div id="response" style={{ whiteSpace: "initial" }}>
