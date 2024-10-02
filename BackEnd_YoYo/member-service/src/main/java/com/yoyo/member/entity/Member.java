@@ -1,6 +1,8 @@
 package com.yoyo.member.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,6 +36,7 @@ public class Member extends BaseMember{
 
     @OneToMany(mappedBy = "member" ,cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
+    @JsonManagedReference
     private List<Relation> relations = new ArrayList<>();
 
     public Member(String naveValue, String phoneNumberValue, String passwordValue, LocalDate birthDayValue,

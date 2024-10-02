@@ -105,19 +105,17 @@ public class TransactionConsumer {
 
     @KafkaListener(topics = "update-transaction-relation-type-topic", concurrency = "3")
     public void updateTransactionRelationType(UpdateTransactionRelationTypeDTO updateTransactionRelationTypeDTO) {
-        Optional<Transaction> existingTransaction1 = transactionRepository.findBySenderIdAndReceiverId(updateTransactionRelationTypeDTO.getMemberId(), updateTransactionRelationTypeDTO.getOppositeId());
-        Optional<Transaction> existingTransaction2 = transactionRepository.findBySenderIdAndReceiverId(updateTransactionRelationTypeDTO.getOppositeId(), updateTransactionRelationTypeDTO.getMemberId());
-        existingTransaction1.ifPresent(transaction -> {
+        List<Transaction> existingTransaction1 = transactionRepository.findAllBySenderIdAndReceiverId(updateTransactionRelationTypeDTO.getMemberId(), updateTransactionRelationTypeDTO.getOppositeId());
+        List<Transaction> existingTransaction2 = transactionRepository.findAllBySenderIdAndReceiverId(updateTransactionRelationTypeDTO.getOppositeId(), updateTransactionRelationTypeDTO.getMemberId());
+        existingTransaction1.forEach(transaction -> {
             transaction.setRelationType(RelationType.valueOf(updateTransactionRelationTypeDTO.getRelationType()));
             transactionRepository.save(transaction);
         });
-        existingTransaction2.ifPresent(transaction -> {
+        existingTransaction2.forEach(transaction -> {
             transaction.setRelationType(RelationType.valueOf(updateTransactionRelationTypeDTO.getRelationType()));
             transactionRepository.save(transaction);
         });
     }
-
-
 }
 
 
