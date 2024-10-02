@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   vault:
     image: vault:1.13.3
@@ -17,8 +15,6 @@ services:
   member-db:
     image: mysql:8.0
     container_name: member-db
-    networks:
-      - yoyo_network
     volumes:
       - ./db/member-db/conf.d:/etc/mysql/conf.d
       - ./db/member-db/data:/var/lib/mysql
@@ -35,8 +31,6 @@ services:
   banking-db:
     image: mysql:8.0
     container_name: banking-db
-    networks:
-      - yoyo_network
     volumes:
       - ./db/banking-db/conf.d:/etc/mysql/conf.d
       - ./db/banking-db/data:/var/lib/mysql
@@ -53,8 +47,6 @@ services:
   transaction-db:
     image: mysql:8.0
     container_name: transaction-db
-    networks:
-      - yoyo_network
     volumes:
       - ./db/transaction-db/conf.d:/etc/mysql/conf.d
       - ./db/transaction-db/data:/var/lib/mysql
@@ -71,8 +63,6 @@ services:
   notification-db:
     image: mysql:8.0
     container_name: notification-db
-    networks:
-      - yoyo_network
     volumes:
       - ./db/notification-db/conf.d:/etc/mysql/conf.d
       - ./db/notification-db/data:/var/lib/mysql
@@ -89,8 +79,6 @@ services:
   event-db:
     image: mysql:8.0
     container_name: event-db
-    networks:
-      - yoyo_network
     volumes:
       - ./db/event-db/conf.d:/etc/mysql/conf.d
       - ./db/event-db/data:/var/lib/mysql
@@ -106,8 +94,6 @@ services:
 
   redis:
     image: redis:alpine
-    networks:
-      - yoyo_network
     restart: always
     ports:
       - "6379:6379"
@@ -122,8 +108,6 @@ services:
       - vault
     ports:
       - "8888:8888"
-    networks:
-      - yoyo_network
     environment:
       - SPRING_PROFILES_ACTIVE=default
 
@@ -135,8 +119,6 @@ services:
       context: ./eureka
     ports:
       - "8761:8761"
-    networks:
-      - yoyo_network
     environment:
       - SPRING_APPLICATION_NAME=eureka-server
       - SERVER_PORT=8761
@@ -150,8 +132,6 @@ services:
     container_name: member-service
     build:
       context: ./member-service
-    networks:
-      - yoyo_network
     ports:
       - "8081:8081"
     depends_on:
@@ -164,8 +144,6 @@ services:
     container_name: banking-service
     build:
       context: ./banking-service
-    networks:
-      - yoyo_network
     ports:
       - "8082:8082"
     depends_on:
@@ -180,8 +158,6 @@ services:
     container_name: transaction-service
     build:
       context: ./transaction-service
-    networks:
-      - yoyo_network
     ports:
       - "8083:8083"
     depends_on:
@@ -194,8 +170,6 @@ services:
     container_name: notification-service
     build:
       context: ./notification-service
-    networks:
-      - yoyo_network
     ports:
       - "8084:8084"
     depends_on:
@@ -208,8 +182,6 @@ services:
     container_name: payment-service
     build:
       context: ./payment-service
-    networks:
-      - yoyo_network
     ports:
       - "8085:8085"
     depends_on:
@@ -222,8 +194,6 @@ services:
     container_name: event-service
     build:
       context: ./event-service
-    networks:
-      - yoyo_network
     ports:
       - "8086:8086"
     depends_on:
@@ -236,10 +206,6 @@ services:
     container_name: spring-cloud-gateway
     build:
       context: ./scg
-    networks:
-      - yoyo_network
-    ports:
-      - "8000:8000"
     depends_on:
       - eureka
 
@@ -269,8 +235,6 @@ services:
       - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
       - KAFKA_CFG_MIN_INSYNC_REPLICAS=2
       - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
-    networks:
-      - yoyo_network
 
   yoyo-kafka2:
     container_name: yoyo-kafka2
@@ -298,8 +262,6 @@ services:
       - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
       - KAFKA_CFG_MIN_INSYNC_REPLICAS=2
       - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
-    networks:
-      - yoyo_network
 
   yoyo-kafka3:
     container_name: yoyo-kafka3
@@ -327,9 +289,23 @@ services:
       - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
       - KAFKA_CFG_MIN_INSYNC_REPLICAS=2
       - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
-    networks:
-      - yoyo_network
 
-networks:
-  yoyo_network:
-    driver: bridge
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
