@@ -29,7 +29,8 @@ public enum ErrorCode {
     // 일정 관련 에러
     DUPLICATE_MEMBER_EVENT("이미 등록된 일정입니다.", HttpStatus.CONFLICT),
     FORBIDDEN_EVENT("이벤트 접근 권한이 없습니다.", HttpStatus.FORBIDDEN),
-    
+    NOT_FOUND_EVENT("존재하지 않는 일정입니다.", HttpStatus.NOT_FOUND),
+
     // 알림 관련 에러
     NOT_FOUND_NOTIFICATION("존재하지 않는 알림입니다.", HttpStatus.NOT_FOUND),
     UNAUTHORIZED_NOTIFICATION("알림 삭제 권한이 없습니다.", HttpStatus.UNAUTHORIZED),

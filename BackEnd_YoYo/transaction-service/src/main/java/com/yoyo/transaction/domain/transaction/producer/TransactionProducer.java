@@ -12,6 +12,8 @@ public class TransactionProducer {
     private final KafkaTemplate<String, KafkaJson> kafkaTemplate;
 
     private final String CREATE_TRANSACTION_SELF_RELATION_TOPIC = "create-transaction-self-relation-topic";
+    private final String SEND_EVENTID_EVENT_TOPIC = "send-event-id-event-topic";
+
 
     public void sendTransactionSummary(AmountResponseDTO responseDTO) {
         kafkaTemplate.send("transaction-summary-topic", responseDTO);
@@ -39,5 +41,12 @@ public class TransactionProducer {
 
     public void sendRelationUpdate(UpdateRelationDTO.Request request) {
         kafkaTemplate.send("update-relation-topic", request);
+    }
+
+    /**
+     * event Id로 event Name을 불러옴
+     * */
+    public void getEventNameByEventId(Long eventId) {
+        kafkaTemplate.send(SEND_EVENTID_EVENT_TOPIC, EventRequestDTO.of(eventId));
     }
 }

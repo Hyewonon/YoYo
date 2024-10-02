@@ -20,16 +20,19 @@ public class TransactionCreateDTO {
 
         @Schema(description = "거래 종류 (받는사람 등록 시 RECEIVE, 보낸사람이 등록 시 SEND)")
         private TransactionType transactionType;
-        @Schema(description = "상대방 id")
+        @Schema(description = "상대방 id (검색되지 않은 사람일 경우 0)")
         private Long memberId;
-        @Schema(description = "상대방 이름")
+        @Schema(description = "상대방 이름 (검색된 사람일 경우 x)")
         private String name;
 
-        @Schema(description = "관계 태그")
+        @Schema(description = "관계 태그 (검색된 사람일 경우 x)")
         private String relationType;
-        @Schema(description = "관계 설명")
+        @Schema(description = "관계 설명 (검색된 사람일 경우 x)")
         private String description;
+        
+        @Schema(description = "이벤트 id (검색되지 않은 이벤트일 경우 0)")
         private Long eventId;
+        @Schema(description = "이벤트 명 (검색된 이벤트일 경우 x)")
         private String eventName;
         private Long amount;
         @Schema(description = "거래 설명")

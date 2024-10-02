@@ -15,8 +15,6 @@ import com.yoyo.event.domain.event.dto.EventDetailDTO.Response;
 import com.yoyo.event.domain.event.dto.EventUpdateDTO;
 import com.yoyo.event.domain.event.repository.EventRepository;
 import com.yoyo.event.entity.Event;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -25,10 +23,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -143,5 +137,10 @@ public class EventService {
 
     private void isMyEvent(Event event, Long memberId){
         if(!event.getMemberId().equals(memberId)) throw new EventException(ErrorCode.FORBIDDEN_EVENT);
+    }
+
+    public String findEventById(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND_EVENT));
+        return event.getTitle();
     }
 }
