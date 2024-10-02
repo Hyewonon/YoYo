@@ -4,16 +4,17 @@ import "./App.css";
 import { FailPage } from "./pages/Fail";
 import { Payment } from "./pages/Payment";
 import { Success } from "./pages/Success";
+import Home from "./pages/Home";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Payment />,
+    element: <Home />,
   },
   {
     path: "payment",
     children: [
       {
-        path: "checkout",
+        path: "checkout/:id",
         element: <Payment />,
       },
       {
