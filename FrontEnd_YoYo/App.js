@@ -44,6 +44,8 @@ import { useContext, useEffect } from "react";
 import AuthContextProvider, { AuthContext } from "./store/auth-context.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { axiosInterceptor } from "./apis/axiosInterceptor.js";
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -340,16 +342,46 @@ function Root() {
         async function fetchToken() {
             const storedToken = await AsyncStorage.getItem("token");
             const nowMember = await AsyncStorage.getItem("memberId");
+            const pushToken = await requestPushToken();
             if (storedToken && nowMember) {
-                authCtx.login(storedToken, nowMember);
+                authCtx.login(storedToken, nowMember, pushToken);
             }
         }
         fetchToken();
+
+        // 푸시 알림 수신 핸들러 설정
+        Notifications.setNotificationHandler({
+            handleNotification: async () => ({
+                shouldShowAlert: true,
+                shouldPlaySound: true,
+                shouldSetBadge: true,
+            }),
+        });
     }, []);
     // useEffect(() => {
     //     axiosInterceptor(authCtx);
     // }, [authCtx.token]);
     return <Navigation />;
+}
+async function requestPushToken() {
+    const { status } = await Notifications.getPermissionsAsync();
+    if (status !== 'granted') {
+        const { status: newStatus } = await Notifications.requestPermissionsAsync();
+        if (newStatus !== 'granted') {
+        alert('Push notification permissions required!');
+        return;
+        }
+    }
+    return await getPushToken();
+}
+async function getPushToken() {
+    try {
+        const token = (await Notifications.getExpoPushTokenAsync()).data;
+        return token;
+    } catch (error) {
+        console.error("Error getting FCM token: ", error);
+        return null;
+    }
 }
 export default function App() {
     return (
