@@ -1,6 +1,8 @@
 package com.yoyo.transaction.domain.transaction.dto;
 
+import com.yoyo.common.util.ValidEnum;
 import com.yoyo.transaction.entity.TransactionType;
+import com.yoyo.transaction.entity.RelationType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,13 +21,15 @@ public class TransactionCreateDTO {
     public static class Request {
 
         @Schema(description = "거래 종류 (받는사람 등록 시 RECEIVE, 보낸사람이 등록 시 SEND)")
-        private TransactionType transactionType;
+        @ValidEnum(enumClass = TransactionType.class)
+        private String transactionType;
         @Schema(description = "상대방 id (검색되지 않은 사람일 경우 0)")
         private Long memberId;
         @Schema(description = "상대방 이름 (검색된 사람일 경우 x)")
         private String name;
 
         @Schema(description = "관계 태그 (검색된 사람일 경우 x)")
+        @ValidEnum(enumClass = RelationType.class)
         private String relationType;
         @Schema(description = "관계 설명 (검색된 사람일 경우 x)")
         private String description;

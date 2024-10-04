@@ -1,11 +1,17 @@
 package com.yoyo.transaction.domain.transaction.controller;
 
+import com.yoyo.common.dto.response.BodyValidationExceptionResopnse;
 import com.yoyo.common.dto.response.CommonResponse;
 import com.yoyo.common.response.ApiResponse;
 import com.yoyo.transaction.domain.transaction.dto.FindTransactionDTO;
 import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
 import com.yoyo.transaction.domain.transaction.dto.UpdateTransactionDTO;
 import com.yoyo.transaction.domain.transaction.service.TransactionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +37,15 @@ public class TransactionController {
      * 보냈어요 받았어요 직접 등록
      **/
     @PostMapping
+    @Operation(summary = "요요 거래내역 직접 등록", description = "요요 거래내역 직접 등록")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "거래내역 등록 성공",
+                                                                 content = @Content(schema = @Schema(implementation = ApiResponse.class))),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류",
+                                                                 content = @Content(schema = @Schema(implementation = BodyValidationExceptionResopnse.class))),
+    })
     public ResponseEntity<?> createTransactionSelf(@RequestHeader("memberId") Long memberId,
-                                                   @RequestBody TransactionCreateDTO.Request request) {
+                                                   @RequestBody @Valid TransactionCreateDTO.Request request) {
         transactionService.createTransactionSelf(memberId, request);
         CommonResponse response = CommonResponse.of(true, "요요 거래내역이 등록되었습니다.");
 
