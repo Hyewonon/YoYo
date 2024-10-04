@@ -146,8 +146,6 @@ services:
       - "8082:8082"
     depends_on:
       - eureka
-    environment:
-      - TZ=Asia/Seoul
 
 
   # Transaction Service
@@ -201,6 +199,8 @@ services:
   # Spring Cloud Gateway
   scg:
     image: scg:1.0.0
+    ports:
+      - "8000:8000"
     container_name: spring-cloud-gateway
     build:
       context: ./scg

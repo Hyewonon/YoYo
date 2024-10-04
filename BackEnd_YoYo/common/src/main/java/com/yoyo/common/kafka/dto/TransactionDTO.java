@@ -35,6 +35,7 @@ public class TransactionDTO implements KafkaJson {
         private RelationType relationType;
         private String name;
         private Long amount;
+        private String description;
         private int relationStatus;
     }
 }

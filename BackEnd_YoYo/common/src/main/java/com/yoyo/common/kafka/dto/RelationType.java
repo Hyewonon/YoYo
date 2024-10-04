@@ -4,7 +4,7 @@ public enum RelationType {
     FRIEND,
     FAMILY,
     COMPANY,
-    OTHERS,
+    ETC,
     NONE
     ;
 }

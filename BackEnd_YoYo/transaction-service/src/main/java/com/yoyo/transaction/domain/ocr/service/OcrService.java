@@ -69,7 +69,7 @@ public class OcrService {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         ResponseEntity<String> response = restTemplate.exchange(apiURL, HttpMethod.POST, requestEntity, String.class);
-
+        log.info(response.getBody());
         List<TransactionDTO.MatchRelation> responseList = parseOcrResponse(response.getBody());
         List<TransactionDTO.MatchRelation> finalResponseList = new ArrayList<>();
 
@@ -90,49 +90,100 @@ public class OcrService {
 
         return finalResponseList;
     }
+
     public List<TransactionDTO.MatchRelation> parseOcrResponse(String jsonResponse) {
         List<TransactionDTO.MatchRelation> responses = new ArrayList<>();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(jsonResponse);
             JsonNode fieldsNode = rootNode.get("images").get(0).get("fields");
+
+            StringBuilder nameBuilder = new StringBuilder();
+            StringBuilder relationBuilder = new StringBuilder();
+            StringBuilder descriptionBuilder = new StringBuilder();
             TransactionDTO.MatchRelation transaction = new TransactionDTO.MatchRelation();
+
+            int count = 0;
+            double previousY = -1;
+            double yThreshold = 70;
+
+            reTry:
             for (JsonNode fieldNode : fieldsNode) {
                 String inferText = fieldNode.get("inferText").asText();
-                double inferConfidence = fieldNode.get("inferConfidence").asDouble();
-                // 신뢰도 0.8 이상만 처리
-                if (inferConfidence >= 0.8) {
-                    // 관계 추출
-                    if (inferText.contains("친구")) {
-                        transaction.setRelationType(RelationType.valueOf("FRIEND"));
-                    } else if (inferText.contains("가족")) {
-                        transaction.setRelationType(RelationType.valueOf("FAMILY"));
-                    } else if (inferText.contains("직장") || inferText.contains("회사")) {
-                        transaction.setRelationType(RelationType.valueOf("COMPANY"));
-                    }
-                    // 이름 추출
-                    else if (inferText.matches(".*[가-힣]+")) {
-                        transaction.setName(inferText);
-                    }
 
-                    // 금액 추출
-                    else if (inferText.matches("^\\d+$")) {
+                JsonNode verticesArray = fieldNode.get("boundingPoly").get("vertices");
+                if (verticesArray == null || !verticesArray.isArray() || verticesArray.isEmpty()) {
+                    continue reTry;
+                }
+
+                JsonNode verticesNode = verticesArray.get(0);
+                double verticesX = verticesNode.has("x") ? verticesNode.get("x").asDouble() : 0.0;
+                double verticesY = verticesNode.has("y") ? verticesNode.get("y").asDouble() : 0.0;
+
+                if (previousY != -1 && Math.abs(previousY - verticesY) > yThreshold) {
+                    if (transaction.getName() != null || transaction.getAmount() != null) {
+                        responses.add(transaction);
+                    }
+                    transaction = new TransactionDTO.MatchRelation();
+                    nameBuilder.setLength(0);
+                    relationBuilder.setLength(0);
+                    descriptionBuilder.setLength(0);
+                    count = 0;
+                }
+
+                if (inferText.equals("(원)") || inferText.equals("성") || inferText.equals("명") || inferText.equals("금") || inferText.equals("액") || inferText.equals("관") || inferText.equals("계")) {
+                    continue reTry;
+                }
+
+                if (verticesX <= 1000 && inferText.matches(".*[가-힣]+")) {
+                    nameBuilder.append(inferText);
+                    transaction.setName(nameBuilder.toString());
+                } else if (1000 < verticesX && verticesX <= 2000) {
+                    if (inferText.matches("^\\d+$")) {
                         transaction.setAmount(Long.parseLong(inferText));
                     }
+                } else if (2000 < verticesX) {
+                    descriptionBuilder.append(inferText).append(" ");
+                    if (descriptionBuilder.toString().contains("친구")) {
+                        transaction.setRelationType(RelationType.valueOf("FRIEND"));
+                    } else if (descriptionBuilder.toString().contains("가족")) {
+                        transaction.setRelationType(RelationType.valueOf("FAMILY"));
+                    } else if (descriptionBuilder.toString().contains("직장") || descriptionBuilder.toString().contains("회사")) {
+                        transaction.setRelationType(RelationType.valueOf("COMPANY"));
+                    }
+                    transaction.setDescription(descriptionBuilder.toString().trim());
                 }
+
                 if (transaction.getAmount() != null && transaction.getName() != null) {
                     if (transaction.getRelationType() == null) {
-                        transaction.setRelationType(RelationType.valueOf("OTHERS"));
+                        transaction.setRelationType(RelationType.valueOf("ETC"));
                     }
-                    responses.add(transaction);
-                    transaction = new TransactionDTO.MatchRelation();
                 }
+
+                if (++count > 3) {
+                    if (transaction.getName() != null || transaction.getAmount() != null) {
+                        responses.add(transaction);
+                    }
+                    transaction = new TransactionDTO.MatchRelation();
+                    nameBuilder.setLength(0);
+                    relationBuilder.setLength(0);
+                    descriptionBuilder.setLength(0);
+                    count = 0;
+                }
+
+                previousY = verticesY;
             }
+
+            if (transaction.getName() != null || transaction.getAmount() != null) {
+                responses.add(transaction);
+            }
+
         } catch (IOException e) {
             log.error(e.getMessage());
         }
         return responses;
     }
+
 
     @KafkaListener(topics = "result-match-topic", concurrency = "3")
     public void getMatchResult(TransactionDTO.MatchRelation response) {

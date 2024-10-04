@@ -101,7 +101,44 @@ public class TransactionController {
         );
         return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
-
+    @GetMapping("/relation/test-up/{oppositeId}")
+    public ResponseEntity<?> getTransactionsUp(@RequestHeader("memberId") Long memberId, @PathVariable("oppositeId") Long oppositeId) {
+        ApiResponse<Map<String, Object>> response;
+        Map<String, Object> transactions = transactionService.findTransactionsUp(memberId, oppositeId);
+        if (transactions.isEmpty()) {
+            response = new ApiResponse<>(
+                    HttpStatus.NO_CONTENT.value(),
+                    "데이터 없음",
+                    transactions
+            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).body(response);
+        }
+        response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "상대와의 거래내역",
+                transactions
+        );
+        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
+    }
+    @GetMapping("/relation/test-down/{oppositeId}")
+    public ResponseEntity<?> getTransactionsDown(@RequestHeader("memberId") Long memberId, @PathVariable("oppositeId") Long oppositeId) {
+        ApiResponse<Map<String, Object>> response;
+        Map<String, Object> transactions = transactionService.findTransactionsDown(memberId, oppositeId);
+        if (transactions.isEmpty()) {
+            response = new ApiResponse<>(
+                    HttpStatus.NO_CONTENT.value(),
+                    "데이터 없음",
+                    transactions
+            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).body(response);
+        }
+        response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "상대와의 거래내역",
+                transactions
+        );
+        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
+    }
     @GetMapping("/relation/{oppositeId}")
     public ResponseEntity<?> getTransactions(@RequestHeader("memberId") Long memberId, @PathVariable("oppositeId") Long oppositeId) {
         ApiResponse<Map<String, Object>> response;
