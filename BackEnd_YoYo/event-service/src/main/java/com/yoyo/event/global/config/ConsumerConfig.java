@@ -2,12 +2,11 @@ package com.yoyo.event.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
-import com.yoyo.common.kafka.dto.AmountResponseDTO;
-import com.yoyo.common.kafka.dto.MemberResponseDTO;
-import com.yoyo.common.kafka.dto.NotificationInfoDTO;
-import com.yoyo.common.kafka.dto.RelationResponseDTO;
+import com.yoyo.common.kafka.dto.*;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,17 +36,18 @@ public class ConsumerConfig {
         props.put(org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG, groupId);
         props.put(org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
         props.put(org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                  ErrorHandlingDeserializer.class);
+                ErrorHandlingDeserializer.class);
         props.put(org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                  ErrorHandlingDeserializer.class);
+                ErrorHandlingDeserializer.class);
         props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.TYPE_MAPPINGS, KafkaUtils
                 .getJsonTypeMappingInfo(AmountResponseDTO.class,
-                                        MemberResponseDTO.class,
-                                        NotificationInfoDTO.class,
-                                        RelationResponseDTO.class));
+                        MemberResponseDTO.class,
+                        NotificationInfoDTO.class,
+                        RelationResponseDTO.class,
+                        ReceiverRequestDTO.class));
 
         return props;
     }

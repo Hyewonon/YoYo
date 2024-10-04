@@ -4,7 +4,6 @@ import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.TransactionException;
 import com.yoyo.common.kafka.dto.EventResponseDTO;
-import com.yoyo.common.kafka.dto.FindDescriptionDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO.ResponseFromMember;
 import com.yoyo.common.kafka.dto.UpdateRelationDTO;
@@ -42,9 +41,6 @@ public class TransactionService {
     private final TransactionProducer transactionProducer;
     private final Map<Long, CompletableFuture<TransactionSelfRelationDTO.ResponseFromMember>> summaries = new ConcurrentHashMap<>();
     private final Map<Long, CompletableFuture<EventResponseDTO>> names = new ConcurrentHashMap<>();
-
-    private final CountDownLatch latch = new CountDownLatch(1);
-    private String description;
 
     @Autowired
     public TransactionService(TransactionRepository transactionRepository,
@@ -222,90 +218,8 @@ public class TransactionService {
     }
 
     public Map<String, Object> findTransactions(Long memberId, Long oppositeId) {
-        CountDownLatch latch = new CountDownLatch(1);
-        List<Transaction> sendTransaction = transactionRepository.findAllBySenderIdAndReceiverId(memberId, oppositeId);
-        List<Transaction> receiveTransaction = transactionRepository.findAllBySenderIdAndReceiverId(oppositeId,
-                memberId);
-        RelationType relationType = receiveTransaction.isEmpty()
-                ? (sendTransaction.isEmpty() ? null : sendTransaction.get(0).getRelationType())
-                : receiveTransaction.get(0).getRelationType();
-        String oppositeName = receiveTransaction.isEmpty() ? (sendTransaction.isEmpty() ? null : sendTransaction.get(0)
-                .getSenderName())
-                : receiveTransaction.get(0).getSenderName();
-        FindDescriptionDTO.Request request = FindDescriptionDTO.Request.builder().memberId(memberId)
-                .oppositeId(oppositeId).build();
-        transactionProducer.sendRelationDescription(request);
-        try {
-            latch.await(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        long totalReceivedAmount = receiveTransaction.stream().mapToLong(Transaction::getAmount).sum();
-        long totalSentAmount = sendTransaction.stream().mapToLong(Transaction::getAmount).sum();
-        List<FindTransactionDTO.RelationReceiveResponse> receiveResponse = receiveTransaction.isEmpty() ? Collections.emptyList() :
-                receiveTransaction.stream().map(transaction -> FindTransactionDTO.RelationReceiveResponse.builder()
-                                .transactionId(transaction.getTransactionId())
-                                .senderName(transaction.getSenderName())
-                                .relationType(transaction.getRelationType().toString())
-                                .memo(transaction.getMemo())
-                                .amount(transaction.getAmount())
-                                .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt()).build())
-                        .toList();
-        List<FindTransactionDTO.RelationSendResponse> sendResponse =
-                sendTransaction.isEmpty() ? Collections.emptyList() : sendTransaction.stream().map(transaction -> FindTransactionDTO.RelationSendResponse.builder()
-                        .transactionId(transaction.getTransactionId())
-                        .receiveName(transaction.getReceiverName())
-                        .relationType(transaction.getRelationType().toString())
-                        .memo(transaction.getMemo())
-                        .amount(transaction.getAmount())
-                        .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt())
-                        .build()).toList();
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("oppositeName", oppositeName);
-        responseMap.put("description", description);
-        responseMap.put("relationType", relationType);
-        responseMap.put("totalReceivedAmount", totalReceivedAmount);
-        responseMap.put("totalSentAmount", totalSentAmount);
-        responseMap.put("receive", receiveResponse);
-        responseMap.put("send", sendResponse);
-        return responseMap;
-    }
-
-    public Map<String, Object> findTransactionsUp(Long memberId, Long oppositeId) {
-        CountDownLatch latch = new CountDownLatch(1);
-        List<Transaction> sendTransaction = transactionRepository.findAllBySenderIdAndReceiverId(memberId, oppositeId);
-        List<Transaction> receiveTransaction = transactionRepository.findAllBySenderIdAndReceiverId(oppositeId,
-                memberId);
-        RelationType relationType = receiveTransaction.isEmpty()
-                ? (sendTransaction.isEmpty() ? null : sendTransaction.get(0).getRelationType())
-                : receiveTransaction.get(0).getRelationType();
-        String oppositeName = receiveTransaction.isEmpty() ? (sendTransaction.isEmpty() ? null : sendTransaction.get(0)
-                .getSenderName())
-                : receiveTransaction.get(0).getSenderName();
-        FindDescriptionDTO.Request request = FindDescriptionDTO.Request.builder().memberId(memberId)
-                .oppositeId(oppositeId).build();
-        transactionProducer.sendRelationDescription(request);
-        try {
-            latch.await(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        long totalReceivedAmount = receiveTransaction.stream().mapToLong(Transaction::getAmount).sum();
-        long totalSentAmount = sendTransaction.stream().mapToLong(Transaction::getAmount).sum();
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("oppositeName", oppositeName);
-        responseMap.put("description", description);
-        responseMap.put("relationType", relationType);
-        responseMap.put("totalReceivedAmount", totalReceivedAmount);
-        responseMap.put("totalSentAmount", totalSentAmount);
-        return responseMap;
-    }
-
-    public Map<String, Object> findTransactionsDown(Long memberId, Long oppositeId) {
         List<Transaction> sendTransaction = transactionRepository.findAllBySenderIdAndReceiverId(memberId, oppositeId);
         List<Transaction> receiveTransaction = transactionRepository.findAllBySenderIdAndReceiverId(oppositeId, memberId);
-        FindDescriptionDTO.Request request = FindDescriptionDTO.Request.builder().memberId(memberId).oppositeId(oppositeId).build();
-        transactionProducer.sendRelationDescription(request);
 
         List<FindTransactionDTO.RelationReceiveResponse> receiveResponse = receiveTransaction.isEmpty() ? Collections.emptyList() :
                 receiveTransaction.stream().map(transaction -> FindTransactionDTO.RelationReceiveResponse.builder()
@@ -326,15 +240,10 @@ public class TransactionService {
                         .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt())
                         .build()).toList();
         Map<String, Object> responseMap = new HashMap<>();
+
         responseMap.put("receive", receiveResponse);
         responseMap.put("send", sendResponse);
         return responseMap;
-    }
-
-    @KafkaListener(topics = "description-response-topic", concurrency = "3")
-    public void getDescriptionResponse(FindDescriptionDTO.Response response) {
-        this.description = response.getDescription();
-        latch.countDown();
     }
 
     public void completeEventName(EventResponseDTO response) {

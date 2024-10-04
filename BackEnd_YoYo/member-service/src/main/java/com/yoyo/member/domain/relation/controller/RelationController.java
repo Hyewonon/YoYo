@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/yoyo")
@@ -61,5 +62,25 @@ public class RelationController {
                 relationService.updateRelation(memberId, request)
         );
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/member-relation/{oppositeId}")
+    public ResponseEntity<?> getRelation(@RequestHeader("memberId") Long memberId, @PathVariable("oppositeId") Long oppositeId) {
+        ApiResponse<Map<String, Object>> response;
+        Map<String, Object> transactions = relationService.findRelation(memberId, oppositeId);
+        if (transactions.isEmpty()) {
+            response = new ApiResponse<>(
+                    HttpStatus.NO_CONTENT.value(),
+                    "데이터 없음",
+                    transactions
+            );
+            return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).body(response);
+        }
+        response = new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "상대와의 관계",
+                transactions
+        );
+        return ResponseEntity.status(HttpStatus.OK.value()).body(response);
     }
 }

@@ -56,7 +56,6 @@ public class ConsumerConfig {
                         PaymentDTO.class,
                         RelationDTO.Request.class,
                         RelationResponseDTO.class,
-                        FindDescriptionDTO.Request.class,
                         TransactionDTO.MatchRelation.class,
                         UpdateRelationDTO.Request.class
                 ));

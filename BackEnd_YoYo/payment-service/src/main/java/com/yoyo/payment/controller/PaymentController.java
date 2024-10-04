@@ -1,9 +1,10 @@
 package com.yoyo.payment.controller;
 
 import com.yoyo.common.kafka.dto.PaymentDTO;
+import com.yoyo.common.kafka.dto.ReceiverRequestDTO;
 import com.yoyo.common.kafka.dto.TransactionDTO;
+import com.yoyo.payment.consumer.PaymentConsumer;
 import com.yoyo.payment.producer.PaymentProducer;
-import com.yoyo.payment.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
@@ -31,13 +32,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final PaymentProducer producer;
+    private final PaymentProducer paymentProducer;
 
     @Value("${payment.secret}")
     private String SECRETKEY;
     @Value("${payment.url}")
     private String PAYMENTURL;
-    private final PaymentService paymentService;
+    private final PaymentConsumer paymentConsumer;
 
     @PostMapping(value = "/confirm/payment", consumes = "application/json", produces = "application/json")
     public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
@@ -47,7 +48,6 @@ public class PaymentController {
         String amount;
         String paymentKey;
         String senderName;
-        String receiverId;
         String eventId;
         String description;
         try {
@@ -57,7 +57,6 @@ public class PaymentController {
             orderId = (String) requestData.get("orderId");
             amount = (String) requestData.get("amount");
             senderName = (String) requestData.get("senderName");
-            receiverId = (String) requestData.get("receiverId");
             eventId = (String) requestData.get("eventId");
             description = (String) requestData.get("description");
         } catch (ParseException e) {
@@ -98,7 +97,12 @@ public class PaymentController {
          */
         log.info("들어오는 데이터 : {}", jsonBody);
         log.info("데이터 : {}", obj);
-        producer.sendNoMemberPayment(PaymentDTO.of(senderName, Long.parseLong(receiverId), Long.parseLong(eventId), Long.parseLong(amount), description));
+        // eventId를 이용해 receiver 아이디 가져오기
+        Long parseLongEventId = Long.parseLong(eventId);
+        ReceiverRequestDTO requestDTO = ReceiverRequestDTO.builder().eventId(parseLongEventId).build();
+        paymentProducer.sendEventId(requestDTO);
+        Long receiverId = paymentConsumer.getReceiverId();
+        paymentProducer.sendNoMemberPayment(PaymentDTO.of(senderName, receiverId, parseLongEventId, Long.parseLong(amount), description));
 
         /*
          * TODO : 결제 실패 비즈니스 로직 구현
@@ -112,14 +116,14 @@ public class PaymentController {
 
     @PostMapping("/yoyo/payment/success")
     public ResponseEntity<?> createTransaction(@RequestBody TransactionDTO transaction) {
-        paymentService.sendTransaction(transaction);
-        paymentService.sendRelation(transaction);
+        paymentProducer.sendTransaction(transaction);
+        paymentProducer.sendRelation(transaction);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/yoyo/payment/test")
     public ResponseEntity<?> paymentTest() {
-        producer.sendNoMemberPayment(PaymentDTO.of("이찬진", 999999998L, 10L, 500000L, "추카추카"));
+        paymentProducer.sendNoMemberPayment(PaymentDTO.of("이찬진", 999999998L, 10L, 500000L, "추카추카"));
         return ResponseEntity.ok().build();
     }
 }

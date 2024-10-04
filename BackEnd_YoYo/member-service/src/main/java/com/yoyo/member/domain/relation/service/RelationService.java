@@ -1,5 +1,6 @@
 package com.yoyo.member.domain.relation.service;
 
+import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.MemberException;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
@@ -15,8 +16,13 @@ import com.yoyo.member.entity.NoMember;
 import com.yoyo.member.entity.Relation;
 import com.yoyo.member.entity.RelationType;
 import jakarta.transaction.Transactional;
+
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,16 +39,17 @@ public class RelationService {
 
     /**
      * 페이 송금 친구 관계 저장
+     *
      * @param memberId1 회원
      * @param memberId2 회원 혹은 비회원
-     * @param isMember memberId2가 회원인지 비회원인지
+     * @param isMember  memberId2가 회원인지 비회원인지
      */
-    public void createRelation(Long memberId1, Long memberId2, RelationType relationType, Boolean isMember){
+    public void createRelation(Long memberId1, Long memberId2, RelationType relationType, Boolean isMember) {
         Member member = memberService.findMemberById(memberId1);
         String member2Name = memberService.findBaseMemberNameById(memberId2);
         relationRepository.save(toNewEntityForPay(member, memberId2, member2Name, relationType, isMember));
 
-        if(isMember){
+        if (isMember) {
             // 둘다 회원이라면 양방향으로 저장
             member = memberService.findMemberById(memberId2);
             String member1Name = memberService.findBaseMemberNameById(memberId1);
@@ -73,10 +80,10 @@ public class RelationService {
      */
     public void updateRelationAmount(Long memberId1, Long memberId2, Long amount, Boolean isSender) {
         Relation relation = relationRepository.findByMemberAndOppositeId(memberId1, memberId2)
-                                                    .orElseThrow(() -> new MemberException(
-                                                            ErrorCode.NOT_FOUND_RELATION));
+                .orElseThrow(() -> new MemberException(
+                        ErrorCode.NOT_FOUND_RELATION));
         Long updatedAmount;
-        if(isSender){
+        if (isSender) {
             updatedAmount = relation.getTotalSentAmount() + amount;
         } else updatedAmount = relation.getTotalReceivedAmount() + amount;
         relation.setTotalSentAmount(updatedAmount);
@@ -88,10 +95,10 @@ public class RelationService {
      */
     public Relation updateRelation(Long memberId, UpdateRelationDTO.Request request) {
         Relation relation = relationRepository.findByMember_MemberIdAndOppositeId(memberId, request.getMemberId())
-                                              .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_RELATION));
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_RELATION));
         relation.setRelationType(RelationType.valueOf(request.getRelationType()));
         relation.setDescription(request.getDescription());
-        Relation updatedRelation= relationRepository.save(relation);
+        Relation updatedRelation = relationRepository.save(relation);
         UpdateTransactionRelationTypeDTO updateTransactionRelationTypeDTO = UpdateTransactionRelationTypeDTO.builder()
                 .memberId(memberId)
                 .oppositeId(updatedRelation.getOppositeId())
@@ -124,40 +131,53 @@ public class RelationService {
      */
     public MemberTagDTO findRelationTag(Long memberId, Long oppositeId) {
         Relation relation = relationRepository.findByMemberAndOppositeId(memberId, oppositeId)
-                                              .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
+                .orElseThrow(() -> new MemberException(ErrorCode.NOT_FOUND_MEMBER));
         return new MemberTagDTO(relation.getMember().getMemberId(), relation.getOppositeId(), relation.getRelationType().toString(), relation.getDescription());
     }
 
-    public RelationResponseDTO findRelationIds(Long memberId){
+    public RelationResponseDTO findRelationIds(Long memberId) {
         List<Relation> relations = relationRepository.findByMember_MemberIdAndIsMemberTrue(memberId);
         List<Long> oppositeIds = relations.stream()
-                                          .map(Relation::getOppositeId)
-                                          .toList();
+                .map(Relation::getOppositeId)
+                .toList();
         return RelationResponseDTO.of(memberId, oppositeIds);
     }
 
     private Relation toNewEntityForPay(Member member, Long oppositeId, String oppositeName, RelationType relationType, Boolean isMember) {
         return Relation.builder()
-                       .member(member)
-                       .oppositeId(oppositeId)
-                        .oppositeName(oppositeName)
-                       .relationType(relationType)
-                       .description("")
-                       .totalReceivedAmount(0L)
-                       .totalSentAmount(0L)
-                       .isMember(isMember)
-                       .build();
+                .member(member)
+                .oppositeId(oppositeId)
+                .oppositeName(oppositeName)
+                .relationType(relationType)
+                .description("")
+                .totalReceivedAmount(0L)
+                .totalSentAmount(0L)
+                .isMember(isMember)
+                .build();
     }
 
     private Relation toNewEntityForPayment(Member member, Long noMemberId, Long amount) {
         return Relation.builder()
-                       .member(member)
-                       .oppositeId(noMemberId)
-                       .relationType(RelationType.NONE)
-                       .description("")
-                       .totalReceivedAmount(amount)
-                       .totalSentAmount(0L)
-                       .isMember(false)
-                       .build();
+                .member(member)
+                .oppositeId(noMemberId)
+                .relationType(RelationType.NONE)
+                .description("")
+                .totalReceivedAmount(amount)
+                .totalSentAmount(0L)
+                .isMember(false)
+                .build();
+    }
+
+    public Map<String, Object> findRelation(Long memberId, Long oppositeId) {
+        Relation relation = relationRepository.findByMember_MemberIdAndOppositeId(memberId, oppositeId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_RELATION));
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("oppositeName", relation.getOppositeName());
+        responseMap.put("description", relation.getDescription());
+        responseMap.put("relationType", relation.getRelationType().toString());
+        responseMap.put("totalReceivedAmount", relation.getTotalReceivedAmount());
+        responseMap.put("totalSentAmount", relation.getTotalSentAmount());
+
+        return responseMap;
     }
 }

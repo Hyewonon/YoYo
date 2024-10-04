@@ -1,4 +1,4 @@
-package com.yoyo.payment.config;
+package com.yoyo.payment.global.config;
 
 
 import io.swagger.v3.oas.models.OpenAPI;

@@ -1,4 +1,4 @@
-package com.yoyo.payment.config;
+package com.yoyo.payment.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
