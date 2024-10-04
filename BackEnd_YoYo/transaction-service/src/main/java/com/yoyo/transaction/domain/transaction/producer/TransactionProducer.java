@@ -35,10 +35,6 @@ public class TransactionProducer {
         kafkaTemplate.send(CREATE_TRANSACTION_SELF_RELATION_TOPIC, request);
     }
 
-    public void sendRelationDescription(FindDescriptionDTO.Request request) {
-        kafkaTemplate.send("relation-description-topic", request);
-    }
-
     public void sendRelationUpdate(UpdateRelationDTO.Request request) {
         kafkaTemplate.send("update-relation-topic", request);
     }

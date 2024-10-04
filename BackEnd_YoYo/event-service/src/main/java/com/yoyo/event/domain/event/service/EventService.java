@@ -143,4 +143,9 @@ public class EventService {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND_EVENT));
         return event.getTitle();
     }
+
+    public Long findEventByIdReceiverId(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND_EVENT));
+        return event.getMemberId();
+    }
 }

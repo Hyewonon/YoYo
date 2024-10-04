@@ -1,10 +1,6 @@
 package com.yoyo.event.domain.event.consumer;
 
-import com.yoyo.common.kafka.dto.AmountResponseDTO;
-import com.yoyo.common.kafka.dto.EventRequestDTO;
-import com.yoyo.common.kafka.dto.EventResponseDTO;
-import com.yoyo.common.kafka.dto.MemberResponseDTO;
-import com.yoyo.common.kafka.dto.RelationResponseDTO;
+import com.yoyo.common.kafka.dto.*;
 import com.yoyo.event.domain.event.producer.EventProducer;
 import com.yoyo.event.domain.event.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -43,4 +39,9 @@ public class EventConsumer {
         eventProducer.sendEventNameToTransaction(EventResponseDTO.of(request.getEventId(), eventName));
     }
 
+    @KafkaListener(topics = "eventId-receiverId", concurrency = "3")
+    public void getEventIdByReceiverId(ReceiverRequestDTO requestDTO) {
+        requestDTO.setReceiverId(eventService.findEventByIdReceiverId(requestDTO.getReceiverId()));
+        eventProducer.sendReceiverId(requestDTO);
+    }
 }

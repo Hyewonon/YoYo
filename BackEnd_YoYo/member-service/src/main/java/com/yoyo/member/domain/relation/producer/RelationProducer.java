@@ -35,10 +35,6 @@ public class RelationProducer {
         kafkaTemplate.send("update-transaction-relation-type-topic", request);
     }
 
-    public void sendDescriptionResponse(FindDescriptionDTO.Response response) {
-        kafkaTemplate.send("description-response-topic", response);
-    }
-
     public void sendResultMatch(TransactionDTO.MatchRelation response) {
         kafkaTemplate.send("result-match-topic", response);
     }

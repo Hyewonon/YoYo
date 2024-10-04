@@ -1,8 +1,9 @@
-package com.yoyo.payment.config;
+package com.yoyo.payment.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.PaymentDTO;
+import com.yoyo.common.kafka.dto.ReceiverRequestDTO;
 import com.yoyo.common.kafka.dto.TransactionDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RoundRobinPartitioner;
@@ -32,12 +33,13 @@ public class ProducerConfig {
         config.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         config.put(JsonSerializer.TYPE_MAPPINGS, KafkaUtils.getJsonTypeMappingInfo(TransactionDTO.class,
-                                                                                   PaymentDTO.class));
+                PaymentDTO.class,
+                ReceiverRequestDTO.class));
         return new DefaultKafkaProducerFactory<>(config);
     }
 
     @Bean
-    public KafkaTemplate<String, KafkaJson> kafkaTemplate(){
+    public KafkaTemplate<String, KafkaJson> kafkaTemplate() {
         return new KafkaTemplate<>(factory());
     }
 }

@@ -29,7 +29,6 @@ public class TransactionDTO implements KafkaJson {
     @JsonSerialize
     @JsonDeserialize
     @Builder
-    @ToString
     public static class MatchRelation implements KafkaJson {
         private Long memberId;
         private RelationType relationType;

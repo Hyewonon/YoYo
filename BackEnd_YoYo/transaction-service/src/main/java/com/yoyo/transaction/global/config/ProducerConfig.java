@@ -34,7 +34,6 @@ public class ProducerConfig {
                 PayInfoDTO.RequestToTransaction.class,
                 TransactionSelfRelationDTO.RequestToMember.class,
                 RelationDTO.Request.class,
-                FindDescriptionDTO.Request.class,
                 TransactionDTO.MatchRelation.class,
                 UpdateRelationDTO.Request.class));
         return new DefaultKafkaProducerFactory<>(config);

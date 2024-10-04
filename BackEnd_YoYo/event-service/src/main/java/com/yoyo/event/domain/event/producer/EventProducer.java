@@ -1,10 +1,7 @@
 package com.yoyo.event.domain.event.producer;
 
 import com.yoyo.common.kafka.KafkaJson;
-import com.yoyo.common.kafka.dto.AmountRequestDTO;
-import com.yoyo.common.kafka.dto.EventResponseDTO;
-import com.yoyo.common.kafka.dto.MemberRequestDTO;
-import com.yoyo.common.kafka.dto.NotificationCreateDTO;
+import com.yoyo.common.kafka.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -40,5 +37,9 @@ public class EventProducer {
 
     public void sendEventNameToTransaction(EventResponseDTO response) {
         kafkaTemplate.send(SEND_EVENT_NAME, response);
+    }
+
+    public void sendReceiverId(ReceiverRequestDTO requestDTO) {
+        kafkaTemplate.send("receiverId-eventId", requestDTO);
     }
 }

@@ -135,14 +135,6 @@ public class RelationConsumer {
                                                                 relation.getDescription());
     }
 
-    @KafkaListener(topics = "relation-description-topic", concurrency = "3")
-    public void getDescription(FindDescriptionDTO.Request request) {
-        Relation relation = relationRepository.findByMember_MemberIdAndOppositeId(request.getMemberId(), request.getOppositeId())
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_RELATION));
-        FindDescriptionDTO.Response response = FindDescriptionDTO.Response.builder().description(relation.getDescription()).build();
-        relationProducer.sendDescriptionResponse(response);
-    }
-
     @KafkaListener(topics = "match-relation", concurrency = "3")
     public void getMatchRelation(TransactionDTO.MatchRelation request) {
         List<Relation> list = relationRepository.findAllByMember_MemberIdAndOppositeName(request.getMemberId(), request.getName());
@@ -159,7 +151,7 @@ public class RelationConsumer {
     @KafkaListener(topics = "update-relation-topic", concurrency = "3")
     public void getUpdateRelation(UpdateRelationDTO.Request request) {
         Relation relation;
-        // 있는 관계 덮어쓰기
+        // 있는 관계 정보 추가
         if (request.getRelationId() != null) {
             relation = relationRepository.findByRelationId(request.getRelationId());
             relation.setTotalReceivedAmount(relation.getTotalReceivedAmount() + request.getAmount());
