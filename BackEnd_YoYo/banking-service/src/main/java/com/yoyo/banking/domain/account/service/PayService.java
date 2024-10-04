@@ -86,8 +86,7 @@ public class PayService {
         // 1.1 충분하지 않으면 충전
         Long insufficientAmount = getInsufficientAmount(request.getAmount(), currMemberId);
         if (insufficientAmount < 0) {
-            String memberName = getNameFromMember(currMemberId);
-            PayDTO.Request chargeRequest = PayDTO.Request.toDto(Math.abs(insufficientAmount), memberName);
+            PayDTO.Request chargeRequest = PayDTO.Request.toDto(Math.abs(insufficientAmount), null);
             ResponseEntity<?> chargeResult = chargeOrRefundPayBalance(chargeRequest, currMemberId, false);
 
             // 충전 실패했으면 응답반환
@@ -154,9 +153,12 @@ public class PayService {
      * */
     private void savePayTransaction(PayDTO.Request request, Long memberId, PayType payType) {
         Account account = findAccountByMemberId(memberId);
-        String memberName = getNameFromMember(memberId);
-        PayTransaction payTransaction = PayDTO.Request.toEntity(request, account.getAccountId(), memberName,
-                                                                payType); // 회원 이름 필요
+
+        String memberName = null;
+        if(payType == PayType.WITHDRAW || payType == PayType.DEPOSIT){
+            memberName = getNameFromMember(memberId);
+        }
+        PayTransaction payTransaction = PayDTO.Request.toEntity(request, account.getAccountId(), memberName, payType);
 
         payTransactionRepository.save(payTransaction);
     }
