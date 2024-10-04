@@ -16,7 +16,6 @@ export function Payment() {
   const [description, setDescription] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const { id } = useParams();
-  console.log(id)
   function selectPaymentMethod(method) {
     setSelectedPaymentMethod(method);
   }
@@ -37,7 +36,6 @@ export function Payment() {
     fetchPayment();
   }, [clientKey, customerKey]);
 
-  // 
   async function requestPayment() {
     const amount = {
       currency: "KRW",

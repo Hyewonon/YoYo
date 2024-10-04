@@ -53,7 +53,7 @@ public class RelationController {
      *
      * @param request 태그, 메모
      */
-    @PatchMapping("/members-relation")
+    @PatchMapping("/members-relations")
     ResponseEntity<?> updateRelation(@RequestHeader("memberId") Long memberId,
                                      @RequestBody UpdateRelationDTO.Request request) {
         ApiResponse<Relation> response = new ApiResponse<>(
@@ -64,7 +64,7 @@ public class RelationController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/member-relation/{oppositeId}")
+    @GetMapping("/members-relations/{oppositeId}")
     public ResponseEntity<?> getRelation(@RequestHeader("memberId") Long memberId, @PathVariable("oppositeId") Long oppositeId) {
         ApiResponse<Map<String, Object>> response;
         Map<String, Object> transactions = relationService.findRelation(memberId, oppositeId);

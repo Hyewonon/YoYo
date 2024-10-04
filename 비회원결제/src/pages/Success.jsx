@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import '../Success.css'
 
 export function Success() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [responseData, setResponseData] = useState(null);
+  const [countDown, setCountDown] = useState(5);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const senderName = params.get("senderName");
@@ -46,6 +48,16 @@ export function Success() {
       .catch((error) => {
         navigate(`/fail?code=${error.code}&message=${error.message}`);
       });
+    const countDownInterval = setInterval(() => {
+      setCountDown((prev) => prev - 1)
+    }, 1000);
+    const timer = setTimeout(() => {
+      navigate('/');
+    }, 5000);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(countDownInterval);
+    }
   }, [searchParams]);
 
   return (
@@ -60,6 +72,10 @@ export function Success() {
           <div className="p-grid-col text--right" id="amount">
             {`${Number(searchParams.get("amount")).toLocaleString()}원`}
           </div>
+        </div>
+         <div className="countdown-container">
+          <div className="countdown-number">{countDown}</div>
+          <div className="countdown-text">초 후에 홈 화면으로 이동합니다.</div>
         </div>
       </div>
       {/* <div className="box_section" style={{ width: "600px", textAlign: "left" }}>
