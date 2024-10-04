@@ -89,6 +89,7 @@ public class TransactionService {
 
         // 1. 친구관계 수정 (+ 등록되지 않은 회원은 회원 등록)
         TransactionSelfRelationDTO.ResponseFromMember response = updateTransactionRelation(memberId, request);
+        request.setRelationType(response.getRelationType());
 
         // 2. 거래내역 저장
         Map<String, Object[]> infoMap = extractTransactionRelationInfo(response, request.getTransactionType());

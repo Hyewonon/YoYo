@@ -45,8 +45,22 @@ public class TransactionSelfRelationDTO {
 
         private Long memberId;
         private String memberName;
-
         private Long oppositeId;
         private String oppositeName;
+
+        private String relationType;
+        private String description;
+
+        public static ResponseFromMember of(Long memberId, String memberName, Long oppositeId, String oppositeName
+                , String relationType, String description) {
+            return ResponseFromMember.builder()
+                                     .memberId(memberId)
+                                     .memberName(memberName)
+                                     .oppositeId(oppositeId)
+                                     .oppositeName(oppositeName)
+                                     .relationType(relationType)
+                                     .description(description)
+                                     .build();
+        }
     }
 }
