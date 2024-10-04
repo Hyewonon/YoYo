@@ -2,6 +2,7 @@ package com.yoyo.member.domain.relation.consumer;
 
 import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
+import com.yoyo.common.exception.exceptionType.TransactionException;
 import com.yoyo.common.kafka.dto.*;
 import com.yoyo.common.kafka.dto.PayInfoDTO.RequestToMember;
 import com.yoyo.member.domain.member.repository.MemberRepository;
@@ -124,12 +125,14 @@ public class RelationConsumer {
         String memberName = memberService.findBaseMemberNameById(request.getMemberId());
         String oppositeName = memberService.findBaseMemberNameById(request.getOppositeId());
 
-        return TransactionSelfRelationDTO.ResponseFromMember.builder()
-                                                            .memberId(request.getMemberId())
-                                                            .memberName(memberName)
-                                                            .oppositeId(request.getOppositeId())
-                                                            .oppositeName(oppositeName)
-                                                            .build();
+        Relation relation = relationRepository.findByMember_MemberIdAndOppositeId(request.getMemberId(), request.getOppositeId())
+                .orElseThrow(()-> new TransactionException(ErrorCode.NOT_FOUND_RELATION));
+        return TransactionSelfRelationDTO.ResponseFromMember.of(request.getMemberId(),
+                                                                memberName,
+                                                                request.getOppositeId(),
+                                                                oppositeName,
+                                                                String.valueOf(relation.getRelationType()),
+                                                                relation.getDescription());
     }
 
     @KafkaListener(topics = "relation-description-topic", concurrency = "3")
