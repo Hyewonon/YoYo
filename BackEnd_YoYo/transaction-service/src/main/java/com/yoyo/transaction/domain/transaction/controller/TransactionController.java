@@ -6,6 +6,7 @@ import com.yoyo.transaction.domain.transaction.dto.FindTransactionDTO;
 import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
 import com.yoyo.transaction.domain.transaction.dto.UpdateTransactionDTO;
 import com.yoyo.transaction.domain.transaction.service.TransactionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class TransactionController {
      **/
     @PostMapping
     public ResponseEntity<?> createTransactionSelf(@RequestHeader("memberId") Long memberId,
-                                                   @RequestBody TransactionCreateDTO.Request request) {
+                                                   @RequestBody @Valid TransactionCreateDTO.Request request) {
         transactionService.createTransactionSelf(memberId, request);
         CommonResponse response = CommonResponse.of(true, "요요 거래내역이 등록되었습니다.");
 

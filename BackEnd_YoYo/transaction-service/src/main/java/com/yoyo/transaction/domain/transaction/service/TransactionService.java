@@ -92,7 +92,8 @@ public class TransactionService {
         request.setRelationType(response.getRelationType());
 
         // 2. 거래내역 저장
-        Map<String, Object[]> infoMap = extractTransactionRelationInfo(response, request.getTransactionType());
+        Map<String, Object[]> infoMap = extractTransactionRelationInfo(response,
+                                                                       TransactionType.valueOf(request.getTransactionType()));
         // 2.1 event Id 있을 시 event Name 불러옴
         if (request.getEventId() != 0) {
             request.setEventName(getNameFromEvent(request.getEventId()));
@@ -188,7 +189,7 @@ public class TransactionService {
                           .isRegister(true)
                           .amount(request.getAmount())
                           .memo(request.getMemo())
-                          .transactionType(request.getTransactionType())
+                          .transactionType(TransactionType.valueOf(request.getTransactionType()))
                           .relationType(RelationType.valueOf(request.getRelationType()))
                           .build();
     }
