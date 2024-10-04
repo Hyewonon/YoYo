@@ -108,6 +108,11 @@ services:
       - "8888:8888"
     environment:
       - SPRING_PROFILES_ACTIVE=default
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # Eureka Server
   eureka:
@@ -133,7 +138,8 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
 
   # Banking Service
@@ -145,7 +151,8 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
     environment:
       - TZ=Asia/Seoul
 
@@ -158,7 +165,8 @@ services:
     ports:
       - "8083:8083"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
   # Notification Service
   notification-service:
@@ -169,7 +177,8 @@ services:
     ports:
       - "8084:8084"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
 
   # Payment Service
@@ -181,7 +190,8 @@ services:
     ports:
       - "8085:8085"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
 
   # Event Service
@@ -193,7 +203,8 @@ services:
     ports:
       - "8086:8086"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
 
   # Spring Cloud Gateway
@@ -205,7 +216,8 @@ services:
     build:
       context: ./scg
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
   yoyo-kafka1:
     container_name: yoyo-kafka1
