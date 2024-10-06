@@ -117,7 +117,6 @@ public class TransactionService {
                     .isRegister(true)
                     .transactionType(TransactionType.RECEIVE)
                     .build();
-            log.info("RelationType : {}", dto.getRelationType());
             transactionRepository.save(transaction);
         }
         OcrRegister.OcrList ocrList = OcrRegister.OcrList.builder().ocrList(ocrRegisterList).build();
