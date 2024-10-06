@@ -6,6 +6,7 @@ import com.yoyo.common.exception.exceptionType.TransactionException;
 import com.yoyo.common.kafka.dto.*;
 import com.yoyo.common.kafka.dto.PayInfoDTO.RequestToMember;
 import com.yoyo.member.domain.member.repository.MemberRepository;
+import com.yoyo.member.domain.member.repository.NoMemberRepository;
 import com.yoyo.member.domain.member.service.MemberService;
 import com.yoyo.member.domain.relation.producer.RelationProducer;
 import com.yoyo.member.domain.relation.repository.RelationRepository;
@@ -37,6 +38,7 @@ public class RelationConsumer {
     private final String CREATE_TRANSACTION_SELF_RELATION_TOPIC = "create-transaction-self-relation-topic";
     private final String GET_RELATION_IDS = "get-relations-ids";
     private final RelationProducer relationProducer;
+    private final NoMemberRepository noMemberRepository;
 
     /**
      * * 페이 송금 시 친구 관계 정보 수정
@@ -105,12 +107,12 @@ public class RelationConsumer {
         if (!relationService.isAlreadyFriend(request.getMemberId(), request.getOppositeId())) {
             // 1.1. 없으면 생성
             relationService.createRelation(request.getMemberId(), request.getOppositeId(),
-                                           RelationType.valueOf(request.getRelationType()), false);
+                    RelationType.valueOf(request.getRelationType()), false);
         }
         // 2 친구 관계 보낸 총금액, 받은 총금액 수정
         // 보낸사람이 등록하면 보낸사람 친구관계만 수정
         relationService.updateRelationAmount(request.getMemberId(), request.getOppositeId(), request.getAmount(),
-                                             request.getTransactionType().equals("SEND"));
+                request.getTransactionType().equals("SEND"));
 
         relationProducer.sendTransactionSelf(createResponse(request));
     }
@@ -126,13 +128,13 @@ public class RelationConsumer {
         String oppositeName = memberService.findBaseMemberNameById(request.getOppositeId());
 
         Relation relation = relationRepository.findByMember_MemberIdAndOppositeId(request.getMemberId(), request.getOppositeId())
-                .orElseThrow(()-> new TransactionException(ErrorCode.NOT_FOUND_RELATION));
+                .orElseThrow(() -> new TransactionException(ErrorCode.NOT_FOUND_RELATION));
         return TransactionSelfRelationDTO.ResponseFromMember.of(request.getMemberId(),
-                                                                memberName,
-                                                                request.getOppositeId(),
-                                                                oppositeName,
-                                                                String.valueOf(relation.getRelationType()),
-                                                                relation.getDescription());
+                memberName,
+                request.getOppositeId(),
+                oppositeName,
+                String.valueOf(relation.getRelationType()),
+                relation.getDescription());
     }
 
     @KafkaListener(topics = "match-relation", concurrency = "3")
@@ -168,5 +170,30 @@ public class RelationConsumer {
                     .build();
         }
         relationRepository.save(relation);
+    }
+
+    @KafkaListener(topics = "ocr-register", concurrency = "3")
+    public void getOcrList(OcrRegister.OcrList request) {
+        for (OcrRegister ocr : request.getOcrList()) {
+            if (ocr.getOppositeId() != 0) {
+                Relation relation = relationRepository.findByMember_MemberIdAndOppositeId(ocr.getMemberId(), ocr.getOppositeId())
+                        .orElseThrow(() -> new TransactionException(ErrorCode.NOT_FOUND_RELATION));
+                relation.setTotalReceivedAmount(relation.getTotalReceivedAmount() + ocr.getAmount());
+                relationRepository.save(relation);
+            } else {
+                NoMember member = NoMember.builder().memberId(ocr.getOppositeId()).build();
+                noMemberRepository.save(member);
+                Relation relation = Relation.builder()
+                        .relationType(RelationType.valueOf(ocr.getRelationType()))
+                        .totalReceivedAmount(ocr.getAmount())
+                        .description(ocr.getDescription())
+                        .member(memberRepository.findByMemberId(ocr.getMemberId()))
+                        .oppositeId(ocr.getOppositeId())
+                        .oppositeName(ocr.getOppositeName())
+                        .isMember(false)
+                        .build();
+                relationRepository.save(relation);
+            }
+        }
     }
 }

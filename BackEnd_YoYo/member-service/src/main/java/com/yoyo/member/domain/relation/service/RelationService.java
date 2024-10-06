@@ -114,7 +114,8 @@ public class RelationService {
         List<Relation> relations = relationRepository.findByMember_MemberId(memberId);
         return relations.stream()
                 .filter(relation -> validatedTag == null || relation.getRelationType().toString().equals(validatedTag))
-                .filter(relation -> validatedSearch == null || relation.getOppositeName().contains(validatedSearch))
+                .filter(relation -> validatedSearch == null ||
+                        (relation.getOppositeName() != null && relation.getOppositeName().contains(validatedSearch)))
                 .map(relation -> FindRelationDTO.Response.builder()
                         .relationId(relation.getRelationId())
                         .oppositeId(relation.getOppositeId())

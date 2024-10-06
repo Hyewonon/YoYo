@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class TransactionProducer {
@@ -44,5 +46,9 @@ public class TransactionProducer {
      * */
     public void getEventNameByEventId(Long eventId) {
         kafkaTemplate.send(SEND_EVENTID_EVENT_TOPIC, EventRequestDTO.of(eventId));
+    }
+
+    public void sendOCRRegister(OcrRegister.OcrList ocrList) {
+        kafkaTemplate.send("ocr-register", ocrList);
     }
 }

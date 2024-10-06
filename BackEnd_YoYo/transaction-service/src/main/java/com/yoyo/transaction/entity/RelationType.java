@@ -5,6 +5,6 @@ public enum RelationType {
     FAMILY,
     COMPANY,
     ETC,
-    NONE
+    NONE,
     ;
 }

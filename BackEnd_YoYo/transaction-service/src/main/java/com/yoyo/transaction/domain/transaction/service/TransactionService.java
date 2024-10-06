@@ -4,9 +4,11 @@ import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.TransactionException;
 import com.yoyo.common.kafka.dto.EventResponseDTO;
+import com.yoyo.common.kafka.dto.OcrRegister;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO.ResponseFromMember;
 import com.yoyo.common.kafka.dto.UpdateRelationDTO;
+import com.yoyo.transaction.domain.ocr.dto.OcrConfirmDTO;
 import com.yoyo.transaction.domain.transaction.dto.FindTransactionDTO;
 import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
 import com.yoyo.transaction.domain.transaction.dto.UpdateTransactionDTO;
@@ -17,37 +19,27 @@ import com.yoyo.transaction.entity.Transaction;
 import com.yoyo.transaction.entity.TransactionType;
 import jakarta.transaction.Transactional;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 @Slf4j
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionProducer transactionProducer;
-    private final Map<Long, CompletableFuture<TransactionSelfRelationDTO.ResponseFromMember>> summaries = new ConcurrentHashMap<>();
+    private final Map<Long, CompletableFuture<ResponseFromMember>> summaries = new ConcurrentHashMap<>();
     private final Map<Long, CompletableFuture<EventResponseDTO>> names = new ConcurrentHashMap<>();
 
-    @Autowired
-    public TransactionService(TransactionRepository transactionRepository,
-                              TransactionProducer transactionProducer) {
-        this.transactionRepository = transactionRepository;
-        this.transactionProducer = transactionProducer;
-    }
 
     public void deleteTransaction(Long transactionId) {
         transactionRepository.deleteById(transactionId);
@@ -86,7 +78,7 @@ public class TransactionService {
     public void createTransactionSelf(Long memberId, TransactionCreateDTO.Request request) {
 
         // 1. 친구관계 수정 (+ 등록되지 않은 회원은 회원 등록)
-        TransactionSelfRelationDTO.ResponseFromMember response = updateTransactionRelation(memberId, request);
+        ResponseFromMember response = updateTransactionRelation(memberId, request);
         request.setRelationType(response.getRelationType());
 
         // 2. 거래내역 저장
@@ -99,6 +91,37 @@ public class TransactionService {
         Transaction selfTransaction = toTransactionEntity(infoMap, request);
 
         transactionRepository.save(selfTransaction);
+    }
+
+    public void createTransactionOCR(Long memberId, Long eventId, List<OcrConfirmDTO> requestOCR) {
+        String eventName = getNameFromEvent(eventId);
+        List<OcrRegister> ocrRegisterList = new ArrayList<>();
+        for (OcrConfirmDTO dto : requestOCR) {
+            OcrRegister register = OcrRegister.builder()
+                    .memberId(memberId)
+                    .oppositeId(dto.getMemberId())
+                    .amount(dto.getAmount())
+                    .oppositeName(dto.getName())
+                    .description(dto.getDescription())
+                    .relationType(dto.getRelationType())
+                    .build();
+            ocrRegisterList.add(register);
+            Transaction transaction = Transaction.builder()
+                    .receiverId(memberId)
+                    .senderId(dto.getMemberId())
+                    .senderName(register.getOppositeName())
+                    .amount(dto.getAmount())
+                    .eventId(eventId)
+                    .eventName(eventName)
+                    .relationType(RelationType.valueOf(dto.getRelationType().toUpperCase()))
+                    .isRegister(true)
+                    .transactionType(TransactionType.RECEIVE)
+                    .build();
+            log.info("RelationType : {}", dto.getRelationType());
+            transactionRepository.save(transaction);
+        }
+        OcrRegister.OcrList ocrList = OcrRegister.OcrList.builder().ocrList(ocrRegisterList).build();
+        transactionProducer.sendOCRRegister(ocrList);
     }
 
     /*
@@ -122,8 +145,8 @@ public class TransactionService {
      *
      * @return 회원 id, 이름, 상대 id, 이름 반환
      */
-    private TransactionSelfRelationDTO.ResponseFromMember updateTransactionRelation(Long memberId,
-                                                                                    TransactionCreateDTO.Request request) {
+    private ResponseFromMember updateTransactionRelation(Long memberId,
+                                                         TransactionCreateDTO.Request request) {
 
         TransactionSelfRelationDTO.RequestToMember requestToMember = TransactionSelfRelationDTO.RequestToMember.of(
                 memberId, request.getMemberId(), request.getName(), request.getAmount(),
@@ -131,11 +154,11 @@ public class TransactionService {
 
         // 1. 직접등록 친구관계 수정 요청 (+ 등록되지 않은 회원은 회원 등록)
         transactionProducer.sendSelfTransactionRelation(requestToMember);
-        CompletableFuture<TransactionSelfRelationDTO.ResponseFromMember> future = new CompletableFuture<>();
+        CompletableFuture<ResponseFromMember> future = new CompletableFuture<>();
         summaries.put(memberId, future); // 입력한 사람 id
 
         // 2. 회원 id, 이름, 상대 id, 이름 반환
-        TransactionSelfRelationDTO.ResponseFromMember response;
+        ResponseFromMember response;
         try {
             response = future.get(10, TimeUnit.SECONDS);
             return response;
@@ -192,8 +215,8 @@ public class TransactionService {
                 .build();
     }
 
-    public void completeMemberCheck(TransactionSelfRelationDTO.ResponseFromMember response) {
-        CompletableFuture<TransactionSelfRelationDTO.ResponseFromMember> future = summaries.remove(
+    public void completeMemberCheck(ResponseFromMember response) {
+        CompletableFuture<ResponseFromMember> future = summaries.remove(
                 response.getMemberId());
         if (future != null) {
             future.complete(response);

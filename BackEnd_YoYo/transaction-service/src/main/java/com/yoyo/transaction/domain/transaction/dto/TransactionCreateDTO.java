@@ -33,7 +33,7 @@ public class TransactionCreateDTO {
         private String relationType;
         @Schema(description = "관계 설명 (검색된 사람일 경우 x)")
         private String description;
-        
+
         @Schema(description = "이벤트 id (검색되지 않은 이벤트일 경우 0)")
         private Long eventId;
         @Schema(description = "이벤트 명 (검색된 이벤트일 경우 x)")
@@ -42,5 +42,4 @@ public class TransactionCreateDTO {
         @Schema(description = "거래 설명")
         private String memo;
     }
-
 }
