@@ -98,84 +98,52 @@ public class OcrService {
             JsonNode rootNode = objectMapper.readTree(jsonResponse);
             JsonNode fieldsNode = rootNode.get("images").get(0).get("fields");
 
-            StringBuilder nameBuilder = new StringBuilder();
-            StringBuilder relationBuilder = new StringBuilder();
-            StringBuilder descriptionBuilder = new StringBuilder();
             TransactionDTO.MatchRelation transaction = new TransactionDTO.MatchRelation();
+            StringBuilder descriptionBuilder = new StringBuilder();
 
-            int count = 0;
-            double previousY = -1;
-            double yThreshold = 70;
-
-            reTry:
             for (JsonNode fieldNode : fieldsNode) {
                 String inferText = fieldNode.get("inferText").asText();
-
                 JsonNode verticesArray = fieldNode.get("boundingPoly").get("vertices");
+
                 if (verticesArray == null || !verticesArray.isArray() || verticesArray.isEmpty()) {
-                    continue reTry;
+                    continue;
                 }
 
-                JsonNode verticesNode = verticesArray.get(0);
-                double verticesX = verticesNode.has("x") ? verticesNode.get("x").asDouble() : 0.0;
-                double verticesY = verticesNode.has("y") ? verticesNode.get("y").asDouble() : 0.0;
+                JsonNode firstVertexX = verticesArray.get(0);
+                double verticesX = firstVertexX.get("x").asDouble();
+                if (inferText.equals("성") || inferText.equals("명") || inferText.equals("금") || inferText.equals("액") || inferText.equals("관") || inferText.equals("계")) {
+                    continue;
+                }
 
-                if (previousY != -1 && Math.abs(previousY - verticesY) > yThreshold) {
-                    if (transaction.getName() != null || transaction.getAmount() != null) {
-                        responses.add(transaction);
+                if (verticesX < 850) {
+                    if (inferText.matches("^[가-힣]{2,4}$")) {
+                        transaction.setName(inferText);
                     }
+                }
+                if (inferText.matches("^\\d{1,3}(,\\d{3})*(원)?$")) {
+                    String cleanText = inferText.replaceAll("[^\\d]", "");
+                    transaction.setAmount(Long.parseLong(cleanText));
+                }
+                if (verticesX > 850) {
+                    if (inferText.matches("^[가-힣a-zA-Z]+$")) {
+                        descriptionBuilder.append(inferText).append(" ");
+                        transaction.setDescription(descriptionBuilder.toString().trim());
+                        if (inferText.contains("친구")) {
+                            transaction.setRelationType(RelationType.FRIEND);
+                        } else if (inferText.contains("가족")) {
+                            transaction.setRelationType(RelationType.FAMILY);
+                        } else if (inferText.contains("직장") || inferText.contains("회사")) {
+                            transaction.setRelationType(RelationType.COMPANY);
+                        } else {
+                            transaction.setRelationType(RelationType.ETC);
+                        }
+                    }
+                }
+                if (transaction.getName() != null && transaction.getAmount() != null && transaction.getDescription() != null) {
+                    responses.add(transaction);
                     transaction = new TransactionDTO.MatchRelation();
-                    nameBuilder.setLength(0);
-                    relationBuilder.setLength(0);
                     descriptionBuilder.setLength(0);
-                    count = 0;
                 }
-
-                if (inferText.equals("(원)") || inferText.equals("성") || inferText.equals("명") || inferText.equals("금") || inferText.equals("액") || inferText.equals("관") || inferText.equals("계")) {
-                    continue reTry;
-                }
-
-                if (verticesX <= 1000 && inferText.matches(".*[가-힣]+")) {
-                    nameBuilder.append(inferText);
-                    transaction.setName(nameBuilder.toString());
-                } else if (1000 < verticesX && verticesX <= 2000) {
-                    if (inferText.matches("^\\d+$")) {
-                        transaction.setAmount(Long.parseLong(inferText));
-                    }
-                } else if (2000 < verticesX) {
-                    descriptionBuilder.append(inferText).append(" ");
-                    if (descriptionBuilder.toString().contains("친구")) {
-                        transaction.setRelationType(RelationType.valueOf("FRIEND"));
-                    } else if (descriptionBuilder.toString().contains("가족")) {
-                        transaction.setRelationType(RelationType.valueOf("FAMILY"));
-                    } else if (descriptionBuilder.toString().contains("직장") || descriptionBuilder.toString().contains("회사")) {
-                        transaction.setRelationType(RelationType.valueOf("COMPANY"));
-                    }
-                    transaction.setDescription(descriptionBuilder.toString().trim());
-                }
-
-                if (transaction.getAmount() != null && transaction.getName() != null) {
-                    if (transaction.getRelationType() == null) {
-                        transaction.setRelationType(RelationType.valueOf("ETC"));
-                    }
-                }
-
-                if (++count > 3) {
-                    if (transaction.getName() != null || transaction.getAmount() != null) {
-                        responses.add(transaction);
-                    }
-                    transaction = new TransactionDTO.MatchRelation();
-                    nameBuilder.setLength(0);
-                    relationBuilder.setLength(0);
-                    descriptionBuilder.setLength(0);
-                    count = 0;
-                }
-
-                previousY = verticesY;
-            }
-
-            if (transaction.getName() != null || transaction.getAmount() != null) {
-                responses.add(transaction);
             }
 
         } catch (IOException e) {
@@ -183,7 +151,6 @@ public class OcrService {
         }
         return responses;
     }
-
 
     @KafkaListener(topics = "result-match-topic", concurrency = "3")
     public void getMatchResult(TransactionDTO.MatchRelation response) {
