@@ -3,6 +3,7 @@ package com.yoyo.transaction.global.config;
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.*;
+import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RoundRobinPartitioner;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -15,6 +16,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -35,7 +37,8 @@ public class ProducerConfig {
                 TransactionSelfRelationDTO.RequestToMember.class,
                 RelationDTO.Request.class,
                 TransactionDTO.MatchRelation.class,
-                UpdateRelationDTO.Request.class));
+                UpdateRelationDTO.Request.class,
+                OcrRegister.OcrList.class));
         return new DefaultKafkaProducerFactory<>(config);
     }
 

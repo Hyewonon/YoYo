@@ -53,7 +53,6 @@ public class TransactionController {
                 HttpStatus.CREATED.value(),
                 "직접등록 성공",
                 response
-
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }

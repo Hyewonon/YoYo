@@ -33,7 +33,7 @@ public class Transaction extends AuditableEntity {
     private String memo;
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
-    @Enumerated(EnumType.STRING)
     @Setter
+    @Enumerated(EnumType.STRING)
     private RelationType relationType;
 }

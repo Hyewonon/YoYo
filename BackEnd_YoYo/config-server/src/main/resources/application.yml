@@ -13,6 +13,11 @@ spring:
 #          private-key: ${git.private}
           username: ${git.username}
           password: ${git.password}
+#    vault:
+#      token: hvs.p6BgpQZCPs8vQmywkXHf0O4n
+#      scheme: http
+#      host: localhost
+#      port: 8200
 
 server:
   port: 8888

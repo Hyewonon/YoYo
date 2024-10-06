@@ -23,11 +23,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     //config
     implementation 'org.springframework.cloud:spring-cloud-config-server'
+//    implementation group: 'org.springframework.vault', name: 'spring-vault-core', version: '2.3.3'
+
 //    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 //    implementation 'org.springframework.cloud:spring-cloud-starter-vault-config'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.springframework.security:spring-security-test'
+
 }
 
 test {

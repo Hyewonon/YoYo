@@ -78,12 +78,6 @@ export function Success() {
           <div className="countdown-text">초 후에 홈 화면으로 이동합니다.</div>
         </div>
       </div>
-      {/* <div className="box_section" style={{ width: "600px", textAlign: "left" }}>
-        <b>Response Data :</b>
-        <div id="response" style={{ whiteSpace: "initial" }}>
-          {responseData && <pre>{JSON.stringify(responseData, null, 4)}</pre>}
-        </div>
-      </div> */}
     </>
   );
 }
