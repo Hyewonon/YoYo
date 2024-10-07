@@ -38,4 +38,8 @@ public class RelationProducer {
     public void sendResultMatch(TransactionDTO.MatchRelation response) {
         kafkaTemplate.send("result-match-topic", response);
     }
+
+    public void sendOcrList(OcrRegister.OcrList response) {
+        kafkaTemplate.send("ocr-list-topic", response);
+    }
 }

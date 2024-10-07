@@ -18,6 +18,7 @@ import com.yoyo.member.entity.RelationType;
 import java.util.List;
 import java.util.Optional;
 
+import com.yoyo.member.global.config.ProducerConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -39,6 +40,7 @@ public class RelationConsumer {
     private final String GET_RELATION_IDS = "get-relations-ids";
     private final RelationProducer relationProducer;
     private final NoMemberRepository noMemberRepository;
+    private final ProducerConfig producerConfig;
 
     /**
      * * 페이 송금 시 친구 관계 정보 수정
@@ -180,20 +182,23 @@ public class RelationConsumer {
                         .orElseThrow(() -> new TransactionException(ErrorCode.NOT_FOUND_RELATION));
                 relation.setTotalReceivedAmount(relation.getTotalReceivedAmount() + ocr.getAmount());
                 relationRepository.save(relation);
+                ocr.setMemberId(relation.getOppositeId());
             } else {
-                NoMember member = NoMember.builder().memberId(ocr.getOppositeId()).build();
+                NoMember member = NoMember.builder().build();
                 noMemberRepository.save(member);
+                ocr.setOppositeId(member.getMemberId());
                 Relation relation = Relation.builder()
                         .relationType(RelationType.valueOf(ocr.getRelationType()))
                         .totalReceivedAmount(ocr.getAmount())
                         .description(ocr.getDescription())
                         .member(memberRepository.findByMemberId(ocr.getMemberId()))
-                        .oppositeId(ocr.getOppositeId())
+                        .oppositeId(member.getMemberId())
                         .oppositeName(ocr.getOppositeName())
                         .isMember(false)
                         .build();
                 relationRepository.save(relation);
             }
         }
+        relationProducer.sendOcrList(request);
     }
 }

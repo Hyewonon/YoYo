@@ -3,8 +3,6 @@ package com.yoyo.member.global.config;
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.*;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RoundRobinPartitioner;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -16,10 +14,12 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 @Slf4j
 public class ProducerConfig {
-
     @Value("${spring.kafka.producer.bootstrap-servers}")
     private String bootstrapServers;
 
@@ -27,21 +27,18 @@ public class ProducerConfig {
     public ProducerFactory<String, KafkaJson> factory() {
         Map<String, Object> config = new HashMap<>();
         config.put(org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        config.put(org.apache.kafka.clients.producer.ProducerConfig.PARTITIONER_CLASS_CONFIG,
-                   RoundRobinPartitioner.class.getName());
-        config.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-                   StringSerializer.class);
-        config.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-                   JsonSerializer.class);
+        config.put(org.apache.kafka.clients.producer.ProducerConfig.PARTITIONER_CLASS_CONFIG, RoundRobinPartitioner.class.getName());
+        config.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        config.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         config.put(JsonSerializer.TYPE_MAPPINGS, KafkaUtils.getJsonTypeMappingInfo(MemberResponseDTO.class,
-                                                                                   PayInfoDTO.RequestToTransaction.class,
-                                                                                   MemberTagDTO.class,
-                                                                                   PaymentDTO.class,
-                                                                                   RelationResponseDTO.class,
-                                                                                   UpdateTransactionRelationTypeDTO.class,
-                                                                                   TransactionDTO.MatchRelation.class,
-                                                                                   PushTokenDTO.class));
-
+                PayInfoDTO.RequestToTransaction.class,
+                MemberTagDTO.class,
+                PaymentDTO.class,
+                RelationResponseDTO.class,
+                UpdateTransactionRelationTypeDTO.class,
+                TransactionDTO.MatchRelation.class,
+                PushTokenDTO.class,
+                OcrRegister.OcrList.class));
         return new DefaultKafkaProducerFactory<>(config);
     }
 

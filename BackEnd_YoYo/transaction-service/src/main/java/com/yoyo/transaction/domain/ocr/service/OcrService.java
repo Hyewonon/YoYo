@@ -116,7 +116,7 @@ public class OcrService {
                 }
 
                 if (verticesX < 850) {
-                    if (inferText.matches("^[가-힣]{2,4}$")) {
+                    if (inferText.matches("^[가-힣]{2,6}$")) {
                         transaction.setName(inferText);
                     }
                 }
