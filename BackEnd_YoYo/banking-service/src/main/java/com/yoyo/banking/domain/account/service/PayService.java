@@ -213,7 +213,13 @@ public class PayService {
     }
 
     public void createUserKey(MemberRequestDTO request) {
-        ssafyBankService.createUserKey(request.getMemberId());
+        ResponseEntity<Map> response = (ResponseEntity<Map>) ssafyBankService.createUserKey(request.getMemberId());
+
+        if(response.getStatusCode().is4xxClientError()){
+            // 실패했으면 이미 조회  했던 회원인지 학인
+            String message = response.getBody().get("errorMessage").toString();
+            if(message.equals("이미 존재하는 ID입니다.")) ssafyBankService.getUserKey(request.getMemberId());
+        }
     }
 
     public String getNameFromMember(Long memberId) {
