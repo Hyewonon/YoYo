@@ -17,6 +17,7 @@ public enum ErrorCode {
 
     // 비밀번호 암호화 관련 에러
     PASSWORD_ENCRYPTION_FAILURE("암호화 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    PASSWORD_DECRYPTION_FAILURE("복호화 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // 회원 관련 에러
     NOT_FOUND_MEMBER("존재하지 않는 회원입니다.", HttpStatus.NOT_FOUND),

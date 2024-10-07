@@ -7,6 +7,7 @@ import com.yoyo.banking.domain.account.dto.account.DummyTransactionDTOs.DummyTra
 import com.yoyo.banking.domain.account.dto.SsafyCommonHeader.Request;
 import com.yoyo.banking.domain.account.repository.AccountRepository;
 import com.yoyo.banking.entity.Account;
+import com.yoyo.banking.global.util.AesService;
 import com.yoyo.banking.global.util.BankingUtil;
 import com.yoyo.common.dto.response.CommonResponse;
 import com.yoyo.common.exception.ErrorCode;
@@ -36,6 +37,7 @@ public class SsafyBankService {
 
     private final AccountRepository accountRepository;
     private final BankingUtil bankingUtil;
+    private final AesService aesService;
 
     @Value("${ssafy.bank.api-key}")
     private String bankApiKey;
@@ -123,7 +125,6 @@ public class SsafyBankService {
         if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
             Map<String, Object> tmp = (Map<String, Object>) responseFromSsafy.getBody().get("REC");
             String accountTypeUniqueNo = (String) tmp.get("accountTypeUniqueNo");
-//            log.info("accountTypeUniqueNo 발급 성공 = {}", accountTypeUniqueNo);
             return accountTypeUniqueNo;
         } else {
             throw new BankingException(ErrorCode.UNEXPECTED_ERROR);
@@ -138,7 +139,6 @@ public class SsafyBankService {
         Map<String, Object> requestToSsafy = new HashMap<>();
         requestToSsafy.put("accountNo", request.getAccountNumber());
         requestToSsafy.put("authText", bankAuthAccountText);
-//        log.info("authText= {}", bankAuthAccountText);
 
         ResponseEntity<Map> responseFromSsafy = sendPostRequestToSsafy(url, requestToSsafy, memberId);
 
@@ -294,7 +294,7 @@ public class SsafyBankService {
                 .orElseThrow(() -> new BankingException(ErrorCode.NOT_FOUND_ACCOUNT));
 
         Map<String, Object> requestToSsafy = new HashMap<>();
-        requestToSsafy.put("accountNo", account.getAccountNumber());
+        requestToSsafy.put("accountNo", aesService.decrypt(account.getAccountNumber()));
         requestToSsafy.put("transactionBalance", amount);
         requestToSsafy.put("transactionSummary", transactionSummary);
         ResponseEntity<Map> responseFromSsafy = sendPostRequestToSsafy(url, requestToSsafy, memberId);

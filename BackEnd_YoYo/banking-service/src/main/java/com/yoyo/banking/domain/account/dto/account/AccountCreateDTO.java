@@ -37,13 +37,11 @@ public class AccountCreateDTO {
         @Schema(description = "결제 비밀번호 : 6자리 숫자만 입력가능")
         private String pin;
 
-        // TODO : 계좌번호 저장시 양방향 암호화 알고리즘 적용 필요
-        public static Account toEntity(AccountCreateDTO.Request request, Long memberId, String bankCode) {
+        public static Account toEntity(AccountCreateDTO.Request request, Long memberId, String bankCode, String encryptAccountNum) {
             String hashedPin = BCrypt.hashpw(request.getPin(), BCrypt.gensalt());
-
             return Account.builder()
                           .memberId(memberId)
-                          .accountNumber(request.getAccountNumber())
+                          .accountNumber(encryptAccountNum)
                           .bankCode(bankCode)
                           .balance(0L)
                           .pin(hashedPin)
