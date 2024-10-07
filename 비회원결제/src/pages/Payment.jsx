@@ -111,13 +111,15 @@ export function Payment() {
         </div>
         <div className="inputContainer">
           <label className="inputLabel">💰 금액을 입력해주세요.</label>
-          <input
-            className="infoInput"
-            type="text"
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-            placeholder="금액을 입력해주세요"
-          />
+          <input className="infoInput" type="text"
+              value={price}
+              onChange={(e) => {
+              const onlyNumbers = e.target.value.replace(/[^0-9]/g, ""); // 숫자가 아닌 값은 제거
+              setPrice(Number(onlyNumbers));
+              }}
+              placeholder="금액을 입력해주세요 (숫자만 입력 가능)"
+      />
+
         </div>
         <div className="inputContainer">
           <label className="inputLabel">🤝 주최자와의 관계</label>
