@@ -3,11 +3,8 @@ package com.yoyo.transaction.domain.transaction.service;
 import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.TransactionException;
-import com.yoyo.common.kafka.dto.EventResponseDTO;
-import com.yoyo.common.kafka.dto.OcrRegister;
-import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO;
+import com.yoyo.common.kafka.dto.*;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO.ResponseFromMember;
-import com.yoyo.common.kafka.dto.UpdateRelationDTO;
 import com.yoyo.transaction.domain.ocr.dto.OcrConfirmDTO;
 import com.yoyo.transaction.domain.transaction.dto.FindTransactionDTO;
 import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
@@ -27,6 +24,7 @@ import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,12 +32,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class TransactionService {
-
     private final TransactionRepository transactionRepository;
     private final TransactionProducer transactionProducer;
     private final Map<Long, CompletableFuture<ResponseFromMember>> summaries = new ConcurrentHashMap<>();
     private final Map<Long, CompletableFuture<EventResponseDTO>> names = new ConcurrentHashMap<>();
-
+    private final Map<Long, CompletableFuture<OcrRegister.OcrList>> futureMap = new ConcurrentHashMap<>();
 
     public void deleteTransaction(Long transactionId) {
         transactionRepository.deleteById(transactionId);
@@ -96,6 +93,7 @@ public class TransactionService {
     public void createTransactionOCR(Long memberId, Long eventId, List<OcrConfirmDTO> requestOCR) {
         String eventName = getNameFromEvent(eventId);
         List<OcrRegister> ocrRegisterList = new ArrayList<>();
+
         for (OcrConfirmDTO dto : requestOCR) {
             OcrRegister register = OcrRegister.builder()
                     .memberId(memberId)
@@ -106,22 +104,51 @@ public class TransactionService {
                     .relationType(dto.getRelationType())
                     .build();
             ocrRegisterList.add(register);
-            Transaction transaction = Transaction.builder()
-                    .receiverId(memberId)
-                    .senderId(dto.getMemberId())
-                    .senderName(register.getOppositeName())
-                    .amount(dto.getAmount())
-                    .eventId(eventId)
-                    .eventName(eventName)
-                    .relationType(RelationType.valueOf(dto.getRelationType().toUpperCase()))
-                    .isRegister(true)
-                    .transactionType(TransactionType.RECEIVE)
-                    .build();
-            transactionRepository.save(transaction);
         }
-        OcrRegister.OcrList ocrList = OcrRegister.OcrList.builder().ocrList(ocrRegisterList).build();
-        transactionProducer.sendOCRRegister(ocrList);
+
+        OcrRegister.OcrList ocrListToSend = OcrRegister.OcrList.builder().ocrList(ocrRegisterList).build();
+        transactionProducer.sendOCRRegister(ocrListToSend);
+
+        CompletableFuture<OcrRegister.OcrList> future = new CompletableFuture<>();
+        futureMap.put(memberId, future);
+
+        try {
+            OcrRegister.OcrList ocrListFromKafka = future.get(10, TimeUnit.SECONDS);
+            for (OcrRegister register : ocrListFromKafka.getOcrList()) {
+                Transaction transaction = Transaction.builder()
+                        .receiverId(memberId)
+                        .senderId(register.getOppositeId())
+                        .senderName(register.getOppositeName())
+                        .amount(register.getAmount())
+                        .eventId(eventId)
+                        .eventName(eventName)
+                        .relationType(RelationType.valueOf(register.getRelationType().toUpperCase()))
+                        .isRegister(true)
+                        .transactionType(TransactionType.RECEIVE)
+                        .build();
+                transactionRepository.save(transaction);
+            }
+        } catch (Exception e) {
+            throw new TransactionException(ErrorCode.KAFKA_ERROR);
+        } finally {
+            futureMap.remove(memberId);
+        }
     }
+
+
+    @KafkaListener(topics = "ocr-list-topic", concurrency = "3")
+    public void getOcrList(OcrRegister.OcrList ocrListFromKafka) {
+        Long memberId = ocrListFromKafka.getOcrList().get(0).getMemberId();
+
+        CompletableFuture<OcrRegister.OcrList> future = futureMap.get(memberId);
+
+        if (future != null) {
+            future.complete(ocrListFromKafka);
+        } else {
+            log.error("No CompletableFuture: {}", memberId);
+        }
+    }
+
 
     /*
      * event Id로 event Name을 가져옴

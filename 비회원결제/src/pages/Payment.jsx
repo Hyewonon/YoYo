@@ -97,9 +97,9 @@ export function Payment() {
   return (
     <div className="wrapper">
       <div className="box_section">
-        <h1>마음 전하기</h1>
+        <h1>💌 마음 전하기</h1>
         <div className="inputContainer">
-          <label className="inputLabel">보내시는 분</label>
+          <label className="inputLabel">🙋‍♂️ 보내시는 분</label>
           <input
             className="infoInput"
             type="text"
@@ -109,7 +109,7 @@ export function Payment() {
           />
         </div>
         <div className="inputContainer">
-          <label className="inputLabel">금액을 입력해주세요.</label>
+          <label className="inputLabel">💰 금액을 입력해주세요.</label>
           <input
             className="infoInput"
             type="text"
@@ -119,7 +119,7 @@ export function Payment() {
           />
         </div>
         <div className="inputContainer">
-          <label className="inputLabel">주최자와의 관계</label>
+          <label className="inputLabel">🤝 주최자와의 관계</label>
           <textarea
             className="infoArea"
             type="text"
@@ -128,7 +128,7 @@ export function Payment() {
           />
         </div>
         <div className="inputContainer">
-          <label className="inputLabel">전화번호</label>
+          <label className="inputLabel">📞 전화번호</label>
           <input
             className="infoInput"
             type="tel"
@@ -141,14 +141,14 @@ export function Payment() {
 
         <div id="payment-method" style={{ display: "flex", justifyContent: "center", width: "100%" }}>
           <button id="CARD" className={`button2 ${selectedPaymentMethod === "CARD" ? "active" : ""}`} onClick={() => selectPaymentMethod("CARD")}>
-            카드
+          💳 카드
           </button>
           <button id="TRANSFER" className={`button2 ${selectedPaymentMethod === "TRANSFER" ? "active" : ""}`} onClick={() => selectPaymentMethod("TRANSFER")}>
-            계좌이체
+          🔄 계좌이체
           </button>
         </div>
         <button className="button" onClick={() => requestPayment()}>
-          결제하기
+        🛍️ 결제하기
         </button>
       </div>
     </div>

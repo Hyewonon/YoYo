@@ -44,8 +44,8 @@ public class ConsumerConfig {
                         PayInfoDTO.RequestToTransaction.class,
                         PaymentDTO.class,
                         UpdateTransactionRelationTypeDTO.class,
-                        TransactionDTO.MatchRelation.class
-                ));
+                        TransactionDTO.MatchRelation.class,
+                        OcrRegister.OcrList.class));
 
         return props;
     }
