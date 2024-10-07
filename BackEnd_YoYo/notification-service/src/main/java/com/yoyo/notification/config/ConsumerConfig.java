@@ -4,6 +4,7 @@ import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.MemberTagDTO;
 import com.yoyo.common.kafka.dto.NotificationCreateDTO;
+import com.yoyo.common.kafka.dto.PushTokenDTO;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -43,7 +44,8 @@ public class ConsumerConfig {
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.TYPE_MAPPINGS, KafkaUtils
                 .getJsonTypeMappingInfo(MemberTagDTO.class,
-                                        NotificationCreateDTO.class));
+                                        NotificationCreateDTO.class,
+                                        PushTokenDTO.class));
 
         return props;
     }

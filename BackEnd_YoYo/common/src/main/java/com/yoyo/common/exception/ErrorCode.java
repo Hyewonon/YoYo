@@ -1,5 +1,7 @@
 package com.yoyo.common.exception;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,7 @@ public enum ErrorCode {
     // 알림 관련 에러
     NOT_FOUND_NOTIFICATION("존재하지 않는 알림입니다.", HttpStatus.NOT_FOUND),
     UNAUTHORIZED_NOTIFICATION("알림 삭제 권한이 없습니다.", HttpStatus.UNAUTHORIZED),
+    NOT_FOUND_PUSH_TOKEN("PUSH TOKEN이 없습니다.", HttpStatus.NOT_FOUND),
 
     NOT_FOUND_TRANSACTION("존재하는 거래 내역 없음", HttpStatus.NOT_FOUND),
 
