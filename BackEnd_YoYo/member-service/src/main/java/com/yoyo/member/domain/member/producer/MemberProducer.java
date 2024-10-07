@@ -4,6 +4,7 @@ import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
+import com.yoyo.common.kafka.dto.PushTokenDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ public class MemberProducer {
     private final String UPDATE_TRANSACTION_TOPIC = "pay-update-transaction-topic";
     private final String MEMBER_NAME_TO_PAY_TOPIC = "member-name-to-pay-topic";
     private final String USER_KEY_TO_BANKING_TOPIC = "user-key-to-banking-topic";
+    private final String GET_PUSH_TOKEN = "member-push-token-to-notification-topic";
 
     private final KafkaTemplate<String, KafkaJson> kafkaTemplate;
 
@@ -31,5 +33,9 @@ public class MemberProducer {
 
     public void sendBankingUserkey(Long memberId) {
         kafkaTemplate.send(USER_KEY_TO_BANKING_TOPIC, MemberRequestDTO.of(memberId));
+    }
+
+    public void sendPushToken(PushTokenDTO response) {
+        kafkaTemplate.send(GET_PUSH_TOKEN, response);
     }
 }

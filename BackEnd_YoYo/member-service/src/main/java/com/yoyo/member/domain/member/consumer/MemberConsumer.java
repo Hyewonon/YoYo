@@ -3,6 +3,7 @@ package com.yoyo.member.domain.member.consumer;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.PayInfoDTO;
+import com.yoyo.common.kafka.dto.PushTokenDTO;
 import com.yoyo.member.domain.member.producer.MemberProducer;
 import com.yoyo.member.domain.member.service.MemberService;
 import com.yoyo.member.entity.Member;
@@ -20,6 +21,7 @@ public class MemberConsumer {
     private final String GROUP_ID = "member-service";
     private final String UPDATE_TRANSACTION_MEMBER_TOPIC = "pay-update-transaction-member-topic";
     private final String GET_PAY_MEMBER_NAME = "pay-get-pay-member-name";
+    private final String GET_MEMBER_PUSH_TOKEN = "get-member-push-token";
 
     private final MemberService memberService;
     private final MemberProducer memberProducer;
@@ -48,5 +50,12 @@ public class MemberConsumer {
         request.setSenderName(sender.getName()); // 발신자 이름 저장
         // 거래내역 저장 요청
         memberProducer.sendPayInfoToTransaction(request);
+    }
+
+    @KafkaListener(topics = GET_MEMBER_PUSH_TOKEN)
+    public void getPayMemberName(PushTokenDTO request) {
+        Member member = memberService.findMemberById(request.getMemberId());
+        request.setPushToken(member.getFcmToken());
+        memberProducer.sendPushToken(request);
     }
 }
