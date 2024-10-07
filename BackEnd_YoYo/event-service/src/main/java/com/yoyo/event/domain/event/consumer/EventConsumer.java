@@ -1,14 +1,19 @@
 package com.yoyo.event.domain.event.consumer;
 
+import com.yoyo.common.exception.CustomException;
+import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.kafka.dto.*;
 import com.yoyo.event.domain.event.producer.EventProducer;
+import com.yoyo.event.domain.event.repository.EventRepository;
 import com.yoyo.event.domain.event.service.EventService;
+import com.yoyo.event.entity.Event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Slf4j
 public class EventConsumer {
@@ -17,6 +22,7 @@ public class EventConsumer {
     private final EventProducer eventProducer;
 
     private final String SEND_EVENTID_EVENT_TOPIC = "send-event-id-event-topic";
+    private final EventRepository eventRepository;
 
     @KafkaListener(topics = "transaction-summary-topic", concurrency = "3")
     public void getTransactionSummary(AmountResponseDTO summary) {
@@ -41,7 +47,12 @@ public class EventConsumer {
 
     @KafkaListener(topics = "eventId-receiverId", concurrency = "3")
     public void getEventIdByReceiverId(ReceiverRequestDTO requestDTO) {
-        requestDTO.setReceiverId(eventService.findEventByIdReceiverId(requestDTO.getReceiverId()));
-        eventProducer.sendReceiverId(requestDTO);
+        Event event = eventRepository.findById(requestDTO.getEventId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_EVENT));
+        ReceiverRequestDTO updateDTO = ReceiverRequestDTO.builder()
+                .eventId(event.getId())
+                .receiverId(event.getMemberId())
+                .eventName(event.getName())
+                .build();
+        eventProducer.sendReceiverId(updateDTO);
     }
 }

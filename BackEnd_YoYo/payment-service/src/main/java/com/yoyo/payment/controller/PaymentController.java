@@ -50,6 +50,7 @@ public class PaymentController {
         String senderName;
         String eventId;
         String description;
+        String memo;
         try {
             // 클라이언트에서 받은 JSON 요청 바디입니다.
             JSONObject requestData = (JSONObject) parser.parse(jsonBody);
@@ -59,6 +60,7 @@ public class PaymentController {
             senderName = (String) requestData.get("senderName");
             eventId = (String) requestData.get("eventId");
             description = (String) requestData.get("description");
+            memo = (String) requestData.get("memo");
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -96,14 +98,12 @@ public class PaymentController {
         -> [Transaction] 기록 : 받은 사람 ID, 금액, 메모
          */
         log.info("들어오는 데이터 : {}", jsonBody);
-        log.info("데이터 : {}", obj);
         // eventId를 이용해 receiver 아이디 가져오기
         Long parseLongEventId = Long.parseLong(eventId);
         ReceiverRequestDTO requestDTO = ReceiverRequestDTO.builder().eventId(parseLongEventId).build();
         paymentProducer.sendEventId(requestDTO);
-        Long receiverId = paymentConsumer.getReceiverId();
-        paymentProducer.sendNoMemberPayment(PaymentDTO.of(senderName, receiverId, parseLongEventId, Long.parseLong(amount), description));
-
+        ReceiverRequestDTO updateReceiverDTO = paymentConsumer.getReceiverId(parseLongEventId);
+        paymentProducer.sendNoMemberPayment(PaymentDTO.of(senderName, updateReceiverDTO.getReceiverId(), parseLongEventId, Long.parseLong(amount), memo,description, updateReceiverDTO.getEventName()));
         /*
          * TODO : 결제 실패 비즈니스 로직 구현
          */

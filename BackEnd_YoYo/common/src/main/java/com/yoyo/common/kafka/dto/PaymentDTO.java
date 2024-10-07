@@ -25,6 +25,7 @@ public class PaymentDTO implements KafkaJson {
     private String title;
     private Long amount;
     private String memo;
+    private String description;
 
     public static PaymentDTO of(String senderName, Long receiverId, Long eventId, Long amount,
                                 String memo) {
@@ -35,5 +36,18 @@ public class PaymentDTO implements KafkaJson {
                          .amount(amount)
                          .memo(memo)
                          .build();
+    }
+
+    public static PaymentDTO of(String senderName, Long receiverId, Long eventId, Long amount,
+                                String memo,String description, String title) {
+        return PaymentDTO.builder()
+                .senderName(senderName)
+                .receiverId(receiverId)
+                .eventId(eventId)
+                .amount(amount)
+                .memo(memo)
+                .description(description)
+                .title(title)
+                .build();
     }
 }

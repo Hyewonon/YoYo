@@ -60,9 +60,9 @@ public class RelationService {
     /**
      * 비회원 결제 친구 관계 저장
      */
-    public String createPaymentRelation(NoMember noMember, Long memberId, Long amount) {
+    public String createPaymentRelation(NoMember noMember, Long memberId, Long amount, String description) {
         Member member = memberService.findMemberById(memberId);
-        relationRepository.save(toNewEntityForPayment(member, noMember.getMemberId(), amount));
+        relationRepository.save(toNewEntityForPayment(member, noMember.getMemberId(), amount, description, noMember.getName()));
         return member.getName();
     }
 
@@ -157,12 +157,13 @@ public class RelationService {
                 .build();
     }
 
-    private Relation toNewEntityForPayment(Member member, Long noMemberId, Long amount) {
+    private Relation toNewEntityForPayment(Member member, Long noMemberId, Long amount, String description, String name) {
         return Relation.builder()
                 .member(member)
                 .oppositeId(noMemberId)
+                .oppositeName(name)
                 .relationType(RelationType.NONE)
-                .description("")
+                .description(description)
                 .totalReceivedAmount(amount)
                 .totalSentAmount(0L)
                 .isMember(false)

@@ -15,4 +15,5 @@ import lombok.*;
 public class ReceiverRequestDTO implements KafkaJson {
     private Long eventId;
     private Long receiverId;
+    private String eventName;
 }
