@@ -5,6 +5,8 @@ import com.yoyo.banking.domain.account.repository.BankRepository;
 import com.yoyo.banking.entity.Account;
 import com.yoyo.banking.entity.Bank;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -15,53 +17,55 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DataInitializer implements CommandLineRunner {
     private final AccountRepository accountRepository;
     private final BankRepository bankRepository;
+    private final AesService aesService;
 
-
-    public static List<Account> generateDummyAccounts() {
+    public List<Account> generateDummyAccounts() {
         List<Account> accounts = new ArrayList<>();
+        String hashedPin = BCrypt.hashpw("111111", BCrypt.gensalt());
 
         Account account1 = Account.builder()
                 .memberId(1L)
-                .accountNumber("9991952997044858")
+                .accountNumber(aesService.encrypt("9991952997044858"))
                 .bankCode("011")
                 .balance(0L)
-                .pin("1234")
+                .pin(hashedPin)
                 .userKey("ca38f7e9-c736-44cf-96aa-c152d040d50a")
                 .build();
 
         Account account2 = Account.builder()
                 .memberId(2L)
-                .accountNumber("9996441146967187")
+                .accountNumber(aesService.encrypt("9996441146967187"))
                 .bankCode("004")
                 .balance(0L)
-                .pin("002")
+                .pin(hashedPin)
                 .userKey("cb1619b1-daf2-43e3-9e44-ed64f9ef212b")
                 .build();
         Account account3 = Account.builder()
                 .memberId(3L)
-                .accountNumber("9990010761414577")
+                .accountNumber(aesService.encrypt("9990010761414577"))
                 .bankCode("003")
                 .balance(0L)
-                .pin("003")
+                .pin(hashedPin)
                 .userKey("0b2cd3ff-a284-4459-b399-c0abc0ff349c")
                 .build();
         Account account4 = Account.builder()
                 .memberId(4L)
-                .accountNumber("9997693456333174")
+                .accountNumber(aesService.encrypt("9997693456333174"))
                 .bankCode("999")
                 .balance(0L)
-                .pin("004")
+                .pin(hashedPin)
                 .userKey("3ebc5f5e-3a92-4802-9d4b-30574aac23c5")
                 .build();
         Account account5 = Account.builder()
                 .memberId(5L)
-                .accountNumber("9992403965057438")
+                .accountNumber(aesService.encrypt("9992403965057438"))
                 .bankCode("999")
                 .balance(0L)
-                .pin("1234")
+                .pin(hashedPin)
                 .userKey("b272b182-e7a1-4956-80d6-1093371e550c")
                 .build();
         accounts.add(account1);
@@ -104,8 +108,8 @@ public class DataInitializer implements CommandLineRunner {
             generateBanking();
         }
         if (accountRepository.count() == 0) {
-        List<Account> dummyAccounts = generateDummyAccounts();
-        accountRepository.saveAll(dummyAccounts);
+            List<Account> dummyAccounts = generateDummyAccounts();
+            accountRepository.saveAll(dummyAccounts);
         }
     }
 }
