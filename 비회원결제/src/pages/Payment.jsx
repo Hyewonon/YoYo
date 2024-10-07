@@ -15,6 +15,7 @@ export function Payment() {
   const [price, setPrice] = useState("")
   const [description, setDescription] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [memo, setMemo] = useState("");
   const { id } = useParams();
   function selectPaymentMethod(method) {
     setSelectedPaymentMethod(method);
@@ -53,7 +54,7 @@ export function Payment() {
             amount,
             orderId: generateRandomString(),
             orderName: description,
-            successUrl: `${successUrl}?senderName=${senderName}&description=${description}&eventId=${id}`, // URL에 쿼리 스트링으로 전달
+            successUrl: `${successUrl}?senderName=${encodeURIComponent(senderName)}&description=${encodeURIComponent(description)}&eventId=${encodeURIComponent(id)}&memo=${encodeURIComponent(memo)}`, // URL에 쿼리 스트링으로 전달
             failUrl,
             customerEmail: "",
             customerName: "",
@@ -72,7 +73,7 @@ export function Payment() {
             amount,
             orderId: generateRandomString(),
             orderName: "마음 보내기",
-            successUrl: `${successUrl}?senderName=${senderName}&description=${description}&eventId=${id}`, // URL에 쿼리 스트링으로 전달
+            successUrl: `${successUrl}?senderName=${encodeURIComponent(senderName)}&description=${encodeURIComponent(description)}&eventId=${encodeURIComponent(id)}&memo=${encodeURIComponent(memo)}`, // URL에 쿼리 스트링으로 전달
             failUrl,
             customerEmail: "",
             customerName: "",
@@ -105,7 +106,7 @@ export function Payment() {
             type="text"
             value={senderName}
             onChange={(e) => setSenderName(e.target.value)}
-            placeholder="보내는 사람 이름을 입력하세요"
+            placeholder="보내시는 분 이름을 입력해주세요"
           />
         </div>
         <div className="inputContainer">
@@ -115,16 +116,25 @@ export function Payment() {
             type="text"
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
-            placeholder="가격을 입력하세요"
+            placeholder="금액을 입력해주세요"
           />
         </div>
         <div className="inputContainer">
           <label className="inputLabel">🤝 주최자와의 관계</label>
+          <input
+            className="infoInput"
+            type="text"
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="관계를 입력해주세요"
+          />
+        </div>
+        <div className="inputContainer">
+          <label className="inputLabel">📝 전달할 말</label>
           <textarea
             className="infoArea"
             type="text"
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="메모를 입력하세요"
+            onChange={(e) => setMemo(e.target.value)}
+            placeholder="메모를 입력해주세요"
           />
         </div>
         <div className="inputContainer">
@@ -134,11 +144,9 @@ export function Payment() {
             type="tel"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            placeholder="전화번호를 입력하세요"
+            placeholder="전화번호를 입력해주세요"
           />
-
         </div>
-
         <div id="payment-method" style={{ display: "flex", justifyContent: "center", width: "100%" }}>
           <button id="CARD" className={`button2 ${selectedPaymentMethod === "CARD" ? "active" : ""}`} onClick={() => selectPaymentMethod("CARD")}>
           💳 카드

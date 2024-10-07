@@ -12,6 +12,7 @@ export function Success() {
   const senderName = params.get("senderName");
   const description = params.get("description");
   const eventId = params.get("eventId");
+  const memo = params.get("memo");
   console.log(senderName, description, eventId)
   useEffect(() => {
     async function confirm() {
@@ -21,7 +22,8 @@ export function Success() {
         paymentKey: searchParams.get("paymentKey"),
         senderName: senderName,
         eventId: eventId,
-        description: description
+        description: description,
+        memo: memo
       };
 
       const response = await fetch("/api/confirm/payment", {
