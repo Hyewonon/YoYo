@@ -19,7 +19,6 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class DataInitializer implements CommandLineRunner {
-    private final AccountRepository accountRepository;
     private final BankRepository bankRepository;
 
     public void generateBanking() {

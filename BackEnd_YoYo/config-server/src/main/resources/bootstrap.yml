@@ -8,7 +8,7 @@ spring:
     vault:
       host: vault
       port: 8200
-      uri: http://j11a308.p.ssafy.io:8200
+      uri: http://vault:8200
       token: yoyovault
       authentication: token
       kv:
