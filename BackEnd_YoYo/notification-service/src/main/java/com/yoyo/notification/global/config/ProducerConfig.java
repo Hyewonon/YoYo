@@ -1,4 +1,4 @@
-package com.yoyo.notification.config;
+package com.yoyo.notification.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
