@@ -99,7 +99,13 @@ public class SsafyBankService {
             String bankName = bankingUtil.findBankNameByBankCode(bankCode);
 
             // 더미 계좌 생성 시 돈 입금
-            updateDemandDeposit(memberId, DUMMY_MONEY_AMOUNT, true);
+//            updateDemandDeposit(memberId, DUMMY_MONEY_AMOUNT, true);
+            Map<String, Object> requestToSsafy = new HashMap<>();
+            requestToSsafy.put("accountNo", account);
+            requestToSsafy.put("transactionBalance", DUMMY_MONEY_AMOUNT);
+            requestToSsafy.put("transactionSummary", "계좌 생성 시 축하금");
+           sendPostRequestToSsafy(url, requestToSsafy, memberId);
+
 
             return new ResponseEntity<>(DummyAccountDTO.Response.of(account, bankName, memberId), HttpStatus.CREATED);
         } else {
