@@ -2,9 +2,10 @@ package com.yoyo.banking.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
+import com.yoyo.common.kafka.dto.EventRequestDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.NotificationCreateDTO;
-import com.yoyo.common.kafka.dto.PayInfoDTO;
+import com.yoyo.common.kafka.dto.PayInfoRequestToMemberDTO;
 import com.yoyo.common.kafka.dto.PaymentDTO;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,10 +38,12 @@ public class ProducerConfig {
         config.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                    JsonSerializer.class);
         config.put(JsonSerializer.TYPE_MAPPINGS, KafkaUtils.getJsonTypeMappingInfo(
-                PayInfoDTO.RequestToMember.class
+                PayInfoRequestToMemberDTO.class
                 , PaymentDTO.class
                 , MemberRequestDTO.class
                 , NotificationCreateDTO.class
+                , PayInfoRequestToMemberDTO.class
+                , EventRequestDTO.class
         ));
         return new DefaultKafkaProducerFactory<>(config);
     }

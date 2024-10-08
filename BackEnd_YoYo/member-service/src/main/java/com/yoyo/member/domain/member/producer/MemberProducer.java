@@ -3,7 +3,7 @@ package com.yoyo.member.domain.member.producer;
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
-import com.yoyo.common.kafka.dto.PayInfoDTO;
+import com.yoyo.common.kafka.dto.PayInfoRequestToTransactionDTO;
 import com.yoyo.common.kafka.dto.PushTokenDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -27,7 +27,7 @@ public class MemberProducer {
         kafkaTemplate.send(MEMBER_NAME_TO_PAY_TOPIC, response);
     }
 
-    public void sendPayInfoToTransaction(PayInfoDTO.RequestToTransaction request) {
+    public void sendPayInfoToTransaction(PayInfoRequestToTransactionDTO request) {
         kafkaTemplate.send(UPDATE_TRANSACTION_TOPIC, request);
     }
 
