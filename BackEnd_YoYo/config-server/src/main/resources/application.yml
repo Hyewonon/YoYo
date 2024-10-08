@@ -1,27 +1,20 @@
 spring:
   profiles:
-    active: local
-    include: local
-  application:
-    name: config-server
+    active: vault
   cloud:
     config:
       server:
+        vault:
+          order: 1
+          host: vault
+          port: 8200
+          token: yoyovault
+          authentication: token
+          kv-version: 2
+          backend: secret
+          profile-separator: '/'
+          scheme: http
         git:
           uri: ${git.config.repository}
-#          ignore-local-ssh-settings: true
-#          private-key: ${git.private}
           username: ${git.username}
           password: ${git.password}
-#    vault:
-#      token: hvs.p6BgpQZCPs8vQmywkXHf0O4n
-#      scheme: http
-#      host: localhost
-#      port: 8200
-
-server:
-  port: 8888
-#  1. application.yaml
-#  2. application.yaml
-#  3. application-{profile}.yaml
-#  4. {application name}/{application name}-{profile}

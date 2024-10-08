@@ -21,65 +21,9 @@ import java.util.Set;
 public class DataInitializer implements CommandLineRunner {
     private final AccountRepository accountRepository;
     private final BankRepository bankRepository;
-    private final AesService aesService;
-
-    public List<Account> generateDummyAccounts() {
-        List<Account> accounts = new ArrayList<>();
-        String hashedPin = BCrypt.hashpw("111111", BCrypt.gensalt());
-
-        Account account1 = Account.builder()
-                .memberId(1L)
-                .accountNumber(aesService.encrypt("9991952997044858"))
-                .bankCode("011")
-                .balance(0L)
-                .pin(hashedPin)
-                .userKey("ca38f7e9-c736-44cf-96aa-c152d040d50a")
-                .build();
-
-        Account account2 = Account.builder()
-                .memberId(2L)
-                .accountNumber(aesService.encrypt("9996441146967187"))
-                .bankCode("004")
-                .balance(0L)
-                .pin(hashedPin)
-                .userKey("cb1619b1-daf2-43e3-9e44-ed64f9ef212b")
-                .build();
-        Account account3 = Account.builder()
-                .memberId(3L)
-                .accountNumber(aesService.encrypt("9990010761414577"))
-                .bankCode("003")
-                .balance(0L)
-                .pin(hashedPin)
-                .userKey("0b2cd3ff-a284-4459-b399-c0abc0ff349c")
-                .build();
-        Account account4 = Account.builder()
-                .memberId(4L)
-                .accountNumber(aesService.encrypt("9997693456333174"))
-                .bankCode("999")
-                .balance(0L)
-                .pin(hashedPin)
-                .userKey("3ebc5f5e-3a92-4802-9d4b-30574aac23c5")
-                .build();
-        Account account5 = Account.builder()
-                .memberId(5L)
-                .accountNumber(aesService.encrypt("9992403965057438"))
-                .bankCode("999")
-                .balance(0L)
-                .pin(hashedPin)
-                .userKey("b272b182-e7a1-4956-80d6-1093371e550c")
-                .build();
-        accounts.add(account1);
-        accounts.add(account2);
-        accounts.add(account3);
-        accounts.add(account4);
-        accounts.add(account5);
-
-        return accounts;
-    }
 
     public void generateBanking() {
         Set<Bank> banks = new HashSet<>();
-
         banks.add(Bank.builder().bankCode("001").bankName("한국은행").build());
         banks.add(Bank.builder().bankCode("002").bankName("산업은행").build());
         banks.add(Bank.builder().bankCode("003").bankName("IBK기업은행").build());
@@ -106,10 +50,6 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (bankRepository.count() == 0) {
             generateBanking();
-        }
-        if (accountRepository.count() == 0) {
-            List<Account> dummyAccounts = generateDummyAccounts();
-            accountRepository.saveAll(dummyAccounts);
         }
     }
 }
