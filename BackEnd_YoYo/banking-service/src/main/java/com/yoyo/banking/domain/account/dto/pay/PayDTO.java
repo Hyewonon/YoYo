@@ -24,11 +24,11 @@ public class PayDTO {
         @Nullable
         private String name;
 
-        public static PayTransaction toEntity(PayDTO.Request request, Long accountId, String name, PayType payType) {
+        public static PayTransaction toEntity(Long amount, Long accountId, String name, PayType payType) {
             return PayTransaction.builder()
                                  .accountId(accountId)
                                  .payType(payType)
-                                 .payAmount(request.getPayAmount())
+                                 .payAmount(amount)
                                  .createdAt(LocalDateTime.now())
                                  .name(name)
                                  .build();

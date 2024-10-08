@@ -3,13 +3,12 @@ package com.yoyo.event.global.config;
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.AmountRequestDTO;
+import com.yoyo.common.kafka.dto.EventResponseDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.NotificationCreateDTO;
-
+import com.yoyo.common.kafka.dto.ReceiverRequestDTO;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.yoyo.common.kafka.dto.ReceiverRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RoundRobinPartitioner;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -24,6 +23,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 @Configuration
 @Slf4j
 public class ProducerConfig {
+
     @Value("${spring.kafka.producer.bootstrap-servers}")
     private String bootstrapServers;
 
@@ -31,13 +31,18 @@ public class ProducerConfig {
     public ProducerFactory<String, KafkaJson> factory() {
         Map<String, Object> config = new HashMap<>();
         config.put(org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        config.put(org.apache.kafka.clients.producer.ProducerConfig.PARTITIONER_CLASS_CONFIG, RoundRobinPartitioner.class.getName());
-        config.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        config.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        config.put(org.apache.kafka.clients.producer.ProducerConfig.PARTITIONER_CLASS_CONFIG,
+                   RoundRobinPartitioner.class.getName());
+        config.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                   StringSerializer.class);
+        config.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+                   JsonSerializer.class);
         config.put(JsonSerializer.TYPE_MAPPINGS, KafkaUtils.getJsonTypeMappingInfo(AmountRequestDTO.class,
-                MemberRequestDTO.class,
-                NotificationCreateDTO.class,
-                ReceiverRequestDTO.class));
+                                                                                   MemberRequestDTO.class,
+                                                                                   NotificationCreateDTO.class,
+                                                                                   ReceiverRequestDTO.class,
+                                                                                   EventResponseDTO.class
+        ));
         return new DefaultKafkaProducerFactory<>(config);
     }
 

@@ -16,9 +16,6 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Configuration
 @EnableKafka
 public class ConsumerConfig {
@@ -47,8 +44,7 @@ public class ConsumerConfig {
                 .getJsonTypeMappingInfo(IncreaseAmountDTO.class,
                                         TransactionDTO.class,
                                         MemberRequestDTO.class,
-                                        PayInfoDTO.RequestToMember.class,
-                                        PayInfoDTO.RequestToTransaction.class,
+                                        PayInfoRequestToTransactionDTO.class,
                                         MemberTagDTO.class,
                                         TransactionSelfRelationDTO.RequestToMember.class,
                                         PaymentDTO.class,
@@ -57,7 +53,8 @@ public class ConsumerConfig {
                                         TransactionDTO.MatchRelation.class,
                                         UpdateRelationDTO.Request.class,
                                         PushTokenDTO.class,
-                                        OcrRegister.OcrList.class
+                                        OcrRegister.OcrList.class,
+                                        PayInfoRequestToMemberDTO.class
                 ));
 
         return props;

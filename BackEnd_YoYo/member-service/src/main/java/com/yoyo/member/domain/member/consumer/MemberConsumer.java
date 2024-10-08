@@ -2,7 +2,7 @@ package com.yoyo.member.domain.member.consumer;
 
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
-import com.yoyo.common.kafka.dto.PayInfoDTO;
+import com.yoyo.common.kafka.dto.PayInfoRequestToTransactionDTO;
 import com.yoyo.common.kafka.dto.PushTokenDTO;
 import com.yoyo.member.domain.member.producer.MemberProducer;
 import com.yoyo.member.domain.member.service.MemberService;
@@ -45,7 +45,7 @@ public class MemberConsumer {
      * @param : reqeust 페이 송금 거래내역 저장 정보
      * */
     @KafkaListener(topics = UPDATE_TRANSACTION_MEMBER_TOPIC, groupId = GROUP_ID)
-    public void getMemberNameForPay(PayInfoDTO.RequestToTransaction request) {
+    public void getMemberNameForPay(PayInfoRequestToTransactionDTO request) {
         Member sender = memberService.findMemberById(request.getSenderId());
         request.setSenderName(sender.getName()); // 발신자 이름 저장
         // 거래내역 저장 요청

@@ -2,6 +2,7 @@ package com.yoyo.banking.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
+import com.yoyo.common.kafka.dto.EventResponseDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.PaymentDTO;
@@ -46,6 +47,7 @@ public class ConsumerConfig {
                 .getJsonTypeMappingInfo(PaymentDTO.class
                         , MemberResponseDTO.class
                         , MemberRequestDTO.class
+                        , EventResponseDTO.class
                 ));
 
         return props;
