@@ -1,6 +1,6 @@
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import '../App.css'
 const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
 const customerKey = generateRandomString();
@@ -8,7 +8,6 @@ const customerKey = generateRandomString();
 export function Payment() {
 
   const [payment, setPayment] = useState(null);
-  const navigate = useNavigate();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   // 두개 값 보내기 /payment/success
   const [senderName, setSenderName] = useState("");
@@ -20,7 +19,18 @@ export function Payment() {
   function selectPaymentMethod(method) {
     setSelectedPaymentMethod(method);
   }
+  useEffect(() => {
+    const appLink = `yoyo://send-money/${id}`;
+    const fallbackLink = window.location.href;
 
+    // 앱 실행 시도
+    window.location.href = appLink;
+
+    // 앱이 없으면 2초 후 웹 페이지로 결제
+    setTimeout(() => {
+      window.location.href = fallbackLink;
+    }, 2000); // 2초 후 웹 페이지로 리디렉션
+  }, [id]);
   useEffect(() => {
     async function fetchPayment() {
       try {
@@ -112,13 +122,13 @@ export function Payment() {
         <div className="inputContainer">
           <label className="inputLabel">💰 금액을 입력해주세요.</label>
           <input className="infoInput" type="text"
-              value={price}
-              onChange={(e) => {
+            value={price}
+            onChange={(e) => {
               const onlyNumbers = e.target.value.replace(/[^0-9]/g, ""); // 숫자가 아닌 값은 제거
               setPrice(Number(onlyNumbers));
-              }}
-              placeholder="금액을 입력해주세요 (숫자만 입력 가능)"
-      />
+            }}
+            placeholder="금액을 입력해주세요 (숫자만 입력 가능)"
+          />
 
         </div>
         <div className="inputContainer">
@@ -151,14 +161,14 @@ export function Payment() {
         </div>
         <div id="payment-method" style={{ display: "flex", justifyContent: "center", width: "100%" }}>
           <button id="CARD" className={`button2 ${selectedPaymentMethod === "CARD" ? "active" : ""}`} onClick={() => selectPaymentMethod("CARD")}>
-          💳 카드
+            💳 카드
           </button>
           <button id="TRANSFER" className={`button2 ${selectedPaymentMethod === "TRANSFER" ? "active" : ""}`} onClick={() => selectPaymentMethod("TRANSFER")}>
-          🔄 계좌이체
+            🔄 계좌이체
           </button>
         </div>
         <button className="button" onClick={() => requestPayment()}>
-        🛍️ 결제하기
+          🛍️ 결제하기
         </button>
       </div>
     </div>
