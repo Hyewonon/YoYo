@@ -7,10 +7,9 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': {
+      '/confirm': {
         target: 'https://j11a308.p.ssafy.io',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   },
