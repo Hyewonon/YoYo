@@ -1,10 +1,8 @@
 package com.yoyo.member.domain.relation.consumer;
 
-import com.yoyo.common.exception.CustomException;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.TransactionException;
 import com.yoyo.common.kafka.dto.*;
-import com.yoyo.common.kafka.dto.PayInfoDTO.RequestToMember;
 import com.yoyo.member.domain.member.repository.MemberRepository;
 import com.yoyo.member.domain.member.repository.NoMemberRepository;
 import com.yoyo.member.domain.member.service.MemberService;
@@ -48,7 +46,7 @@ public class RelationConsumer {
      * @param : request 페이 송금 정보
      */
     @KafkaListener(topics = UPDATE_RELATION_TOPIC, concurrency = "3")
-    public void updateRelation(RequestToMember request) {
+    public void updateRelation(PayInfoRequestToMemberDTO request) {
         // 1. realtion servie에서 친구 관계 있는지 확인
         if (!relationService.isAlreadyFriend(request.getSenderId(), request.getReceiverId())) {
             // 1.1. 없으면 생성

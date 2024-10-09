@@ -9,7 +9,6 @@ import com.yoyo.transaction.entity.Transaction;
 import com.yoyo.transaction.entity.TransactionType;
 
 import java.util.List;
-import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,17 +56,24 @@ public class TransactionConsumer {
     }
 
     @KafkaListener(topics = UPDATE_TRANSACTION_TOPIC, concurrency = "3")
-    public Transaction createTransactionForPay(PayInfoDTO.RequestToTransaction request) {
-        Optional<Transaction> existingTransaction = transactionRepository.findBySenderIdAndReceiverId(request.getSenderId(), request.getReceiverId());
-        RelationType relationType = existingTransaction.map(Transaction::getRelationType).orElse(RelationType.NONE);
+    public Transaction createTransactionForPay(PayInfoRequestToTransactionDTO request) {
+
+        List<Transaction> existingTransactions = transactionRepository.findBySenderIdAndReceiverId(request.getSenderId(), request.getReceiverId());
+        RelationType relationType = existingTransactions.isEmpty()
+                                    ? RelationType.NONE
+                                    : existingTransactions.get(0).getRelationType(); // 첫 번째 거래의 관계 유형을 가져옴
+
+        String eventName = (request.getTitle().isEmpty()) ? transactionService.getNameFromEvent(request.getEventId()) : request.getTitle();
+
         Transaction transaction = Transaction.builder()
+                .isRegister(true)
                 .senderId(request.getSenderId())
                 .senderName(request.getSenderName())
                 .receiverId(request.getReceiverId())
                 .receiverName(request.getReceiverName())
                 .eventId(request.getEventId())
                 .eventId(request.getEventId())
-                .eventName(request.getTitle())
+                .eventName(eventName)
                 .amount(request.getAmount())
                 .transactionType(TransactionType.AUTO)
                 .relationType(relationType)

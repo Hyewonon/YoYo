@@ -1,9 +1,15 @@
 package com.yoyo.banking.global.util;
 
+import com.yoyo.banking.domain.account.dto.account.AccountCreateDTO;
 import com.yoyo.banking.domain.account.repository.AccountRepository;
 import com.yoyo.banking.domain.account.repository.BankRepository;
+import com.yoyo.banking.domain.account.service.AccountService;
+import com.yoyo.banking.domain.account.service.PayService;
 import com.yoyo.banking.entity.Account;
 import com.yoyo.banking.entity.Bank;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
@@ -22,10 +28,92 @@ public class DataInitializer implements CommandLineRunner {
     private final AccountRepository accountRepository;
     private final BankRepository bankRepository;
     private final AesService aesService;
+    private final PayService payService;
+
+    private final AccountService accountService;
+    private final String hashedPin = BCrypt.hashpw("111111", BCrypt.gensalt());
+    private final Map<Long, String> realAccounts = real_account_생성();
+    private final Set<Bank> banks = new HashSet<>();
+
+    public void user_key_저장() {
+        for (long memberId = 1; memberId <= 35; memberId++) {
+            payService.createUserKey(memberId);
+        }
+    }
+
+    public AccountCreateDTO.Request 계좌_등록_dto_생성(String accountNumber, String bankName) {
+        return AccountCreateDTO.Request.builder()
+                .accountNumber(accountNumber)
+                .bankName(bankName)
+                .isAuthenticated(true)
+                .pin(hashedPin)
+                .build();
+    }
+    public String getRandomBankName() {
+        List<String> validBankNames = new ArrayList<>();
+
+        for (Bank bank : banks) {
+            if (!bank.getBankName().equals("한국은행") && !bank.getBankName().equals("싸피은행")) {
+                validBankNames.add(bank.getBankName());
+            }
+        }
+        Random random = new Random();
+        return validBankNames.get(random.nextInt(validBankNames.size()));
+    }
+    public Map<Long, String> real_account_생성(){
+        Map<Long, String> realAccounts = new HashMap<>();
+        realAccounts.put(1L, "9991952997044858");
+        realAccounts.put(2L, "9996441146967187");
+        realAccounts.put(3L, "9990010761414577");
+        realAccounts.put(4L, "9997693456333174");
+        realAccounts.put(5L, "9992403965057438");
+        realAccounts.put(6L, "9999246626725136");
+        realAccounts.put(7L, "9990390432343079");
+        realAccounts.put(8L, "9995012558804030");
+        realAccounts.put(9L, "9994698608163306");
+        realAccounts.put(10L, "9997767801782078");
+
+        realAccounts.put(11L, "9997672059819310");
+        realAccounts.put(12L, "9998419655837863");
+        realAccounts.put(13L, "9991042926156374");
+        realAccounts.put(14L, "9994354416248418");
+        realAccounts.put(15L, "9995846466474461");
+        realAccounts.put(16L, "9999215592836725");
+        realAccounts.put(17L, "9993137942987204");
+        realAccounts.put(18L, "9997640789664011");
+        realAccounts.put(19L, "9992205685933853");
+        realAccounts.put(20L, "9993168876949485");
+
+        realAccounts.put(21L, "9994915793301083");
+        realAccounts.put(22L, "9992106586730812");
+        realAccounts.put(23L, "9998235141457007");
+        realAccounts.put(24L, "9995940300524328");
+        realAccounts.put(25L, "9997089411604462");
+        realAccounts.put(26L, "9994755783925422");
+        realAccounts.put(27L, "9998084964477128");
+        realAccounts.put(28L, "9992529890584949");
+        realAccounts.put(29L, "9994380823348235");
+        realAccounts.put(30L, "9995477151708315");
+
+        realAccounts.put(31L, "9993125242606461");
+        realAccounts.put(32L, "9996519663212761");
+        realAccounts.put(33L, "9999720309482505");
+        realAccounts.put(34L, "9999861157235959");
+        realAccounts.put(35L, "9993678855931950");
+        return realAccounts;
+    }
+
+    public void dummy_account_생성(){
+        for (long memberId = 1; memberId <=35; memberId++) {
+            String accountNumber = realAccounts.get(memberId);
+            String bankName = getRandomBankName();
+            AccountCreateDTO.Request request = 계좌_등록_dto_생성(accountNumber, bankName);
+            accountService.createAccount(request, memberId);
+        }
+    }
 
     public List<Account> generateDummyAccounts() {
         List<Account> accounts = new ArrayList<>();
-        String hashedPin = BCrypt.hashpw("111111", BCrypt.gensalt());
 
         Account account1 = Account.builder()
                 .memberId(1L)
@@ -76,10 +164,7 @@ public class DataInitializer implements CommandLineRunner {
 
         return accounts;
     }
-
     public void generateBanking() {
-        Set<Bank> banks = new HashSet<>();
-
         banks.add(Bank.builder().bankCode("001").bankName("한국은행").build());
         banks.add(Bank.builder().bankCode("002").bankName("산업은행").build());
         banks.add(Bank.builder().bankCode("003").bankName("IBK기업은행").build());
@@ -108,8 +193,12 @@ public class DataInitializer implements CommandLineRunner {
             generateBanking();
         }
         if (accountRepository.count() == 0) {
-            List<Account> dummyAccounts = generateDummyAccounts();
-            accountRepository.saveAll(dummyAccounts);
+//            List<Account> dummyAccounts = generateDummyAccounts();
+//            accountRepository.saveAll(dummyAccounts);
+
+            // ---------위 코드 주석 처리 후 아래 코드 주석 해제 : 35명 생성-------
+            user_key_저장();
+            dummy_account_생성();
         }
     }
 }

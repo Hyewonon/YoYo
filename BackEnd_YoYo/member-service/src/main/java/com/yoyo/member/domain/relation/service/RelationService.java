@@ -85,8 +85,11 @@ public class RelationService {
         Long updatedAmount;
         if (isSender) {
             updatedAmount = relation.getTotalSentAmount() + amount;
-        } else updatedAmount = relation.getTotalReceivedAmount() + amount;
-        relation.setTotalSentAmount(updatedAmount);
+            relation.setTotalSentAmount(updatedAmount);
+        } else {
+            updatedAmount = relation.getTotalReceivedAmount() + amount;
+            relation.setTotalReceivedAmount(updatedAmount);
+        }
         relationRepository.save(relation);
     }
 

@@ -32,6 +32,6 @@ public class PayConsumer {
 
     @KafkaListener(topics = USER_KEY_TO_BANKING_TOPIC, concurrency = "3")
     public void createUserKey(MemberRequestDTO request) {
-        payService.createUserKey(request);
+        payService.createUserKey(request.getMemberId());
     }
 }
