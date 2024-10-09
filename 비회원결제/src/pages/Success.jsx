@@ -26,7 +26,7 @@ export function Success() {
         memo: memo
       };
 
-      const response = await fetch("https://j11a308.p.ssafy.io/confirm/payment", {
+      const response = await fetch("/confirm/payment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
