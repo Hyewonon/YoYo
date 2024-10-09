@@ -19,19 +19,9 @@ export function Payment() {
   function selectPaymentMethod(method) {
     setSelectedPaymentMethod(method);
   }
-    const appLink = `yoyo://send-money/${id}`;
-  // useEffect(() => {
-  //   const appLink = `yoyo://send-money/${id}`;
-  //   const fallbackLink = window.location.href;
+  const appLink = `yoyo://send-money/${id}`;
 
-  //   // 앱 실행 시도
-  //   window.location.href = appLink;
 
-  //   // 앱이 없으면 2초 후 웹 페이지로 결제
-  //   setTimeout(() => {
-  //     window.location.href = fallbackLink;
-  //   }, 2000); // 2초 후 웹 페이지로 리디렉션
-  // }, [id]);
   useEffect(() => {
     async function fetchPayment() {
       try {
@@ -107,8 +97,8 @@ export function Payment() {
   }
 
   return (
-    <div className="wrapper">
-     <button onClick={() => window.location.href = appLink}>앱으로 열기</button>
+    <div className="wrapper relative">
+      <button onClick={() => window.location.href = appLink}>앱으로 열기</button>
       <div className="box_section">
         <h1>💌 마음 전하기</h1>
         <div className="inputContainer">

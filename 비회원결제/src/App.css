@@ -640,3 +640,6 @@ textarea {
     align-items: flex-start; /* 'start' 대신 'flex-start' 사용 권장 */
     gap: 12px;
 }
+.relative {
+    position: relative;
+}
