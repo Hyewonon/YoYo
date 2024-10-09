@@ -70,9 +70,9 @@ public class MemberController {
      * **/
     @PostMapping("/fcm-token")
     @Operation(summary = "FCM Token 저장", description = "FCM Token을 저장한다")
-    public ResponseEntity<?> saveFcmToken(@RequestHeader("memberId") Long memberId,
+    public ResponseEntity<?> saveFcmToken(@RequestHeader("memberId") String memberId,
             @RequestBody @Parameter(description = "FCM 토큰") String fcmToken) {
-        memberService.saveFcmToken(memberId, fcmToken);
+        memberService.saveFcmToken(Long.parseLong(memberId), fcmToken);
         ApiResponse<Member> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "FCM Token 저장",
@@ -85,8 +85,8 @@ public class MemberController {
      * **/
     @DeleteMapping("/fcm-token")
     @Operation(summary = "FCM Token 삭제", description = "FCM Token을 삭제한다")
-    public ResponseEntity<?> deleteFcmToken(@RequestHeader("memberId") Long memberId){
-        memberService.deleteFcmToken(memberId);
+    public ResponseEntity<?> deleteFcmToken(@RequestHeader("memberId") String memberId){
+        memberService.deleteFcmToken(Long.parseLong(memberId));
         ApiResponse<Member> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "FCM Token 삭제",
