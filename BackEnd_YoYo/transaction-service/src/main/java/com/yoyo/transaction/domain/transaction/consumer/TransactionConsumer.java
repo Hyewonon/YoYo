@@ -66,6 +66,7 @@ public class TransactionConsumer {
         String eventName = (request.getTitle().isEmpty()) ? transactionService.getNameFromEvent(request.getEventId()) : request.getTitle();
 
         Transaction transaction = Transaction.builder()
+                .isRegister(true)
                 .senderId(request.getSenderId())
                 .senderName(request.getSenderName())
                 .receiverId(request.getReceiverId())
