@@ -22,17 +22,19 @@ public class TransactionSelfRelationDTO {
         private Long amount;
         private String transactionType;
         private String relationType;
+        private String description;
 
         public static RequestToMember of(Long memberId, Long oppositeId, String oppositeName, Long amount,
-                                         String transactionType, String relationType) {
-            return TransactionSelfRelationDTO.RequestToMember.builder()
-                                                             .memberId(memberId)
-                                                             .oppositeId(oppositeId)
-                                                             .oppositeName(oppositeName)
-                                                             .amount(amount)
-                                                             .transactionType(transactionType)
-                                                             .relationType(relationType)
-                                                             .build();
+                                         String transactionType, String relationType, String description) {
+            return RequestToMember.builder()
+                                  .memberId(memberId)
+                                  .oppositeId(oppositeId)
+                                  .oppositeName(oppositeName)
+                                  .amount(amount)
+                                  .transactionType(transactionType)
+                                  .relationType(relationType)
+                                  .description(description)
+                                  .build();
         }
     }
 
