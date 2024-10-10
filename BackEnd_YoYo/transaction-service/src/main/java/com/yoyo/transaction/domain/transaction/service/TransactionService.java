@@ -5,6 +5,7 @@ import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.TransactionException;
 import com.yoyo.common.kafka.dto.*;
 import com.yoyo.common.kafka.dto.TransactionSelfRelationDTO.ResponseFromMember;
+import com.yoyo.common.kafka.dto.UpdateRelationDTO;
 import com.yoyo.transaction.domain.ocr.dto.OcrConfirmDTO;
 import com.yoyo.transaction.domain.transaction.dto.FindTransactionDTO;
 import com.yoyo.transaction.domain.transaction.dto.TransactionCreateDTO;
@@ -15,7 +16,6 @@ import com.yoyo.transaction.entity.RelationType;
 import com.yoyo.transaction.entity.Transaction;
 import com.yoyo.transaction.entity.TransactionType;
 import jakarta.transaction.Transactional;
-
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class TransactionService {
+
     private final TransactionRepository transactionRepository;
     private final TransactionProducer transactionProducer;
     private final Map<Long, CompletableFuture<ResponseFromMember>> summaries = new ConcurrentHashMap<>();
@@ -51,22 +52,22 @@ public class TransactionService {
         Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_TRANSACTION));
         UpdateRelationDTO.Request updateRequest = UpdateRelationDTO.Request.builder()
-                .memberId(memberId)
-                .relationId(request.getRelationId())
-                .oppositeId(request.getOppositeId())
-                .name(request.getName())
-                .relationType(
-                        request.getRelationType().toString())
-                .amount(request.getAmount())
-                .build();
+                                                                           .memberId(memberId)
+                                                                           .relationId(request.getRelationId())
+                                                                           .oppositeId(request.getOppositeId())
+                                                                           .name(request.getName())
+                                                                           .relationType(
+                                                                                   request.getRelationType().toString())
+                                                                           .amount(request.getAmount())
+                                                                           .build();
         transactionProducer.sendRelationUpdate(updateRequest);
         transaction.setSenderName(request.getName());
         transaction.setRelationType(request.getRelationType());
         transaction.setIsRegister(true);
         Transaction newTransaction = transactionRepository.save(transaction);
         return new UpdateTransactionDTO.Response(newTransaction.getTransactionId(), newTransaction.getEventName(),
-                newTransaction.getUpdatedAt(), newTransaction.getMemo(),
-                newTransaction.getAmount());
+                                                 newTransaction.getUpdatedAt(), newTransaction.getMemo(),
+                                                 newTransaction.getAmount());
     }
 
     /**
@@ -96,13 +97,13 @@ public class TransactionService {
 
         for (OcrConfirmDTO dto : requestOCR) {
             OcrRegister register = OcrRegister.builder()
-                    .memberId(memberId)
-                    .oppositeId(dto.getMemberId())
-                    .amount(dto.getAmount())
-                    .oppositeName(dto.getName())
-                    .description(dto.getDescription())
-                    .relationType(dto.getRelationType())
-                    .build();
+                                              .memberId(memberId)
+                                              .oppositeId(dto.getMemberId())
+                                              .amount(dto.getAmount())
+                                              .oppositeName(dto.getName())
+                                              .description(dto.getDescription())
+                                              .relationType(dto.getRelationType())
+                                              .build();
             ocrRegisterList.add(register);
         }
 
@@ -116,16 +117,17 @@ public class TransactionService {
             OcrRegister.OcrList ocrListFromKafka = future.get(10, TimeUnit.SECONDS);
             for (OcrRegister register : ocrListFromKafka.getOcrList()) {
                 Transaction transaction = Transaction.builder()
-                        .receiverId(memberId)
-                        .senderId(register.getOppositeId())
-                        .senderName(register.getOppositeName())
-                        .amount(register.getAmount())
-                        .eventId(eventId)
-                        .eventName(eventName)
-                        .relationType(RelationType.valueOf(register.getRelationType().toUpperCase()))
-                        .isRegister(true)
-                        .transactionType(TransactionType.RECEIVE)
-                        .build();
+                                                     .receiverId(memberId)
+                                                     .senderId(register.getOppositeId())
+                                                     .senderName(register.getOppositeName())
+                                                     .amount(register.getAmount())
+                                                     .eventId(eventId)
+                                                     .eventName(eventName)
+                                                     .relationType(RelationType.valueOf(
+                                                             register.getRelationType().toUpperCase()))
+                                                     .isRegister(true)
+                                                     .transactionType(TransactionType.RECEIVE)
+                                                     .build();
                 transactionRepository.save(transaction);
             }
         } catch (Exception e) {
@@ -176,7 +178,8 @@ public class TransactionService {
 
         TransactionSelfRelationDTO.RequestToMember requestToMember = TransactionSelfRelationDTO.RequestToMember.of(
                 memberId, request.getMemberId(), request.getName(), request.getAmount(),
-                String.valueOf(request.getTransactionType()), String.valueOf(request.getRelationType()));
+                String.valueOf(request.getTransactionType()), String.valueOf(request.getRelationType()),
+                request.getDescription());
 
         // 1. 직접등록 친구관계 수정 요청 (+ 등록되지 않은 회원은 회원 등록)
         transactionProducer.sendSelfTransactionRelation(requestToMember);
@@ -227,18 +230,18 @@ public class TransactionService {
 
     private Transaction toTransactionEntity(Map<String, Object[]> infoMap, TransactionCreateDTO.Request request) {
         return Transaction.builder()
-                .senderId((Long) infoMap.get("sender")[0])
-                .senderName((String) infoMap.get("sender")[1])
-                .receiverId((Long) infoMap.get("receiver")[0])
-                .receiverName((String) infoMap.get("receiver")[1])
-                .eventId(request.getEventId())
-                .eventName(request.getEventName())
-                .isRegister(true)
-                .amount(request.getAmount())
-                .memo(request.getMemo())
-                .transactionType(TransactionType.valueOf(request.getTransactionType()))
-                .relationType(RelationType.valueOf(request.getRelationType()))
-                .build();
+                          .senderId((Long) infoMap.get("sender")[0])
+                          .senderName((String) infoMap.get("sender")[1])
+                          .receiverId((Long) infoMap.get("receiver")[0])
+                          .receiverName((String) infoMap.get("receiver")[1])
+                          .eventId(request.getEventId())
+                          .eventName(request.getEventName())
+                          .isRegister(true)
+                          .amount(request.getAmount())
+                          .memo(request.getMemo())
+                          .transactionType(TransactionType.valueOf(request.getTransactionType()))
+                          .relationType(RelationType.valueOf(request.getRelationType()))
+                          .build();
     }
 
     public void completeMemberCheck(ResponseFromMember response) {

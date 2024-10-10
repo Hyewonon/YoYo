@@ -48,7 +48,7 @@ public class RelationConsumer {
         // 1. realtion servie에서 친구 관계 있는지 확인
         if (!relationService.isAlreadyFriend(request.getSenderId(), request.getReceiverId())) {
             // 1.1. 없으면 생성
-            relationService.createRelation(request.getSenderId(), request.getReceiverId(), RelationType.NONE, true);
+            relationService.createRelation(request.getSenderId(), request.getReceiverId(), RelationType.NONE, true, "");
         }
         // 2 친구 관계 보낸 총금액, 받은 총금액 수정
         relationService.updateRelationAmount(request.getSenderId(), request.getReceiverId(), request.getAmount(), true);
@@ -105,7 +105,7 @@ public class RelationConsumer {
         if (!relationService.isAlreadyFriend(request.getMemberId(), request.getOppositeId())) {
             // 1.1. 없으면 생성
             relationService.createRelation(request.getMemberId(), request.getOppositeId(),
-                    RelationType.valueOf(request.getRelationType()), false);
+                    RelationType.valueOf(request.getRelationType()), false, request.getDescription());
         }
         // 2 친구 관계 보낸 총금액, 받은 총금액 수정
         // 보낸사람이 등록하면 보낸사람 친구관계만 수정

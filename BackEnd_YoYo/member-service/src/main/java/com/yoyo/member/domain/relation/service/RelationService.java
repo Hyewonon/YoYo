@@ -36,22 +36,22 @@ public class RelationService {
     private final RelationProducer relationProducer;
 
     /**
-     * 페이 송금 친구 관계 저장
+     * 페이 송금 / 직접 등록 친구 관계 저장
      *
      * @param memberId1 회원
      * @param memberId2 회원 혹은 비회원
      * @param isMember  memberId2가 회원인지 비회원인지
      */
-    public void createRelation(Long memberId1, Long memberId2, RelationType relationType, Boolean isMember) {
+    public void createRelation(Long memberId1, Long memberId2, RelationType relationType, Boolean isMember, String description) {
         Member member = memberService.findMemberById(memberId1);
         String member2Name = memberService.findBaseMemberNameById(memberId2);
-        relationRepository.save(toNewEntityForPay(member, memberId2, member2Name, relationType, isMember));
+        relationRepository.save(toNewEntityForPay(member, memberId2, member2Name, relationType, isMember, description));
 
         if (isMember) {
             // 둘다 회원이라면 양방향으로 저장
             member = memberService.findMemberById(memberId2);
             String member1Name = memberService.findBaseMemberNameById(memberId1);
-            relationRepository.save(toNewEntityForPay(member, memberId1, member1Name, relationType, true));
+            relationRepository.save(toNewEntityForPay(member, memberId1, member1Name, relationType, true, description));
         }
     }
 
@@ -146,13 +146,13 @@ public class RelationService {
         return RelationResponseDTO.of(memberId, oppositeIds);
     }
 
-    private Relation toNewEntityForPay(Member member, Long oppositeId, String oppositeName, RelationType relationType, Boolean isMember) {
+    private Relation toNewEntityForPay(Member member, Long oppositeId, String oppositeName, RelationType relationType, Boolean isMember, String description) {
         return Relation.builder()
                 .member(member)
                 .oppositeId(oppositeId)
                 .oppositeName(oppositeName)
                 .relationType(relationType)
-                .description("")
+                .description(description)
                 .totalReceivedAmount(0L)
                 .totalSentAmount(0L)
                 .isMember(isMember)
