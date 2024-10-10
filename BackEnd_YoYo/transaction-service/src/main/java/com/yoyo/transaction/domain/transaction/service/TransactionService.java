@@ -254,6 +254,7 @@ public class TransactionService {
         String validatedSearch = (search == null || search.trim().isEmpty()) ? null : search;
         String validatedRelationType = (relationType == null || relationType.trim().isEmpty()) ? null : relationType;
         List<Transaction> transactions = transactionRepository.findByEventIdAndReceiverId(eventId, memberId);
+        Collections.reverse(transactions);
         return transactions.stream().filter(transaction -> validatedSearch == null || transaction.getSenderName().contains(validatedSearch))
                 .filter(transaction -> validatedRelationType == null || transaction.getRelationType().toString().equals(validatedRelationType)).filter(transaction -> transaction.getIsRegister().equals(isRegister)).map(transaction -> FindTransactionDTO.Response.builder()
                         .transactionId(transaction.getTransactionId())

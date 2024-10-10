@@ -28,7 +28,7 @@ public class NoMemberConsumer {
     @KafkaListener(topics = CREATE_NO_MEMBER_TOPIC, groupId = GROUP_ID)
     public void registerNoMember(PaymentDTO request) {
         NoMember noMember = noMemberService.registerNoMember(request.getSenderName());
-        String name = relationService.createPaymentRelation(noMember, request.getReceiverId(), request.getAmount(), request.getDescription());
+        String name = relationService.createPaymentRelation(noMember, request.getReceiverId(), request.getDescription());
         request.setSenderId(noMember.getMemberId());
         request.setReceiverName(name);
         producer.sendPayByNoMember(request);

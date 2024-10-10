@@ -17,10 +17,8 @@ import com.yoyo.member.entity.Relation;
 import com.yoyo.member.entity.RelationType;
 import jakarta.transaction.Transactional;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.Collator;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -60,9 +58,9 @@ public class RelationService {
     /**
      * 비회원 결제 친구 관계 저장
      */
-    public String createPaymentRelation(NoMember noMember, Long memberId, Long amount, String description) {
+    public String createPaymentRelation(NoMember noMember, Long memberId, String description) {
         Member member = memberService.findMemberById(memberId);
-        relationRepository.save(toNewEntityForPayment(member, noMember.getMemberId(), amount, description, noMember.getName()));
+        relationRepository.save(toNewEntityForPayment(member, noMember.getMemberId(), description, noMember.getName()));
         return member.getName();
     }
 
@@ -119,6 +117,7 @@ public class RelationService {
                 .filter(relation -> validatedTag == null || relation.getRelationType().toString().equals(validatedTag))
                 .filter(relation -> validatedSearch == null ||
                         (relation.getOppositeName() != null && relation.getOppositeName().contains(validatedSearch)))
+                .sorted(Comparator.comparing(Relation::getOppositeName, Collator.getInstance()))
                 .map(relation -> FindRelationDTO.Response.builder()
                         .relationId(relation.getRelationId())
                         .oppositeId(relation.getOppositeId())
@@ -160,14 +159,23 @@ public class RelationService {
                 .build();
     }
 
-    private Relation toNewEntityForPayment(Member member, Long noMemberId, Long amount, String description, String name) {
+    private Relation toNewEntityForPayment(Member member, Long noMemberId, String description, String name) {
+        RelationType relationType;
+        if (description.contains("친구")) {
+            relationType = RelationType.FRIEND;
+        } else if (description.contains("직장") || description.contains("회사") || description.contains("상사")) {
+            relationType = RelationType.COMPANY;
+        } else if (description.contains("친척") || description.contains("가족") || description.contains("사촌")) {
+            relationType = RelationType.FAMILY;
+        } else {
+            relationType = RelationType.ETC;
+        }
         return Relation.builder()
                 .member(member)
                 .oppositeId(noMemberId)
                 .oppositeName(name)
-                .relationType(RelationType.NONE)
+                .relationType(relationType)
                 .description(description)
-                .totalReceivedAmount(amount)
                 .totalSentAmount(0L)
                 .isMember(false)
                 .build();
