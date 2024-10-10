@@ -1,14 +1,21 @@
-version: '3.8'
-
 services:
+  vault:
+    image: vault:1.13.1
+    container_name: vault
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: yoyovault
+    restart: always
+    cap_add:
+      - IPC_LOCK
   # MySQL Database
   # member-db
   member-db:
     image: mysql:8.0
     container_name: member-db
-    networks:
-      - yoyo_network
     volumes:
+      - ./db/member-db/conf.d:/etc/mysql/conf.d
       - ./db/member-db/data:/var/lib/mysql
       - ./db/member-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
@@ -18,14 +25,13 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=member-db
+      - MYSQL_DATABASE=member_db
   # banking-db
   banking-db:
     image: mysql:8.0
     container_name: banking-db
-    networks:
-      - yoyo_network
     volumes:
+      - ./db/banking-db/conf.d:/etc/mysql/conf.d
       - ./db/banking-db/data:/var/lib/mysql
       - ./db/banking-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
@@ -35,14 +41,13 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=banking-db
+      - MYSQL_DATABASE=banking_db
   # transaction-db
   transaction-db:
     image: mysql:8.0
     container_name: transaction-db
-    networks:
-      - yoyo_network
     volumes:
+      - ./db/transaction-db/conf.d:/etc/mysql/conf.d
       - ./db/transaction-db/data:/var/lib/mysql
       - ./db/transaction-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
@@ -52,14 +57,13 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=transaction-db
+      - MYSQL_DATABASE=transaction_db
   # notification-db
   notification-db:
     image: mysql:8.0
     container_name: notification-db
-    networks:
-      - yoyo_network
     volumes:
+      - ./db/notification-db/conf.d:/etc/mysql/conf.d
       - ./db/notification-db/data:/var/lib/mysql
       - ./db/notification-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
@@ -69,14 +73,13 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=notification-db
+      - MYSQL_DATABASE=notification_db
   # event-db
   event-db:
     image: mysql:8.0
     container_name: event-db
-    networks:
-      - yoyo_network
     volumes:
+      - ./db/event-db/conf.d:/etc/mysql/conf.d
       - ./db/event-db/data:/var/lib/mysql
       - ./db/event-db/initdb.d:/docker-entrypoint-initdb.d
     ports:
@@ -86,12 +89,10 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
       - MYSQL_USER=ssafy
       - MYSQL_PASSWORD=ssafy
-      - MYSQL_DATABASE=event-db
+      - MYSQL_DATABASE=event_db
 
   redis:
     image: redis:alpine
-    networks:
-      - yoyo_network
     restart: always
     ports:
       - "6379:6379"
@@ -102,12 +103,17 @@ services:
     container_name: config-server
     build:
       context: ./config-server
+    depends_on:
+      - vault
     ports:
       - "8888:8888"
-    networks:
-      - yoyo_network
     environment:
       - SPRING_PROFILES_ACTIVE=default
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # Eureka Server
   eureka:
@@ -117,8 +123,6 @@ services:
       context: ./eureka
     ports:
       - "8761:8761"
-    networks:
-      - yoyo_network
     environment:
       - SPRING_APPLICATION_NAME=eureka-server
       - SERVER_PORT=8761
@@ -132,12 +136,11 @@ services:
     container_name: member-service
     build:
       context: ./member-service
-    networks:
-      - yoyo_network
     ports:
       - "8081:8081"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
 
   # Banking Service
@@ -146,13 +149,13 @@ services:
     container_name: banking-service
     build:
       context: ./banking-service
-    networks:
-      - yoyo_network
     ports:
       - "8082:8082"
     depends_on:
-      - eureka
-
+      config-server:
+        condition: service_healthy
+    environment:
+      - TZ=Asia/Seoul
 
   # Transaction Service
   transaction-service:
@@ -160,13 +163,11 @@ services:
     container_name: transaction-service
     build:
       context: ./transaction-service
-    networks:
-      - yoyo_network
     ports:
       - "8083:8083"
     depends_on:
-      - eureka
-
+      config-server:
+        condition: service_healthy
 
   # Notification Service
   notification-service:
@@ -174,12 +175,11 @@ services:
     container_name: notification-service
     build:
       context: ./notification-service
-    networks:
-      - yoyo_network
     ports:
       - "8084:8084"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
 
   # Payment Service
@@ -188,12 +188,11 @@ services:
     container_name: payment-service
     build:
       context: ./payment-service
-    networks:
-      - yoyo_network
     ports:
       - "8085:8085"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
 
   # Event Service
@@ -202,26 +201,24 @@ services:
     container_name: event-service
     build:
       context: ./event-service
-    networks:
-      - yoyo_network
     ports:
       - "8086:8086"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
 
   # Spring Cloud Gateway
   scg:
     image: scg:1.0.0
+    ports:
+      - "8000:8000"
     container_name: spring-cloud-gateway
     build:
       context: ./scg
-    networks:
-      - yoyo_network
-    ports:
-      - "8000:8000"
     depends_on:
-      - eureka
+      config-server:
+        condition: service_healthy
 
   yoyo-kafka1:
     container_name: yoyo-kafka1
@@ -249,8 +246,6 @@ services:
       - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
       - KAFKA_CFG_MIN_INSYNC_REPLICAS=2
       - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
-    networks:
-      - yoyo_network
 
   yoyo-kafka2:
     container_name: yoyo-kafka2
@@ -278,8 +273,6 @@ services:
       - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
       - KAFKA_CFG_MIN_INSYNC_REPLICAS=2
       - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
-    networks:
-      - yoyo_network
 
   yoyo-kafka3:
     container_name: yoyo-kafka3
@@ -307,9 +300,37 @@ services:
       - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
       - KAFKA_CFG_MIN_INSYNC_REPLICAS=2
       - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
-    networks:
-      - yoyo_network
 
-networks:
-  yoyo_network:
-    driver: bridge
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - app_home:/usr/share/nginx/html
+    depends_on:
+      frontend-builder:
+        condition: service_completed_successfully
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  frontend-builder:
+    image: node
+    volumes:
+      - ../비회원결제:/opt/app
+      - app_home:/opt/app/dist
+    working_dir: /opt/app
+    command: sh -c "npm i && npm run build"
+volumes:
+  app_home:

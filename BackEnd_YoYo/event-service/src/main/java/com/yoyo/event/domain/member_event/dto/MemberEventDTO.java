@@ -38,7 +38,7 @@ public class MemberEventDTO {
 
         public static MemberEventDTO.Response of(MemberEvent memberEvent) {
             return Response.builder()
-                           .memberId(memberEvent.getMemberId())
+                           .memberId(memberEvent.getEvent().getMemberId())
                            .name(memberEvent.getEvent().getName())
                            .eventId(memberEvent.getEvent().getId())
                            .title(memberEvent.getEvent().getTitle())

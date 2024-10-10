@@ -18,7 +18,7 @@ public class EventDTO {
         private LocalDateTime startAt;
         private LocalDateTime endAt;
 
-        public static Event toEntity(EventDTO.Request request, Long memberId, String name, String sendLink) {
+        public static Event toEntity(EventDTO.Request request, Long memberId, String name) {
             return Event.builder()
                         .memberId(memberId)
                         .name(name)
@@ -27,7 +27,7 @@ public class EventDTO {
                         .location(request.getLocation())
                         .startAt(request.getStartAt())
                         .endAt(request.getEndAt())
-                        .sendLink(sendLink).build();
+                        .build();
         }
     }
 

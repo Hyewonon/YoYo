@@ -47,6 +47,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     // firebase
     implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
+    implementation 'org.springframework.kafka:spring-kafka'
 }
 
 test {

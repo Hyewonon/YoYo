@@ -1,0 +1,17 @@
+server:
+  port:
+    8888
+spring:
+  application:
+    name: config-server
+  cloud:
+    vault:
+      host: vault
+      port: 8200
+      uri: http://vault:8200
+      token: yoyovault
+      authentication: token
+      kv:
+        backend: secret
+        application-name: config-server
+        profiles: dev

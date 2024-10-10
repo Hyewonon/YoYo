@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,17 +27,13 @@ public class DummyAccountController {
     private final SsafyBankService ssafyBankService;
     private final DummyAccountService dummyAccountService;
 
-    //임시 멤버
-    private Long memberId = 999999999L;
-
     /**
-     *  TODO : [ssafy 금융 API] 더미 계좌를 생성함.
+     *  [ssafy 금융 API] 더미 계좌를 생성함.
      * */
     @PostMapping("/dummy-account")
     @Operation(summary = "더미 계좌 생성", description = "Ssafy 서버에 더미 계좌를 생성한다.")
-    ResponseEntity<?> createDummyAccount() {
-        Long currentMemberId = memberId;
-        return ssafyBankService.createDummyAccount(currentMemberId);
+    ResponseEntity<?> createDummyAccount(@RequestHeader("memberId") Long memberId) {
+        return ssafyBankService.createDummyAccount(memberId);
     }
 
     /**
@@ -44,10 +41,10 @@ public class DummyAccountController {
      * */
     @GetMapping("/dummy-transaction")
     @Operation(summary = "더미 계좌 거래 내역 조회", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
-    ResponseEntity<?> getDummyAccountTransaction(@RequestBody @Valid AccountAuthDTO.Request request){
-        Long currentMemberId = memberId;
+    ResponseEntity<?> getDummyAccountTransaction(@RequestHeader("memberId") Long memberId,
+                                                 @RequestBody @Valid AccountAuthDTO.Request request){
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        return ssafyBankService.getDummyAccountTransaction(request, currentMemberId, today);
+        return ssafyBankService.getDummyAccountTransaction(request, memberId, today);
     }
 
     /**
@@ -55,9 +52,9 @@ public class DummyAccountController {
      * */
     @PostMapping("/deposit")
     @Operation(summary = "계좌 돈 입금", description = "ssafy 서버에 있는 더미 계좌에 돈을 입금한다.")
-    ResponseEntity<?> depositDummyAccount(@RequestBody DummyAccountDTO.Request request){
-        Long currentMemberId = memberId;
-        return ssafyBankService.updateDemandDeposit(currentMemberId, request.getAmount(), true);
+    ResponseEntity<?> depositDummyAccount(@RequestHeader("memberId") Long memberId,
+                                          @RequestBody DummyAccountDTO.Request request){
+        return ssafyBankService.updateDemandDeposit(memberId, request.getAmount(), true);
     }
 
     /**
@@ -79,4 +76,25 @@ public class DummyAccountController {
 //        log.info("-----------------은행코드 저장--------------------");
         dummyAccountService.은행_데이터_생성();
     }
+
+    /**
+     *  [ssafy 금융 API] user key 생성 및 저장
+     * <p>
+     *  - 회원가입 시 userkey 생성 및 저장
+     * */
+    @PostMapping("/user-key")
+    @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
+    ResponseEntity<?> createUserKey(@RequestHeader("memberId") Long memberId) {
+        return ssafyBankService.createUserKey(memberId);
+    }
+
+    /**
+     *  [ssafy 금융 API] user key 조회 및 저장
+     * */
+    @GetMapping("/user-key")
+    @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
+    ResponseEntity<?> getUserKey(@RequestHeader("memberId") Long memberId) {
+        return ssafyBankService.getUserKey(memberId);
+    }
+
 }

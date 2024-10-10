@@ -1,2 +1,2 @@
-CREATE DATABASE IF NOT EXISTS notification-db;
-USE notification-db;
+CREATE DATABASE IF NOT EXISTS notification_db;
+USE notification_db;
