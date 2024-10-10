@@ -17,6 +17,7 @@ public class FindTransactionDTO {
         private String receiveName;
         private String relationType;
         private String memo;
+        private String eventName;
         private long amount;
         private LocalDateTime time;
     }
@@ -30,6 +31,7 @@ public class FindTransactionDTO {
         private String senderName;
         private String relationType;
         private String memo;
+        private String eventName;
         private long amount;
         private LocalDateTime time;
     }
