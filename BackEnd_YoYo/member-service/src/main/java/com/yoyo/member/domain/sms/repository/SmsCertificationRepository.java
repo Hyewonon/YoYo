@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:BackEnd_YoYo/member-service/src/main/java/com/yoyo/member/domain/sms/repository/SmsCertificationRepository.java
 package com.yoyo.member.domain.sms.repository;
+========
+package com.yoyo.member.adapter.out.persistence;
+>>>>>>>> 223e6a81c079b9f463bcdfe0cd8f9d5c1690a949:BackEnd_YoYo/member-service/src/main/java/com/yoyo/member/adapter/out/persistence/SmsCertificationRepository.java
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
