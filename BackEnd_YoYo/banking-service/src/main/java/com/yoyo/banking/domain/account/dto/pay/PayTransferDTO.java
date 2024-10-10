@@ -14,15 +14,8 @@ public class PayTransferDTO {
     @Schema(description = "[ PayTransferDTO ] 페이 거래용 요청 DTO")
     public static class Request {
 
-        @Schema(description = "돈받는 사람 id")
-        private Long memberId;
-
-        @Schema(description = "돈받는 사람 이름")
-        private String memberName;
-
         private Long eventId;
-        private String title;
 
-        private Long amount;
+        private Long payAmount;
     }
 }

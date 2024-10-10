@@ -2,6 +2,7 @@ package com.yoyo.banking.global.config;
 
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
+import com.yoyo.common.kafka.dto.EventInfoResponseDTO;
 import com.yoyo.common.kafka.dto.EventResponseDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
@@ -48,6 +49,7 @@ public class ConsumerConfig {
                         , MemberResponseDTO.class
                         , MemberRequestDTO.class
                         , EventResponseDTO.class
+                        , EventInfoResponseDTO.class
                 ));
 
         return props;

@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 @RequiredArgsConstructor
@@ -22,6 +21,8 @@ public class EventConsumer {
     private final EventProducer eventProducer;
 
     private final String SEND_EVENTID_EVENT_TOPIC = "send-event-id-event-topic";
+    private final String GET_EVENT_INFO = "get-event-info";
+
     private final EventRepository eventRepository;
 
     @KafkaListener(topics = "transaction-summary-topic", concurrency = "3")
@@ -43,6 +44,12 @@ public class EventConsumer {
     public void getEventNameByEventId(EventRequestDTO request) {
         String eventName = eventService.findEventById(request.getEventId());
         eventProducer.sendEventNameToTransaction(EventResponseDTO.of(request.getEventId(), eventName));
+    }
+
+    @KafkaListener(topics = GET_EVENT_INFO, concurrency = "3")
+    public void getEventIdForEventInfo(EventRequestDTO request) {
+        EventInfoResponseDTO response = eventService.findEventInfoById(request.getEventId());
+        eventProducer.sendEventInfo(response);
     }
 
     @KafkaListener(topics = "eventId-receiverId", concurrency = "3")

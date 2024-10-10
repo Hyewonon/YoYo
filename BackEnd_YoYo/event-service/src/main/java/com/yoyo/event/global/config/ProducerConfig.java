@@ -3,6 +3,7 @@ package com.yoyo.event.global.config;
 import com.yoyo.common.kafka.KafkaJson;
 import com.yoyo.common.kafka.KafkaUtils;
 import com.yoyo.common.kafka.dto.AmountRequestDTO;
+import com.yoyo.common.kafka.dto.EventInfoResponseDTO;
 import com.yoyo.common.kafka.dto.EventResponseDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.NotificationCreateDTO;
@@ -41,7 +42,8 @@ public class ProducerConfig {
                                                                                    MemberRequestDTO.class,
                                                                                    NotificationCreateDTO.class,
                                                                                    ReceiverRequestDTO.class,
-                                                                                   EventResponseDTO.class
+                                                                                   EventResponseDTO.class,
+                                                                                   EventInfoResponseDTO.class
         ));
         return new DefaultKafkaProducerFactory<>(config);
     }

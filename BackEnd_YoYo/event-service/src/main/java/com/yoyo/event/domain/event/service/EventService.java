@@ -4,6 +4,7 @@ import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.EventException;
 import com.yoyo.common.kafka.dto.AmountRequestDTO;
 import com.yoyo.common.kafka.dto.AmountResponseDTO;
+import com.yoyo.common.kafka.dto.EventInfoResponseDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.NotificationCreateDTO;
@@ -142,5 +143,10 @@ public class EventService {
     public String findEventById(Long eventId) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND_EVENT));
         return event.getTitle();
+    }
+
+    public EventInfoResponseDTO findEventInfoById(Long eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventException(ErrorCode.NOT_FOUND_EVENT));
+        return EventInfoResponseDTO.of(event.getId(), event.getTitle(), event.getMemberId(), event.getName());
     }
 }
