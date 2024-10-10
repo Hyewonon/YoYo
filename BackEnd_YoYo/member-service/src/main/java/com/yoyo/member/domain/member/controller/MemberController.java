@@ -2,6 +2,7 @@ package com.yoyo.member.domain.member.controller;
 
 import com.yoyo.common.dto.response.CommonResponse;
 import com.yoyo.common.response.ApiResponse;
+import com.yoyo.member.domain.member.dto.FCMTokenDTO;
 import com.yoyo.member.domain.member.dto.RegisterMemberDTO;
 import com.yoyo.member.domain.member.dto.UpdateMemberDTO;
 import com.yoyo.member.domain.member.service.MemberService;
@@ -71,8 +72,8 @@ public class MemberController {
     @PostMapping("/fcm-token")
     @Operation(summary = "FCM Token 저장", description = "FCM Token을 저장한다")
     public ResponseEntity<?> saveFcmToken(@RequestHeader("memberId") String memberId,
-            @RequestBody @Parameter(description = "FCM 토큰") String fcmToken) {
-        memberService.saveFcmToken(Long.parseLong(memberId), fcmToken);
+            @RequestBody @Parameter(description = "FCM 토큰") FCMTokenDTO fcmToken) {
+        memberService.saveFcmToken(Long.parseLong(memberId), fcmToken.getPushToken());
         ApiResponse<Member> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
                 "FCM Token 저장",
