@@ -281,6 +281,7 @@ public class TransactionService {
                                 .senderName(transaction.getSenderName())
                                 .relationType(transaction.getRelationType().toString())
                                 .memo(transaction.getMemo())
+                                .eventName(transaction.getEventName())
                                 .amount(transaction.getAmount())
                                 .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt()).build())
                         .toList();
@@ -290,6 +291,7 @@ public class TransactionService {
                         .receiveName(transaction.getReceiverName())
                         .relationType(transaction.getRelationType().toString())
                         .memo(transaction.getMemo())
+                        .eventName(transaction.getEventName())
                         .amount(transaction.getAmount())
                         .time(transaction.getUpdatedAt() != null ? transaction.getUpdatedAt() : transaction.getCreatedAt())
                         .build()).toList();
