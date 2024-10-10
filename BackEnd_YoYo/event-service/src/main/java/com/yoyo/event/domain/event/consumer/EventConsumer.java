@@ -58,7 +58,7 @@ public class EventConsumer {
         ReceiverRequestDTO updateDTO = ReceiverRequestDTO.builder()
                 .eventId(event.getId())
                 .receiverId(event.getMemberId())
-                .eventName(event.getName())
+                .eventName(event.getTitle())
                 .build();
         eventProducer.sendReceiverId(updateDTO);
     }
