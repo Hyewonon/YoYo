@@ -58,9 +58,9 @@ public class RelationService {
     /**
      * 비회원 결제 친구 관계 저장
      */
-    public String createPaymentRelation(NoMember noMember, Long memberId, String description) {
+    public String getMember(Long memberId) {
         Member member = memberService.findMemberById(memberId);
-        relationRepository.save(toNewEntityForPayment(member, noMember.getMemberId(), description, noMember.getName()));
+//        relationRepository.save(toNewEntityForPayment(member, noMember.getMemberId(), description, noMember.getName()));
         return member.getName();
     }
 
