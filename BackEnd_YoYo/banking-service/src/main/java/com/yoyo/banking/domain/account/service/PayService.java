@@ -12,7 +12,7 @@ import com.yoyo.banking.entity.PayType;
 import com.yoyo.common.dto.response.CommonResponse;
 import com.yoyo.common.exception.ErrorCode;
 import com.yoyo.common.exception.exceptionType.BankingException;
-import com.yoyo.common.kafka.dto.EventResponseDTO;
+import com.yoyo.common.kafka.dto.EventInfoResponseDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.NotificationCreateDTO;
 import com.yoyo.common.kafka.dto.PayInfoRequestToMemberDTO;
@@ -45,7 +45,7 @@ public class PayService {
     private final PayProducer payProducer;
 
     private final Map<Long, CompletableFuture<MemberResponseDTO>> names = new ConcurrentHashMap<>();
-    private final Map<Long, CompletableFuture<EventResponseDTO>> titles = new ConcurrentHashMap<>();
+    private final Map<Long, CompletableFuture<EventInfoResponseDTO>> eventInfos = new ConcurrentHashMap<>();
 
     /**
      * * 페이 머니 충전 / 환불
@@ -88,7 +88,7 @@ public class PayService {
     public ResponseEntity<?> transferPayment(PayTransferDTO.Request request, Long currMemberId) {
         // 1. 페이머니 충분한지 확인
         // 1.1 충분하지 않으면 충전
-        Long insufficientAmount = getInsufficientAmount(request.getAmount(), currMemberId);
+        Long insufficientAmount = getInsufficientAmount(request.getPayAmount(), currMemberId);
         if (insufficientAmount < 0) {
             PayDTO.Request chargeRequest = PayDTO.Request.toDto(Math.abs(insufficientAmount), null);
             ResponseEntity<?> chargeResult = chargeOrRefundPayBalance(chargeRequest, currMemberId, false);
@@ -99,46 +99,45 @@ public class PayService {
             }
         }
 
-        // 2. 페이머니 잔액 변경 ( 나, 친구)
-        updatePayBalance(currMemberId, request.getAmount(), true); // 발신자 페이 잔액 변경
-        updatePayBalance(request.getMemberId(), request.getAmount(), false); // 수신자 페이 잔액 변경
+        // 2. 주최자 id, name, 행사 title 받아오기
+        EventInfoResponseDTO eventInfo = getEventInfoFromEvent(request.getEventId());
+        Long oppositeId = eventInfo.getOppositeId();
+        String oppositeName = eventInfo.getOppositeName();
+        String eventTitle = eventInfo.getEventTitle();
 
-        // 3. 페이 거래내역 생성
-        // 3.1 이름 찾기
-        String oppositeName = (request.getMemberName().isEmpty()) ? getNameFromMember(request.getMemberId()) : request.getMemberName();
+        // 3. 페이머니 잔액 변경 ( 나, 친구)
+        updatePayBalance(currMemberId, request.getPayAmount(), true); // 발신자 페이 잔액 변경
+        updatePayBalance(oppositeId, request.getPayAmount(), false); // 수신자 페이 잔액 변경
+
+        // 4. 페이 거래내역 생성
+        // 4.1 이름 찾기
         String myName = getNameFromMember(currMemberId);
+        savePayTransaction(request.getPayAmount(), currMemberId, PayType.WITHDRAW, oppositeName); // 발신자 계좌 출금 거래내역 생성
+        savePayTransaction(request.getPayAmount(), oppositeId, PayType.DEPOSIT, myName); // 수신자 계좌 입금 거래내역 생성
 
-        savePayTransaction(request.getAmount(), currMemberId, PayType.WITHDRAW, oppositeName); // 발신자 계좌 출금 거래내역 생성
-        savePayTransaction(request.getAmount(), request.getMemberId(), PayType.DEPOSIT, myName); // 수신자 계좌 입금 거래내역 생성
-
-        // 4. 친구관계 생성 및 총금액 수정
-        PayInfoRequestToMemberDTO requestToMember = PayInfoRequestToMemberDTO.of(currMemberId, request.getMemberId(),
-                                                                                  request.getAmount());
+        // 5. 친구관계 생성 및 총금액 수정
+        PayInfoRequestToMemberDTO requestToMember = PayInfoRequestToMemberDTO.of(currMemberId, oppositeId,
+                                                                                  request.getPayAmount());
         payProducer.sendPayInfoToMember(requestToMember);
 
-        // 5. 보냈어요 받았어요 거래내역 생성
-
-
+        // 6. 보냈어요 받았어요 거래내역 생성
         PayInfoRequestToTransactionDTO requestToTransaction = PayInfoRequestToTransactionDTO.of(
                 currMemberId,
                 myName,
-                request.getMemberId(),
+                oppositeId,
                 oppositeName,
                 request.getEventId(),
-                request.getTitle(),
-                request.getAmount()
+                eventTitle,
+                request.getPayAmount()
         );
         payProducer.sendPayInfoToTransaction(requestToTransaction);
 
         // 6. Pay 알림 생성
-        payProducer.sendPayToMemberForName(currMemberId);
-        String name = getNameFromMember(currMemberId);
         payProducer.sendPayNotification(
-                NotificationCreateDTO.of(currMemberId, name, request.getMemberId(), request.getEventId(),
-                                         request.getTitle(), "PAY"));
+                NotificationCreateDTO.of(currMemberId, myName, oppositeId, request.getEventId(),
+                                         eventTitle, "PAY"));
         return new ResponseEntity<>(CommonResponse.of(true, "페이 송금 성공"), HttpStatus.OK);
     }
-
 
     /*
      * * 페이머니 잔액 변경 ( 나, 친구)
@@ -229,6 +228,19 @@ public class PayService {
         }
     }
 
+    public EventInfoResponseDTO getEventInfoFromEvent(Long eventId) {
+        payProducer.sendToEventForEventInfo(eventId);
+        CompletableFuture<EventInfoResponseDTO> future = new CompletableFuture<>();
+        eventInfos.put(eventId, future);
+        EventInfoResponseDTO eventInfo;
+        try {
+            eventInfo = future.get(10, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            throw new BankingException(ErrorCode.KAFKA_ERROR);
+        }
+        return eventInfo;
+    }
+
     public String getNameFromMember(Long memberId) {
         payProducer.sendPayToMemberForName(memberId);
         CompletableFuture<MemberResponseDTO> future = new CompletableFuture<>();
@@ -244,6 +256,13 @@ public class PayService {
 
     public void completeMemberName(MemberResponseDTO response) {
         CompletableFuture<MemberResponseDTO> future = names.remove(response.getMemberId());
+        if (future != null) {
+            future.complete(response);
+        }
+    }
+
+    public void completeEventInfo(EventInfoResponseDTO response) {
+        CompletableFuture<EventInfoResponseDTO> future = eventInfos.remove(response.getEventId());
         if (future != null) {
             future.complete(response);
         }

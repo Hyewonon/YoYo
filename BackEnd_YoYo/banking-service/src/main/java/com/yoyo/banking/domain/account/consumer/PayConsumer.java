@@ -1,6 +1,7 @@
 package com.yoyo.banking.domain.account.consumer;
 
 import com.yoyo.banking.domain.account.service.PayService;
+import com.yoyo.common.kafka.dto.EventInfoResponseDTO;
 import com.yoyo.common.kafka.dto.MemberRequestDTO;
 import com.yoyo.common.kafka.dto.MemberResponseDTO;
 import com.yoyo.common.kafka.dto.PaymentDTO;
@@ -17,6 +18,7 @@ public class PayConsumer {
     private final String UPDATE_YOYO_PAY_BY_NO_MEMBER = "update-yoyo-pay-by-no-member";
     private final String MEMBER_NAME_TO_PAY_TOPIC = "member-name-to-pay-topic";
     private final String USER_KEY_TO_BANKING_TOPIC = "user-key-to-banking-topic";
+    private final String SEND_EVENT_INFO = "send-event-info";
 
     private final PayService payService;
 
@@ -34,4 +36,8 @@ public class PayConsumer {
     public void createUserKey(MemberRequestDTO request) {
         payService.createUserKey(request.getMemberId());
     }
-}
+
+    @KafkaListener(topics = SEND_EVENT_INFO, concurrency = "3")
+    public void getEventInfo(EventInfoResponseDTO response) {
+        payService.completeEventInfo(response);
+    }}

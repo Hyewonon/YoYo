@@ -18,6 +18,7 @@ public class EventProducer {
     private final String CREATE_NOTIFICATION = "create-notification";
     private final String GET_RELATION_IDS = "get-relations-ids";
     private final String SEND_EVENT_NAME = "send-event-name";
+    private final String SEND_EVENT_INFO = "send-event-info";
 
     public void sendEventId(AmountRequestDTO event) {
         kafkaTemplate.send(TRANSACTION_TOPIC, event);
@@ -41,5 +42,9 @@ public class EventProducer {
 
     public void sendReceiverId(ReceiverRequestDTO requestDTO) {
         kafkaTemplate.send("receiverId-eventId", requestDTO);
+    }
+
+    public void sendEventInfo(EventInfoResponseDTO response) {
+        kafkaTemplate.send(SEND_EVENT_INFO, response);
     }
 }
