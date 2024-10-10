@@ -28,19 +28,16 @@ public class GlobalAuthFilter extends AbstractGatewayFilterFactory<GlobalAuthFil
     }
 
     @Override
-    public GatewayFilter apply(Config config) {
+    public GatewayFilter apply(GlobalAuthFilter.Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             String path = request.getURI().getPath();
-            if(path.equals("/yoyo/payment/success") || path.equals("/confirm/payment") || path.equals("/yoyo/members/**")){
-                return chain.filter(exchange);
-            }
+            log.info("path : {}", path);
             String token = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
             if (token == null || !token.startsWith("Bearer ")) {
                 return handleUnauthorized(exchange);
             }
             token = token.substring(7); // "Bearer " 이후의 실제 토큰 값
-
             try {
                 // 1. JWT 검증
                 if (!jwtUtil.validateJwtToken(token)) {
@@ -52,7 +49,7 @@ public class GlobalAuthFilter extends AbstractGatewayFilterFactory<GlobalAuthFil
                 ServerHttpRequest modifiedRequest = request.mutate()
                         .header("memberId", memberId)
                         .build();
-                log.info("MemberId : {}", memberId);
+                log.info("memberId : {}", memberId);
                 return chain.filter(exchange.mutate().request(modifiedRequest).build());
             } catch (Exception e) {
                 log.error("JWT 검증 실패", e);

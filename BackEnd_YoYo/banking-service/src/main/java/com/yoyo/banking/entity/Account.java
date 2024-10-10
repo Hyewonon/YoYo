@@ -39,7 +39,7 @@ public class Account {
     @Builder.Default
     @Setter
     private Long balance = 0L;
-
+    @Setter
     private String pin;
 
     @Setter

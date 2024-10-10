@@ -24,11 +24,11 @@ public class PayDTO {
         @Nullable
         private String name;
 
-        public static PayTransaction toEntity(PayDTO.Request request, Long accountId, String name, PayType payType) {
+        public static PayTransaction toEntity(Long amount, Long accountId, String name, PayType payType) {
             return PayTransaction.builder()
                                  .accountId(accountId)
                                  .payType(payType)
-                                 .payAmount(request.getPayAmount())
+                                 .payAmount(amount)
                                  .createdAt(LocalDateTime.now())
                                  .name(name)
                                  .build();
@@ -50,10 +50,19 @@ public class PayDTO {
     public static class Response {
 
         private Long balance;
+        private String memberName;
 
-        public static Response of(Account account) {
+        public static Response of(Account account, String name) {
             return PayDTO.Response.builder()
                                   .balance(account.getBalance())
+                                  .memberName(name)
+                                  .build();
+        }
+
+        public static Response of(String name) {
+            return PayDTO.Response.builder()
+                                  .balance(-1L)
+                                  .memberName(name)
                                   .build();
         }
     }

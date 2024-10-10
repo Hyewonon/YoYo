@@ -2,10 +2,16 @@ package com.yoyo.banking.domain.account.controller;
 
 import com.yoyo.banking.domain.account.dto.account.AccountAuthDTO;
 import com.yoyo.banking.domain.account.dto.account.AccountCreateDTO;
+import com.yoyo.banking.domain.account.dto.account.AccountPinDTO;
+import com.yoyo.banking.domain.account.dto.pay.PayTransactionDTO;
 import com.yoyo.banking.domain.account.service.AccountService;
 import com.yoyo.banking.domain.account.service.SsafyBankService;
+import com.yoyo.common.dto.response.BodyValidationExceptionResopnse;
 import com.yoyo.common.dto.response.CommonResponse;
+import com.yoyo.common.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -14,8 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,29 +36,37 @@ public class AccountController {
     private final AccountService accountService;
     private final SsafyBankService ssafyBankService;
 
-    //임시 멤버
-    private Long memberId = 999999999L;
-
     /**
-     *  [ssafy 금융 API] user key 생성 및 저장
-     * <p>
-     *  - 회원가입 시 userkey 생성 및 저장
+     * PIN 번호 수정
      * */
-    @PostMapping("/user-key")
-    @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
-    ResponseEntity<?> createUserKey() {
-        Long currentMemberId = memberId;
-        return ssafyBankService.createUserKey(currentMemberId);
+    @PatchMapping("/pin/update")
+    @Operation(summary = "계좌 PIN 번호 수정", description = "계좌 PIN 번호를 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "PIN 수정 성공",
+            content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+    @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류",
+                         content = @Content(schema = @Schema(implementation = BodyValidationExceptionResopnse.class))),
+    })
+    ResponseEntity<?> updateAccountPin(@RequestHeader("memberId") Long memberId,
+                                      @RequestBody @Valid AccountPinDTO.Request request) {
+        return accountService.updateAccountPin(request, memberId);
     }
-
     /**
-     *  [ssafy 금융 API] user key 조회 및 저장
+     * PIN 번호 확인
      * */
-    @GetMapping("/user-key")
-    @Operation(summary = "user key 확인", description = "더미 계좌 거래 내역을 조회한다. (1원 송금 확인용)")
-    ResponseEntity<?> getUserKey() {
-        Long currentMemberId = memberId;
-        return ssafyBankService.getUserKey(currentMemberId);
+    @PostMapping("/pin/check")
+    @Operation(summary = "계좌 PIN 번호 확인", description = "계좌 PIN 번호를 확인한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "PIN 번호 일치",
+                         content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "401", description = "PIN 번호 일치하지 않음",
+                         content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류",
+                         content = @Content(schema = @Schema(implementation = BodyValidationExceptionResopnse.class))),
+    })
+    ResponseEntity<?> checkAccountPin(@RequestHeader("memberId") Long memberId,
+                                      @RequestBody @Valid AccountPinDTO.Request request) {
+        return accountService.checkAccountPin(request, memberId);
     }
 
     /**
@@ -58,9 +74,15 @@ public class AccountController {
      * */
     @PostMapping("/open")
     @Operation(summary = "계좌 1원 송금", description = "입력 계좌에 1원 송금한다.")
-    ResponseEntity<?> openAccountAuth(@RequestBody @Valid AccountAuthDTO.Request request) {
-        Long currentMemberId = memberId;
-        return ssafyBankService.openAccountAuth(request, currentMemberId);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "1원 송금 성공",
+                         content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "1원 송금 실패",
+                         content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+    })
+    ResponseEntity<?> openAccountAuth(@RequestHeader("memberId") Long memberId,
+                                      @RequestBody @Valid AccountAuthDTO.Request request) {
+        return ssafyBankService.openAccountAuth(request, memberId);
     }
 
     /**
@@ -68,9 +90,15 @@ public class AccountController {
      * */
     @PostMapping("/check")
     @Operation(summary = "계좌 1원 송금 확인", description = "1원 송금 코드를 확인한다.")
-    ResponseEntity<?> checkAccountAuth(@RequestBody @Valid AccountAuthDTO.Request request) {
-        Long currentMemberId = memberId;
-        return ssafyBankService.checkAccountAuth(request, currentMemberId);
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "1원 송금 코드를 확인 성공",
+                         content = @Content(schema = @Schema(implementation = PayTransactionDTO.Response.class))),
+            @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류",
+                         content = @Content(schema = @Schema(implementation = BodyValidationExceptionResopnse.class))),
+    })
+    ResponseEntity<?> checkAccountAuth(@RequestHeader("memberId") Long memberId,
+                                       @RequestBody @Valid AccountAuthDTO.Request request) {
+        return ssafyBankService.checkAccountAuth(request, memberId);
     }
 
     /**
@@ -83,17 +111,29 @@ public class AccountController {
     @PostMapping
     @Operation(summary = "계좌 등록, 수정", description = "계좌를 등록(수정)한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "계좌 등록(수정) 성공"),
-            @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류")
+            @ApiResponse(responseCode = "201", description = "계좌 등록(수정) 성공",
+                content = @Content(schema = @Schema(implementation = PayTransactionDTO.Response.class))),
+            @ApiResponse(responseCode = "400", description = "요청 dto 필드값 오류",
+                         content = @Content(schema = @Schema(implementation = BodyValidationExceptionResopnse.class))),
     })
-    ResponseEntity<CommonResponse> createAccount(@RequestBody @Valid AccountCreateDTO.Request request) {
+    ResponseEntity<CommonResponse> createAccount(@RequestHeader("memberId") Long memberId,
+                                                 @RequestBody @Valid AccountCreateDTO.Request request) {
 //        log.info("----------------계좌 생성------------------");
-        Long currentMemberId = memberId;
-        CommonResponse response = accountService.createAccount(request, currentMemberId);
+        CommonResponse response = accountService.createAccount(request, memberId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     /**
-     * * TODO : 계좌 삭제
+     * 계좌 조회
      * */
+    @GetMapping
+    @Operation(summary = "등록된 계좌 조회", description = "계좌를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "계좌 조회 성공",
+                         content = @Content(schema = @Schema(implementation = AccountCreateDTO.Response.class))),
+    })
+    ResponseEntity<AccountCreateDTO.Response> getAccount(@RequestHeader("memberId") Long memberId){
+        return accountService.getAccount(memberId);
+    }
 }
+

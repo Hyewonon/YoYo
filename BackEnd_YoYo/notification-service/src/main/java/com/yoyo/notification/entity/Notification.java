@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -40,4 +41,7 @@ public class Notification {
 
     @Enumerated(EnumType.STRING)
     NotificationType type;
+
+    @Setter
+    Boolean isRegister;
 }

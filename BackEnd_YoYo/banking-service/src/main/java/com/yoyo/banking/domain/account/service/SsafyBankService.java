@@ -7,6 +7,7 @@ import com.yoyo.banking.domain.account.dto.account.DummyTransactionDTOs.DummyTra
 import com.yoyo.banking.domain.account.dto.SsafyCommonHeader.Request;
 import com.yoyo.banking.domain.account.repository.AccountRepository;
 import com.yoyo.banking.entity.Account;
+import com.yoyo.banking.global.util.AesService;
 import com.yoyo.banking.global.util.BankingUtil;
 import com.yoyo.common.dto.response.CommonResponse;
 import com.yoyo.common.exception.ErrorCode;
@@ -36,6 +37,7 @@ public class SsafyBankService {
 
     private final AccountRepository accountRepository;
     private final BankingUtil bankingUtil;
+    private final AesService aesService;
 
     @Value("${ssafy.bank.api-key}")
     private String bankApiKey;
@@ -70,6 +72,8 @@ public class SsafyBankService {
     @Value("${ssafy.bank.account.demand-deposit.withdrawal}")
     private String bankDemandDepositWithdrawalUrl;
 
+    private final Long DUMMY_MONEY_AMOUNT = 10000000L;
+
     /**
      * [ssafy 금융 API]더미 계좌 생성
      */
@@ -94,9 +98,18 @@ public class SsafyBankService {
             String bankCode = (String) tmp.get("bankCode");
             String bankName = bankingUtil.findBankNameByBankCode(bankCode);
 
+            // 더미 계좌 생성 시 돈 입금
+//            updateDemandDeposit(memberId, DUMMY_MONEY_AMOUNT, true);
+            Map<String, Object> requestToSsafy = new HashMap<>();
+            requestToSsafy.put("accountNo", account);
+            requestToSsafy.put("transactionBalance", DUMMY_MONEY_AMOUNT);
+            requestToSsafy.put("transactionSummary", "계좌 생성 시 축하금");
+           sendPostRequestToSsafy(url, requestToSsafy, memberId);
+
+
             return new ResponseEntity<>(DummyAccountDTO.Response.of(account, bankName, memberId), HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(response, response.getStatusCode());
+            return response;
         }
     }
 
@@ -118,7 +131,6 @@ public class SsafyBankService {
         if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
             Map<String, Object> tmp = (Map<String, Object>) responseFromSsafy.getBody().get("REC");
             String accountTypeUniqueNo = (String) tmp.get("accountTypeUniqueNo");
-//            log.info("accountTypeUniqueNo 발급 성공 = {}", accountTypeUniqueNo);
             return accountTypeUniqueNo;
         } else {
             throw new BankingException(ErrorCode.UNEXPECTED_ERROR);
@@ -133,7 +145,6 @@ public class SsafyBankService {
         Map<String, Object> requestToSsafy = new HashMap<>();
         requestToSsafy.put("accountNo", request.getAccountNumber());
         requestToSsafy.put("authText", bankAuthAccountText);
-//        log.info("authText= {}", bankAuthAccountText);
 
         ResponseEntity<Map> responseFromSsafy = sendPostRequestToSsafy(url, requestToSsafy, memberId);
 
@@ -141,7 +152,7 @@ public class SsafyBankService {
         if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
             return new ResponseEntity<>(CommonResponse.of(true, "1원 송금에 성공했습니다."), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseFromSsafy, responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
 
@@ -165,7 +176,7 @@ public class SsafyBankService {
             List<DummyTransactionDTO> transactions = extractTransactions(rec);
             return new ResponseEntity<>(DummyTransactionDTOs.of(totalCount, transactions), responseFromSsafy.getStatusCode());
         } else {
-            return new ResponseEntity<>(responseFromSsafy, responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
     /*
@@ -211,7 +222,7 @@ public class SsafyBankService {
         if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
             return new ResponseEntity<>(CommonResponse.of(true, successMessage), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseFromSsafy, responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
 
@@ -237,7 +248,7 @@ public class SsafyBankService {
             accountRepository.save(account);
             return new ResponseEntity<>(CommonResponse.of(true, "유저 키를 등록했습니다."), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseFromSsafy, responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
 
@@ -264,7 +275,7 @@ public class SsafyBankService {
             accountRepository.save(account);
             return new ResponseEntity<>(userKey, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseFromSsafy.getBody(), responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
 
@@ -289,7 +300,7 @@ public class SsafyBankService {
                 .orElseThrow(() -> new BankingException(ErrorCode.NOT_FOUND_ACCOUNT));
 
         Map<String, Object> requestToSsafy = new HashMap<>();
-        requestToSsafy.put("accountNo", account.getAccountNumber());
+        requestToSsafy.put("accountNo", aesService.decrypt(account.getAccountNumber()));
         requestToSsafy.put("transactionBalance", amount);
         requestToSsafy.put("transactionSummary", transactionSummary);
         ResponseEntity<Map> responseFromSsafy = sendPostRequestToSsafy(url, requestToSsafy, memberId);
@@ -297,7 +308,7 @@ public class SsafyBankService {
         if (responseFromSsafy.getStatusCode().is2xxSuccessful()) {
             return new ResponseEntity<>(CommonResponse.of(true, successMessage), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(responseFromSsafy.getBody(), responseFromSsafy.getStatusCode());
+            return responseFromSsafy;
         }
     }
 
@@ -322,10 +333,10 @@ public class SsafyBankService {
         }catch(HttpClientErrorException e){
             // 클라이언트에게 오류 응답 반환
             Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("responseCode", e.getStatusCode().toString());
-            errorResponse.put("responseMessage", (String) e.getResponseBodyAs(Map.class).get("responseMessage"));
-
-            return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
+            errorResponse.put("status", String.valueOf(400));
+            errorResponse.put("errorCode", ErrorCode.SSAFY_API_ERROR.toString());
+            errorResponse.put("errorMessage", (String) e.getResponseBodyAs(Map.class).get("responseMessage"));
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
     }
 }
