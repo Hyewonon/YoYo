@@ -66,22 +66,24 @@ public class NotificationService {
             throw new RuntimeException("Failed Kafka", e);
         }
 
-        ExpoNotificationDTO.Request message;
-        if (notification.getType().equals(NotificationType.PAY)) {
-            message = ExpoNotificationDTO.Request.of(pushToken, PayTitle, notification.getName() + PayBody);
-        } else {
-            message = ExpoNotificationDTO.Request.of(pushToken, EventTitle, notification.getName() + EventBody);
-        }
+        if(pushToken != null){
+            ExpoNotificationDTO.Request message;
+            if (notification.getType().equals(NotificationType.PAY)) {
+                message = ExpoNotificationDTO.Request.of(pushToken, PayTitle, notification.getName() + PayBody);
+            } else {
+                message = ExpoNotificationDTO.Request.of(pushToken, EventTitle, notification.getName() + EventBody);
+            }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<ExpoNotificationDTO.Request> requestEntity = new HttpEntity<>(message, headers);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<ExpoNotificationDTO.Request> requestEntity = new HttpEntity<>(message, headers);
 
-        try {
-            ResponseEntity<?> response = restTemplate.exchange(EXPO_PUSH_URL, HttpMethod.POST, requestEntity,
-                                                               ExpoNotificationDTO.Request.class);
-        } catch (Exception e) {
-            throw new NotificationException(ErrorCode.NOT_FOUND_PUSH_TOKEN);
+            try {
+                ResponseEntity<?> response = restTemplate.exchange(EXPO_PUSH_URL, HttpMethod.POST, requestEntity,
+                                                                   ExpoNotificationDTO.Request.class);
+            } catch (Exception e) {
+                throw new NotificationException(ErrorCode.NOT_FOUND_PUSH_TOKEN);
+            }
         }
 
         notificationRepository.save(notification);
