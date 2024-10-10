@@ -58,9 +58,9 @@ public class RelationService {
     /**
      * 비회원 결제 친구 관계 저장
      */
-    public String createPaymentRelation(NoMember noMember, Long memberId, String description) {
+    public String createPaymentRelation(NoMember noMember, Long memberId, String description, Long amount) {
         Member member = memberService.findMemberById(memberId);
-        relationRepository.save(toNewEntityForPayment(member, noMember.getMemberId(), description, noMember.getName()));
+        relationRepository.save(toNewEntityForPayment(member, noMember.getMemberId(), description, noMember.getName(), amount));
         return member.getName();
     }
 
@@ -159,7 +159,7 @@ public class RelationService {
                 .build();
     }
 
-    private Relation toNewEntityForPayment(Member member, Long noMemberId, String description, String name) {
+    private Relation toNewEntityForPayment(Member member, Long noMemberId, String description, String name, Long amount) {
         RelationType relationType;
         if (description.contains("친구")) {
             relationType = RelationType.FRIEND;
@@ -177,6 +177,7 @@ public class RelationService {
                 .relationType(relationType)
                 .description(description)
                 .totalSentAmount(0L)
+                .totalReceivedAmount(amount)
                 .isMember(false)
                 .build();
     }
