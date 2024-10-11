@@ -98,7 +98,22 @@ export function Payment() {
 
   return (
     <div className="wrapper relative">
-      <button onClick={() => window.location.href = appLink}>앱으로 열기</button>
+        <button onClick={() => {
+        const timeout = setTimeout(() => {
+          alert("앱이 설치되어 있지 않습니다. 앱을 설치해주세요.");
+          navigate("/")
+        }, 1500); // 1.5초 후에 앱이 없다는 경고를 띄움
+
+        try {
+          window.location.href = appLink;
+        } catch (error) {
+          console.error("앱을 열 수 없습니다:", error);
+        }
+
+        // 앱이 열렸을 경우 타임아웃 취소
+        window.addEventListener("blur", () => clearTimeout(timeout));
+
+      }}>앱으로 열기</button>
       <div className="box_section">
         <h1>💌 마음 전하기</h1>
         <div className="inputContainer">
