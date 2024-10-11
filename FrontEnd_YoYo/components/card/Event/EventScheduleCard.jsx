@@ -20,16 +20,18 @@ export default function EventScheduleCard({
                                 {event.title}
                             </YoYoText>
                             {type === "select" && (
-                                <CheckBox checked={event.id === selectedCard} />
+                                <CheckBox
+                                    checked={event.eventId === selectedCard}
+                                />
                             )}
                         </View>
                         <YoYoText type="md" bold>
                             {event.name}
                         </YoYoText>
                     </View>
-                    <YoYoText type="content">{event.date}</YoYoText>
+                    <YoYoText type="content">{event.startAt}</YoYoText>
                 </View>
-                <YoYoText type="desc">{event.position}</YoYoText>
+                <YoYoText type="desc">{event.location}</YoYoText>
             </View>
         </Card>
     );

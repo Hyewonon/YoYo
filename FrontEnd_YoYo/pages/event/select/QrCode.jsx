@@ -3,11 +3,12 @@ import React from 'react'
 import Container from '../../../components/common/Container'
 import YoYoText from '../../../constants/YoYoText'
 import QRCode from 'react-native-qrcode-svg'
-export default function QrCode() {
+export default function QrCode({ route }) {
+  const event = route.params.event
   const qrData = {
-    link: 'https://www.youtube.com/watch?v=URBcer_Tf3I',
-    description: 'Example description for QR code',
-    title: 'Example QR Code',
+    link: `https://j11a308.p.ssafy.io/payment/checkout/${event.eventId}`,
+    description: `${event.title}에 참석해주셔서 감사합니다.`,
+    title: '마음을 전해주세요.',
     createdAt: new Date().toISOString()
   };
   return (

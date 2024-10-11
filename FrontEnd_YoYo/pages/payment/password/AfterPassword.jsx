@@ -21,7 +21,9 @@ export default function AfterPassword({ route, navigation }) {
         </View>
       </Container>
       <View style={styles.buttonContainer}>
-        <Button type="fill" radius={16} width="90%" onPress={() => navigation.navigate("Home")}><YoYoText type="subTitle" bold>확인</YoYoText></Button>
+        <Button type="fill" radius={16} width="90%" onPress={() => {
+          navigation.navigate("HomeTab", { screen: "Home" });
+        }}><YoYoText type="subTitle" bold>확인</YoYoText></Button>
       </View>
     </>
   )

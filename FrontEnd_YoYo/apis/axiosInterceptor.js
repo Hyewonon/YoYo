@@ -1,11 +1,10 @@
 import { axiosInstance } from "./axiosInstance";
 
-export function axiosInterceptor(authCtx) {
+export function axiosInterceptor(AuthCtx) {
     axiosInstance.interceptors.request.use(
         (config) => {
-            const token = authCtx.token; // 현재 토큰 가져오기
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
+            if (AuthCtx.token) {
+                config.headers.Authorization = `Bearer ${AuthCtx.token}`;
             }
             return config;
         },

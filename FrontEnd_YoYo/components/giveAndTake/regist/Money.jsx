@@ -5,18 +5,28 @@ import { MainStyle } from "../../../constants/style";
 import Input from "../../common/Input";
 import ButtonList from "../../common/ButtonList";
 
-export default function Money({ setIsActive }) {
-    const [amount, setAmount] = useState(0);
-    const [memo, setMemo] = useState("");
+export default function Money({ setIsActive, person, setPerson }) {
     const amountChange = (value) => {
         const numericValue = parseInt(value);
-        setAmount(isNaN(numericValue) ? 0 : numericValue); // 숫자로 변환, 숫자가 아닐 경우 0으로 처리
+        setPerson((prevPerson) => ({
+            ...prevPerson,
+            amount: isNaN(numericValue) ? 0 : numericValue,
+        }));
     };
+
+    const memoChange = (value) => {
+        setPerson((prevPerson) => ({
+            ...prevPerson,
+            memo: value,
+        }));
+    };
+
     useEffect(() => {
-        if (amount > 0 || memo.length > 0) {
+        if (person.amount > 0 || person.memo.length > 0) {
             setIsActive(true);
         }
-    }, [amount, memo]);
+    }, [person.amount, person.memo]);
+
     return (
         <View>
             <View style={styles.container}>
@@ -27,13 +37,21 @@ export default function Money({ setIsActive }) {
                 </View>
                 <View style={styles.textContainer}>
                     <Input
-                        text={amount === 0 ? "" : String(amount)}
+                        text={person.amount === 0 ? "" : String(person.amount)}
                         onChange={amountChange}
                         placeholder={"금액을 입력해주세요."}
                         type="phoneNumber"
                     />
                 </View>
-                <ButtonList size={76} setAmount={setAmount} />
+                <ButtonList
+                    size={76}
+                    setAmount={(increment) =>
+                        setPerson((prevPerson) => ({
+                            ...prevPerson,
+                            amount: prevPerson.amount + increment,
+                        }))
+                    }
+                />
             </View>
             <View style={styles.container}>
                 <View>
@@ -43,8 +61,8 @@ export default function Money({ setIsActive }) {
                 </View>
                 <View style={styles.textContainer}>
                     <Input
-                        text={memo}
-                        onChange={setMemo}
+                        text={person.memo}
+                        onChange={memoChange}
                         placeholder={"추가 메모를 기록해주세요."}
                     />
                 </View>

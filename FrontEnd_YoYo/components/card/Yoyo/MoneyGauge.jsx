@@ -2,6 +2,7 @@ import { View, StyleSheet } from "react-native";
 import React from "react";
 import YoYoText from "../../../constants/YoYoText";
 import { MainStyle } from "../../../constants/style";
+import format from "../../../util/format";
 
 export default function MoneyGauge({ give, take }) {
     const gaugeWidth = (take / (give + take)) * 100 + "%";
@@ -20,10 +21,10 @@ export default function MoneyGauge({ give, take }) {
             </View>
             <View style={styles.rowContainer2}>
                 <YoYoText type="content" bold>
-                    {take}원
+                    {format.formatNumber(take)}원
                 </YoYoText>
                 <YoYoText type="content" bold>
-                    {give}원
+                    {format.formatNumber(give)}원
                 </YoYoText>
             </View>
         </View>

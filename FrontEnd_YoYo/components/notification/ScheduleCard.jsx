@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React from "react";
 import Card from "../card/Card";
 import YoYoText from "../../constants/YoYoText";
@@ -10,7 +10,7 @@ const tagTranslate = {
     friend: "친구",
     family: "가족",
     company: "직장",
-    etc: "기타",
+    others: "기타",
 };
 
 export default function ScheduleCard({ item, onPress }) {
@@ -37,7 +37,7 @@ export default function ScheduleCard({ item, onPress }) {
                             type={"normal"}
                             width={88}
                             radius={24}
-                            onPress={() => onPress(item.id)}
+                            onPress={() => onPress(item.notificationId, "true")}
                         >
                             <YoYoText bold>등록</YoYoText>
                         </Button>
@@ -47,7 +47,7 @@ export default function ScheduleCard({ item, onPress }) {
                         type={"normal"}
                         width={88}
                         radius={24}
-                        onPress={() => onPress(item.id)}
+                        onPress={() => onPress(item.notificationId, "false")}
                     >
                         <YoYoText bold>미등록</YoYoText>
                     </Button>
@@ -75,5 +75,8 @@ const styles = StyleSheet.create({
     buttonsContainer: {
         flexDirection: "row",
         columnGap: 10,
+    },
+    buttonContainer: {
+        borderRadius: 18,
     },
 });

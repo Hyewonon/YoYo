@@ -18,8 +18,10 @@ function AuthContextProvider({ children }) {
         AsyncStorage.setItem("token", token);
         AsyncStorage.setItem("memberId", id.toString());
     }
+
     function logout() {
         setAuthToken(null);
+        setMemberId(null);
         AsyncStorage.removeItem("token");
         AsyncStorage.removeItem("memberId");
     }

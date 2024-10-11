@@ -1,30 +1,39 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Pressable } from 'react-native'
 import React from 'react'
 import Card from '../Card'
 import YoYoText from '../../../constants/YoYoText'
 import Tag from '../../common/Tag';
 import { useNavigation } from '@react-navigation/native';
 import { MainStyle } from '../../../constants/style';
-
+import { formatDate } from './../../../util/date';
+const tagTranslate = {
+  all: "전체",
+  friend: "친구",
+  family: "가족",
+  company: "직장",
+  etc: "기타",
+};
 export default function EventAfterRegist({ event }) {
   const navigation = useNavigation();
   function clickFriendHandler() {
-    navigation.navigate("YoYoDetail")
+    navigation.navigate("GiveAndTakeDetail", { id: event.oppositeId })
   }
   return (
     <View style={styles.cardContainer}>
-      <View style={styles.innerContainer}>
-        <View>
-          <YoYoText type="subTitle" bold>{event.name}</YoYoText>
-          <YoYoText type="content">{event.detail}</YoYoText>
+      <Pressable style={styles.pressContainer} android_ripple={{ color: MainStyle.colors.hover }} onPress={clickFriendHandler}>
+        <View style={styles.innerContainer}>
+          <View>
+            <YoYoText type="subTitle" bold>{event.senderName}</YoYoText>
+            <YoYoText type="content">{event.memo}</YoYoText>
+          </View>
+          <Tag type={event.relationType.toLowerCase()} width={88}>{tagTranslate[event.relationType.toLowerCase()]}</Tag>
         </View>
-        <Tag type={event.tag} width={88}>친구</Tag>
-      </View>
-      <View style={styles.innerContainer2}>
-        <YoYoText type="desc" bold>{event.date}</YoYoText>
-        <YoYoText type="subTitle" color={MainStyle.colors.main} bold>{event.price}원</YoYoText>
-      </View>
+        <View style={styles.innerContainer2}>
+          <YoYoText type="desc" bold>{formatDate(event.time)}</YoYoText>
+          <YoYoText type="subTitle" color={MainStyle.colors.main} bold>{event.amount}원</YoYoText>
+        </View>
 
+      </Pressable>
     </View>
   )
 }
@@ -35,7 +44,11 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderWidth: 2,
     borderColor: MainStyle.colors.main,
-    padding: 12
+
+    overflow: 'hidden'
+  },
+  pressContainer: {
+    padding: 12,
   },
   innerContainer: {
     flexDirection: 'row',
