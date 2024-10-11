@@ -3,10 +3,6 @@ import { axiosInstance } from "./../axiosInstance";
 
 //문자전송
 export async function sendMessage(phoneNumber) {
-    console.log("인증번호발송");
-    console.log(
-        BASE_URL + END_POINT.MEMBER("send") + `?phoneNumber=${phoneNumber}`
-    );
     const response = await axiosInstance.post(
         END_POINT.MEMBER("send") + `?phoneNumber=${phoneNumber}`
     );
@@ -40,3 +36,14 @@ export const login = async (phoneNumber, password) => {
     });
     return response.data.data;
 };
+//FCM 토큰 저장
+export async function savePushToken(pushToken) {
+    const response = await axiosInstance.post(END_POINT.MEMBER("fcm-token"), {
+        pushToken: pushToken,
+    });
+    return response.data.status === 200;
+}
+//FCM 토큰 삭제
+export async function deletePushToken() {
+    return await axiosInstance.delete(END_POINT.MEMBER("fcm-token"));
+}

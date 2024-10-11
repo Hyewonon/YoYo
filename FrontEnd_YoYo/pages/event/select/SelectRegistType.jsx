@@ -4,14 +4,15 @@ import Container from '../../../components/common/Container'
 import WhiteButton from '../../../components/common/WhiteButton'
 import { Ionicons } from '@expo/vector-icons';
 
-export default function SelectRegistType({ navigation }) {
+export default function SelectRegistType({ navigation, route }) {
+  const event = route.params.event
   return (
     <Container>
       <View style={styles.innerContainer}>
         <WhiteButton text="인식하기" onPress={() => navigation.navigate("OCRPAGE")}>
           <Ionicons name='camera-outline' size={80} />
         </WhiteButton>
-        <WhiteButton text="직접등록" onPress={() => navigation.navigate("GiveAndTakeRegist", { type: 1 })}>
+        <WhiteButton text="직접등록" onPress={() => navigation.navigate("EventReceiveRegist", { event: event })}>
           <Ionicons name='create-outline' size={80} />
         </WhiteButton>
 

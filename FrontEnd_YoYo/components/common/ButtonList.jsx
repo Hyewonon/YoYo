@@ -4,15 +4,15 @@ import Button from "./Button";
 import { MainStyle } from "../../constants/style";
 
 export default function ButtonList({ size, setAmount }) {
-    let money = [
-        { type: "1000", name: "+1000" },
-        { type: "5000", name: "+5000" },
-        { type: "10000", name: "+10000" },
-        { type: "50000", name: "+50000" },
+    const money = [
+        { type: 1000, name: "+1000" },
+        { type: 5000, name: "+5000" },
+        { type: 10000, name: "+10000" },
+        { type: 50000, name: "+50000" },
     ];
 
     function clickAmount(item) {
-        setAmount((prevAmount) => prevAmount + parseInt(item.type, 10));
+        setAmount(item.type);
     }
 
     return (

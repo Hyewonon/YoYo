@@ -1,14 +1,18 @@
-import { View, Text, Pressable, StyleSheet, FlatList } from "react-native";
-import React, { useContext } from "react";
+import { View, Pressable, StyleSheet, FlatList } from "react-native";
 import Header from "../../../components/header/Header";
 import YoYoText from "../../../constants/YoYoText";
 import IconButton from "../../../components/common/IconButton";
 import { MainStyle } from "../../../constants/style";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../../../store/auth-context";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../store/slices/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
+import { deletePushToken } from "../../../apis/https/member";
 
 export default function SettingList() {
-    const authCtx = useContext(AuthContext);
+    const [memberName, setMemberName] = useState("")
+    const dispatch = useDispatch()
     const navigation = useNavigation();
     const settingList = [
         { id: "1", title: "개인정보 처리방침" },
@@ -17,9 +21,18 @@ export default function SettingList() {
 
     const navigationList = {
         1: () => navigation.navigate("Private"), // 실제 네비게이션 이동
-        2: () => authCtx.logout(), // 로그아웃을 처리할 함수
+        2: async () => {
+            await deletePushToken()
+            dispatch(logout())
+        }, // 로그아웃을 처리할 함수
     };
-
+    useEffect(() => {
+        async function getMemberName() {
+            const name = await AsyncStorage.getItem("memberName")
+            setMemberName(name)
+        }
+        getMemberName()
+    }, [])
     function clickItem(item) {
         const action = navigationList[item.id]; // id에 해당하는 액션을 찾아서 실행
         if (action) {
@@ -44,7 +57,7 @@ export default function SettingList() {
             <View style={styles.container}>
                 <Header />
                 <YoYoText type={"title"} bold>
-                    이찬진님, 반갑습니다.
+                    {memberName}님, 반갑습니다.
                 </YoYoText>
             </View>
             <View>

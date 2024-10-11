@@ -6,52 +6,76 @@ import SearchBar from "../../../components/common/SearchBar";
 import YoYoText from "../../../constants/YoYoText";
 import Button from "../../../components/common/Button";
 import TagList from "../../../components/common/TagList";
+import { getRelations } from "../../../apis/https/relationApi";
+import Loading from "../../../components/common/Loading";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function GiveAndTakeList({ navigation }) {
     const [selectedTag, setSelectedTag] = useState("all");
+    const [data, setData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [keyword, setKeyword] = useState("");
 
-    const DATA = [
-        {
-            id: "1",
-            title: "김현태",
-            description: "고등학교 친구",
-            type: "friend",
-        },
-        {
-            id: "2",
-            title: "최광림",
-            description: "주먹왕",
-            type: "family",
-        },
-    ];
-
-    const [data, setData] = useState(DATA);
+    useFocusEffect(() => {
+        let isActive = true;
+        async function fetchData() {
+            try {
+                const response = await getRelations(keyword);
+                const tmpData = response.map((item) => ({
+                    id: item.relationId,
+                    oppositeId: item.oppositeId,
+                    title: item.oppositeName,
+                    description: item.description,
+                    type: item.relationType.toLowerCase(),
+                    give: item.totalReceivedAmount,
+                    take: item.totalSentAmount,
+                }));
+                const filteredData =
+                    selectedTag === "all" || selectedTag === ""
+                        ? tmpData
+                        : tmpData.filter((item) => item.type === selectedTag);
+                if (isActive) {
+                    setData(filteredData);
+                    setIsLoading(false);
+                }
+            } catch (error) {
+                if (isActive) {
+                    setData([]);
+                    setIsLoading(false);
+                }
+            }
+        }
+        fetchData();
+        return () => {
+            isActive = false;
+        };
+    });
 
     const clickDetailHandler = (item) => {
-        navigation.navigate("GiveAndTakeDetail", { id: item.id });
+        navigation.navigate("GiveAndTakeDetail", { id: item.oppositeId });
     };
     const clickAddHandler = () => {
         navigation.navigate("SelectGiveAndTake");
     };
     function clickTag(type) {
         setSelectedTag(type);
-        if (type === "all") {
-            setData(DATA);
-        } else {
-            setData(DATA.filter((item) => item.type === type));
-        }
     }
     function renderItem({ item }) {
         return (
             <YoYoCard data={item} onPress={() => clickDetailHandler(item)} />
         );
     }
+    if (isLoading) return <Loading />;
 
     return (
         <>
             <Container>
                 <View style={styles.searchContainer}>
-                    <SearchBar placeholder={"이름을 검색해 주세요."} />
+                    <SearchBar
+                        placeholder={"이름을 검색해 주세요."}
+                        setKeyword={setKeyword}
+                        keyword={keyword}
+                    />
                 </View>
                 <View>
                     <TagList
@@ -61,12 +85,18 @@ export default function GiveAndTakeList({ navigation }) {
                         all
                     />
                 </View>
-                <FlatList
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id}
-                    style={styles.innerContainer}
-                ></FlatList>
+                {data && data.length === 0 ? (
+                    <YoYoText type="md" bold center>
+                        요요 목록이 없습니다.
+                    </YoYoText>
+                ) : (
+                    <FlatList
+                        data={data}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        style={styles.innerContainer}
+                    />
+                )}
             </Container>
             <Button type={"fill"} onPress={clickAddHandler}>
                 <YoYoText bold>거래내역 추가하기</YoYoText>

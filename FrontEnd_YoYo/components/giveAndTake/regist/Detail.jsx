@@ -1,41 +1,50 @@
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, Pressable, Modal } from "react-native";
 import React, { useEffect, useState } from "react";
+import { MainStyle } from "../../../constants/style";
+import { getRelations } from "../../../apis/https/relationApi";
 import YoYoText from "../../../constants/YoYoText";
 import Input from "../../common/Input";
-import { MainStyle } from "../../../constants/style";
 import TagList from "../../common/TagList";
-import { useNavigation } from "@react-navigation/native";
 import YoYoCard from "../../card/Yoyo/YoYoCard";
+import Button from "../../common/Button";
+import SelectModal from "../../ocr/SelectModal";
+import Container from "../../common/Container";
 
-export default function Detail({ setIsActive, person, setPerson, data }) {
-    const navigation = useNavigation();
-    const [description, setDescription] = useState("");
-    const [selectedTag, setSelectedTag] = useState("all");
-    const [selectedCard, setSelectedCard] = useState(-1);
-    function clickCard(id) {
-        if (id === selectedCard) {
-            setSelectedCard(-1);
-            setIsActive(false);
-        } else {
-            setSelectedCard(id);
-            setIsActive(true);
-        }
-    }
-
+export default function Detail({ setIsActive, person, setPerson }) {
+    const [relationData, setRelationData] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
-        if (description.length > 0) {
+        if (person.description) {
             setIsActive(true);
-            setPerson((prevPerson) => ({
-                ...prevPerson,
-                description: description,
-            }));
+        } else {
+            setIsActive(false);
         }
-    }, [description]);
-
+    }, [person.description, person.relationType]);
+    useEffect(() => {
+        async function fetchRelationData(name) {
+            const response = await getRelations(name);
+            if (response != null) {
+                const tmpData = response.map((item) => ({
+                    id: item.relationId,
+                    oppositeId: item.oppositeId,
+                    name: item.oppositeName,
+                    title: item.oppositeName,
+                    description: item.description,
+                    type: item.relationType.toLowerCase(),
+                    give: item.totalReceivedAmount,
+                    take: item.totalSentAmount,
+                }));
+                setRelationData(tmpData);
+            }
+        }
+        fetchRelationData(person.name);
+    }, [person.name]);
     function clickTag(type) {
-        setSelectedTag(type);
+        setPerson((prevPerson) => ({
+            ...prevPerson,
+            relationType: type.toUpperCase(),
+        }));
     }
-
     return (
         <View>
             <View style={styles.container}>
@@ -49,56 +58,62 @@ export default function Detail({ setIsActive, person, setPerson, data }) {
                 </View>
             </View>
             <View style={styles.container}>
-                {data.length > 0 ? (
-                    <FlatList
-                        data={data}
-                        renderItem={({ item }) => (
-                            <YoYoCard
-                                item={item}
-                                onPress={() => clickCard(item.id)}
-                                type="select"
-                                selectedCard={selectedCard}
-                            />
-                        )}
-                        style={styles.innerContainer}
-                    ></FlatList>
-                ) : (
-                    <>
-                        <View>
-                            <YoYoText
-                                type="title"
-                                bold
-                                color={MainStyle.colors.main}
-                            >
-                                태그선택
-                            </YoYoText>
-                        </View>
-                        <View style={styles.tagContainer}>
-                            <TagList
-                                onPress={clickTag}
-                                selectedTag={selectedTag}
-                                size={76}
-                            />
-                        </View>
+                <View>
+                    <YoYoText type="title" bold color={MainStyle.colors.main}>
+                        태그선택
+                    </YoYoText>
+                </View>
+                <View style={styles.tagContainer}>
+                    <TagList
+                        onPress={clickTag}
+                        selectedTag={
+                            person.relationType
+                                ? person.relationType.toLowerCase()
+                                : "all"
+                        }
+                        size={76}
+                    />
+                </View>
 
-                        <View>
-                            <YoYoText
-                                type="title"
-                                bold
-                                color={MainStyle.colors.main}
-                            >
-                                인적사항
-                            </YoYoText>
-                        </View>
-                        <View style={styles.textContainer}>
-                            <Input
-                                placeholder={"추가 인적사항을 기록해주세요."}
-                                onChange={setDescription}
-                                text={description}
-                            />
-                        </View>
-                    </>
+                <View>
+                    <YoYoText type="title" bold color={MainStyle.colors.main}>
+                        인적사항
+                    </YoYoText>
+                </View>
+                <View style={styles.textContainer}>
+                    <Input
+                        placeholder={"추가 인적사항을 기록해주세요."}
+                        onChange={(text) =>
+                            setPerson((prevPerson) => ({
+                                ...prevPerson,
+                                description: text,
+                            }))
+                        }
+                        text={person.description}
+                    />
+                </View>
+                {relationData.length > 0 && (
+                    <Pressable onPress={() => setIsModalOpen(true)}>
+                        <YoYoText type="md" bold color={MainStyle.colors.red}>
+                            ※지인 목록에서 선택하기
+                        </YoYoText>
+                    </Pressable>
                 )}
+
+                <Modal
+                    visible={isModalOpen}
+                    animationType="fade"
+                    transparent={true}
+                    onRequestClose={() => setIsModalOpen(false)}
+                >
+                    <SelectModal
+                        onPress={() => setIsModalOpen(false)}
+                        data={relationData}
+                        friend={person}
+                        setFriend={setPerson}
+                        type="event"
+                    />
+                </Modal>
             </View>
         </View>
     );
@@ -116,5 +131,11 @@ const styles = StyleSheet.create({
     },
     innerContainer: {
         marginBottom: 16,
+    },
+    selectContainer: {
+        flexDirection: "column-reverse",
+        alignItems: "center",
+        padding: 16,
+        backgroundColor: MainStyle.colors.main,
     },
 });
