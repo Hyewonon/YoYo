@@ -1,0 +1,336 @@
+services:
+  vault:
+    image: vault:1.13.1
+    container_name: vault
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: yoyovault
+    restart: always
+    cap_add:
+      - IPC_LOCK
+  # MySQL Database
+  # member-db
+  member-db:
+    image: mysql:8.0
+    container_name: member-db
+    volumes:
+      - ./db/member-db/conf.d:/etc/mysql/conf.d
+      - ./db/member-db/data:/var/lib/mysql
+      - ./db/member-db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3301:3306"
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=ssafy
+      - MYSQL_DATABASE=member_db
+  # banking-db
+  banking-db:
+    image: mysql:8.0
+    container_name: banking-db
+    volumes:
+      - ./db/banking-db/conf.d:/etc/mysql/conf.d
+      - ./db/banking-db/data:/var/lib/mysql
+      - ./db/banking-db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3302:3306"
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=ssafy
+      - MYSQL_DATABASE=banking_db
+  # transaction-db
+  transaction-db:
+    image: mysql:8.0
+    container_name: transaction-db
+    volumes:
+      - ./db/transaction-db/conf.d:/etc/mysql/conf.d
+      - ./db/transaction-db/data:/var/lib/mysql
+      - ./db/transaction-db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3303:3306"
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=ssafy
+      - MYSQL_DATABASE=transaction_db
+  # notification-db
+  notification-db:
+    image: mysql:8.0
+    container_name: notification-db
+    volumes:
+      - ./db/notification-db/conf.d:/etc/mysql/conf.d
+      - ./db/notification-db/data:/var/lib/mysql
+      - ./db/notification-db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3304:3306"
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=ssafy
+      - MYSQL_DATABASE=notification_db
+  # event-db
+  event-db:
+    image: mysql:8.0
+    container_name: event-db
+    volumes:
+      - ./db/event-db/conf.d:/etc/mysql/conf.d
+      - ./db/event-db/data:/var/lib/mysql
+      - ./db/event-db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    environment:
+      - TZ=Asia/Seoul
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=ssafy
+      - MYSQL_DATABASE=event_db
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  # Config Server
+  config-server:
+    image: config-server:1.0.0
+    container_name: config-server
+    build:
+      context: ./config-server
+    depends_on:
+      - vault
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Eureka Server
+  eureka:
+    image: eureka:1.0.0
+    container_name: eureka
+    build:
+      context: ./eureka
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_APPLICATION_NAME=eureka-server
+      - SERVER_PORT=8761
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
+      - EUREKA_CLIENT_FETCH_REGISTRY=false
+
+
+  # Member Service
+  member-service:
+    image: member-service:1.0.0
+    container_name: member-service
+    build:
+      context: ./member-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+
+  # Banking Service
+  banking-service:
+    image: banking-service:1.0.0
+    container_name: banking-service
+    build:
+      context: ./banking-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      - TZ=Asia/Seoul
+
+  # Transaction Service
+  transaction-service:
+    image: transaction-service:1.0.0
+    container_name: transaction-service
+    build:
+      context: ./transaction-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+  # Notification Service
+  notification-service:
+    image: notification-service:1.0.0
+    container_name: notification-service
+    build:
+      context: ./notification-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+
+  # Payment Service
+  payment-service:
+    image: payment-service:1.0.0
+    container_name: payment-service
+    build:
+      context: ./payment-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+
+  # Event Service
+  event-service:
+    image: event-service:1.0.0
+    container_name: event-service
+    build:
+      context: ./event-service
+    ports:
+      - "8086:8086"
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+
+  # Spring Cloud Gateway
+  scg:
+    image: scg:1.0.0
+    ports:
+      - "8000:8000"
+    container_name: spring-cloud-gateway
+    build:
+      context: ./scg
+    depends_on:
+      config-server:
+        condition: service_healthy
+
+  yoyo-kafka1:
+    container_name: yoyo-kafka1
+    restart: unless-stopped
+    image: bitnami/kafka:3.7.0
+    ports:
+      - "10000:9094"
+    environment:
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      # KRaft settings
+      - KAFKA_CFG_BROKER_ID=0
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_KRAFT_CLUSTER_ID=HsDBs9l6UUmQq7Y5E6bNlw
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@yoyo-kafka1:9093,1@yoyo-kafka2:9093,2@yoyo-kafka3:9093
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      # Listeners
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://yoyo-kafka1:9092,EXTERNAL://127.0.0.1:10000
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      # Clustering
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_CFG_MIN_INSYNC_REPLICAS=2
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
+
+  yoyo-kafka2:
+    container_name: yoyo-kafka2
+    restart: unless-stopped
+    image: bitnami/kafka:3.7.0
+    ports:
+      - "10001:9094"
+    environment:
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      # KRaft settings
+      - KAFKA_CFG_BROKER_ID=1
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_KRAFT_CLUSTER_ID=HsDBs9l6UUmQq7Y5E6bNlw
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@yoyo-kafka1:9093,1@yoyo-kafka2:9093,2@yoyo-kafka3:9093
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      # Listeners
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://yoyo-kafka2:9092,EXTERNAL://127.0.0.1:10001
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      # Clustering
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_CFG_MIN_INSYNC_REPLICAS=2
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
+
+  yoyo-kafka3:
+    container_name: yoyo-kafka3
+    restart: unless-stopped
+    image: bitnami/kafka:3.7.0
+    ports:
+      - "10002:9094"
+    environment:
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+      # KRaft settings
+      - KAFKA_CFG_BROKER_ID=2
+      - KAFKA_CFG_NODE_ID=2
+      - KAFKA_KRAFT_CLUSTER_ID=HsDBs9l6UUmQq7Y5E6bNlw
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@yoyo-kafka1:9093,1@yoyo-kafka2:9093,2@yoyo-kafka3:9093
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      # Listeners
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://yoyo-kafka3:9092,EXTERNAL://127.0.0.1:10002
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      # Clustering
+      - KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=3
+      - KAFKA_CFG_MIN_INSYNC_REPLICAS=2
+      - KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR=2
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - app_home:/usr/share/nginx/html
+    depends_on:
+      frontend-builder:
+        condition: service_completed_successfully
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  frontend-builder:
+    image: node
+    volumes:
+      - ../비회원결제:/opt/app
+      - app_home:/opt/app/dist
+    working_dir: /opt/app
+    command: sh -c "npm i && npm run build"
+volumes:
+  app_home:

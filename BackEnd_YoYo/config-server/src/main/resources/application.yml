@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: vault
+  cloud:
+    config:
+      server:
+        vault:
+          order: 1
+          host: vault
+          port: 8200
+          token: yoyovault
+          authentication: token
+          kv-version: 2
+          backend: secret
+          profile-separator: '/'
+          scheme: http
+        git:
+          uri: ${git.config.repository}
+          username: ${git.username}
+          password: ${git.password}

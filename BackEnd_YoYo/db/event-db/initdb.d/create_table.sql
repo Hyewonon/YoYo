@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS event_db;
+USE event_db;
