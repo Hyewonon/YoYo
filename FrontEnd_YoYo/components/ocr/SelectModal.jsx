@@ -6,14 +6,10 @@ import YoYoText from '../../constants/YoYoText';
 import { MainStyle } from '../../constants/style';
 import YoYoCard from '../card/Yoyo/YoYoCard';
 import Button from '../common/Button';
-const data = [
-  { id: 0 },
-  { id: 1 },
-  { id: 2 },
-  { id: 3 },
-]
-export default function SelectModal({ onPress }) {
+
+export default function SelectModal({ data, onPress, friend, setFriend, type }) {
   const [selectedCard, setSelectedCard] = useState(-1);
+  const prevFriend = friend
   const animation = useRef(new Animated.Value(0)).current
   useEffect(() => {
     if (selectedCard > -1) {
@@ -30,11 +26,46 @@ export default function SelectModal({ onPress }) {
       }).start();
     }
   }, [selectedCard])
-  function clickCard(id) {
-    if (id === selectedCard) {
+  function clickCard(item) {
+    if (item.id === selectedCard) {
       setSelectedCard(-1)
+      if (type === "event") {
+        setFriend((prev) => ({
+          ...prev,
+          name: prevFriend.name,
+          description: prevFriend.description,
+          relationType: prevFriend.relationType,
+          memberId: prevFriend.oppositeId
+        }))
+      } else {
+        setFriend((prev) => ({
+          ...prev,
+          name: prevFriend.name,
+          description: prevFriend.description,
+          relationType: prevFriend.relationType,
+          oppositeId: prevFriend.oppositeId
+        }))
+      }
+
     } else {
-      setSelectedCard(id);
+      setSelectedCard(item.id);
+      if (type === "event") {
+        setFriend((prev) => ({
+          ...prev,
+          name: item.name,
+          description: item.description,
+          relationType: item.type.toUpperCase(),
+          memberId: item.oppositeId
+        }))
+      } else {
+        setFriend((prev) => ({
+          ...prev,
+          name: item.name,
+          description: item.description,
+          relationType: item.type.toUpperCase(),
+          oppositeId: item.oppositeId
+        }))
+      }
     }
   }
   return (
@@ -45,7 +76,7 @@ export default function SelectModal({ onPress }) {
         </View>
         <View style={styles.innerContainer}>
           <YoYoText type="md" bold color={MainStyle.colors.main}>아래 리스트에서 선택해주세요.</YoYoText>
-          <FlatList data={data} renderItem={({ item }) => <YoYoCard selectedCard={selectedCard} type="select" item={item} onPress={() => clickCard(item.id)} />} keyExtractor={(item) => item.id} />
+          <FlatList data={data} renderItem={({ item }) => <YoYoCard selectedCard={selectedCard} type="select" data={item} onPress={() => clickCard(item)} />} keyExtractor={(item) => item.id} />
         </View>
       </Container>
       {selectedCard > -1 &&
@@ -53,7 +84,7 @@ export default function SelectModal({ onPress }) {
           opacity: animation,
           transform: [{ scale: animation }]
         }}>
-          <Button type="fill" width="100%" radius={0}><YoYoText type="md" bold>등록</YoYoText></Button>
+          <Button type="fill" width="100%" radius={0} onPress={onPress}><YoYoText type="md" bold >등록</YoYoText></Button>
         </Animated.View>}
     </>
   )

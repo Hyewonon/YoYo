@@ -1,43 +1,83 @@
 import { View, Text, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Container from '../../../components/common/Container'
 import YoYoCard from '../../../components/card/Yoyo/YoYoCard'
 import { FlatList } from 'react-native-gesture-handler'
 import Button from '../../../components/common/Button'
 import YoYoText from '../../../constants/YoYoText'
 import { MainStyle } from '../../../constants/style'
-const events = [
-  // { id: 1, name: "이찬진", tag: "friend", detail: "고등학교 친구", date: "2024.09.11", price: 50000 },
-  // { id: 2, name: "이찬진", tag: "friend", detail: "고등학교 친구", date: "2024.09.11", price: 50000 },
-  // { id: 3, name: "이찬진", tag: "friend", detail: "고등학교 친구", date: "2024.09.11", price: 50000 },
-  // { id: 4, name: "이찬진", tag: "friend", detail: "고등학교 친구", date: "2024.09.11", price: 50000 },
-  // { id: 5, name: "이찬진", tag: "friend", detail: "고등학교 친구", date: "2024.09.11", price: 50000 },
-  // { id: 6, name: "이찬진", tag: "friend", detail: "고등학교 친구", date: "2024.09.11", price: 50000 },
-  // { id: 7, name: "이찬진", tag: "friend", detail: "고등학교 친구", date: "2024.09.11", price: 50000 },
-  // { id: 8, name: "이찬진", tag: "friend", detail: "고등학교 친구", date: "2024.09.11", price: 50000 },
-
-]
+import { getRelations } from '../../../apis/https/realtionApi'
+import { updateTransaction } from '../../../apis/https/transactionApi'
+import { Alert } from 'react-native'
 export default function SelectCard({ navigation, route }) {
-  const friend = route.params.friend;
+  const [friends, setFriends] = useState();
+  const { friend, eventId } = route.params;
   const [selectedCard, setSelectedCard] = useState(-1);
+  const [selectedFriend, setSelectedFriend] = useState({
+    relationId: "",
+    oppositeId: "",
+    name: "",
+    relationType: "",
+    description: "",
+    amount: ""
+  })
+  async function modifyTransaction() {
+    try {
+      await updateTransaction(friend.transactionId, selectedFriend)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   function clickBottomButtonHandler() {
     if (selectedCard === -1) {
-      navigation.navigate("지인추가", { friend: friend })
+      navigation.navigate("지인추가", { friend: friend, id: eventId })
     } else {
-      alert("포스트 요청")
+      modifyTransaction()
+      Alert.alert("등록 완료", "지인 추가가 완료되었습니다.", [{ text: "확인", onPress: () => navigation.navigate("EventDetail", { id: eventId }) }])
     }
   }
-  function clickCard(id) {
-    if (id === selectedCard) {
+  function clickCard(item) {
+    if (item.id === selectedCard) {
       setSelectedCard(-1)
     } else {
-      setSelectedCard(id);
+      setSelectedCard(item.id);
+      setSelectedFriend((prev) => ({
+        ...prev,
+        relationId: item.relationId,
+        oppositeId: item.oppositeId,
+        name: item.name,
+        relationType: item.type.toUpperCase(),
+        description: item.description,
+        amount: friend.amount
+      }))
 
     }
   }
-  function renderedItem(item) {
-    return <YoYoCard type="select" onPress={() => clickCard(item.item.id)} item={item.item} selectedCard={selectedCard} />
+  function renderedItem({ item }) {
+    return <YoYoCard type="select" onPress={() => clickCard(item)} data={item} selectedCard={selectedCard} />
   }
+  async function fetchFriends() {
+    try {
+      const response = await getRelations(friend.senderName)
+      const tmpData = response.map((item) => ({
+        id: item.oppositeId,
+        oppositeId: item.oppositeId,
+        relationId: item.relationId,
+        name: item.oppositeName,
+        title: item.oppositeName,
+        description: item.description,
+        type: item.relationType.toLowerCase(),
+        give: item.totalReceivedAmount,
+        take: item.totalSentAmount,
+      }));
+      setFriends(tmpData)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    fetchFriends()
+  }, [])
   return (
     <>
       <View style={styles.topContainer}>
@@ -47,18 +87,18 @@ export default function SelectCard({ navigation, route }) {
         <View style={styles.innerContainer}>
           <View style={styles.rowContainer}>
             <YoYoText type="md" bold color={MainStyle.colors.main}>이름</YoYoText>
-            <YoYoText type="md" bold>{friend.name}</YoYoText>
+            <YoYoText type="md" bold>{friend.senderName}</YoYoText>
           </View>
           <View style={styles.rowContainer}>
             <YoYoText type='md' bold color={MainStyle.colors.main}>메모</YoYoText>
-            <YoYoText type="md" bold>{friend.detail}</YoYoText>
+            <YoYoText type="md" bold>{friend.memo}</YoYoText>
           </View>
         </View>
       </View>
       <Container>
 
         <View style={{ flex: 1 }}>
-          {events && events.length > 0 ? <FlatList data={events} renderItem={renderedItem} key={item => item.id} /> : <YoYoText type="md" bold color={MainStyle.colors.main} center>동명의 지인이 존재하지 않습니다.</YoYoText>}
+          {friends && friends.length > 0 ? <FlatList data={friends} renderItem={renderedItem} key={item => item.transactionId} /> : <YoYoText type="md" bold color={MainStyle.colors.main} center>동명의 지인이 존재하지 않습니다.</YoYoText>}
         </View>
 
       </Container>

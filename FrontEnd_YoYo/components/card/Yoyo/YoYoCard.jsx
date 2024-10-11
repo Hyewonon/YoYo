@@ -39,7 +39,7 @@ export default function YoYoCard({ data, type, onPress, selectedCard }) {
                     {tagTranslate[data.type]}
                 </Tag>
             </View>
-            <MoneyGauge give={20000} take={12000} />
+            <MoneyGauge give={data.give} take={data.take} />
         </Card>
     );
 }

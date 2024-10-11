@@ -1,4 +1,4 @@
-import { Image, View } from 'react-native';
+import { Alert, Image, View } from 'react-native';
 import React, { useLayoutEffect, useState } from 'react';
 import Container from '../../../components/common/Container';
 import YoYoText from '../../../constants/YoYoText';
@@ -7,7 +7,12 @@ import SelectBank from './SelectBank';
 import RegistAccountNumber from './RegistAccountNumber';
 import RegistAuthNumber from './RegistAuthNumber';
 import CompleteRegist from './CompleteRegist';
-
+import { sendWon } from '../../../apis/https/payApi';
+// {
+//   "memberId": 1,
+//   "bankName": "싸피은행",
+//   "accountNo": "9997560764180754"
+// }
 const bankImages = {
   KB국민은행: require("../../../assets/svg/banks/KB국민은행.png"),
   신한은행: require("../../../assets/svg/banks/신한은행.png"),
@@ -21,9 +26,13 @@ const bankImages = {
 };
 
 export default function AccountRegist({ navigation }) {
-  const [selectedBank, setSelectedBank] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
   const [stage, setStage] = useState(0);
+  const [info, setInfo] = useState({
+    accountNumber: "",
+    bankName: "",
+    isAuthenticated: false,
+    pin: ""
+  })
   const [accountAuthNumber, setAccountAuthNumber] = useState("");
   function clickPrev() {
     if (stage === 0) {
@@ -42,18 +51,18 @@ export default function AccountRegist({ navigation }) {
       headerTitle: () => headerTitle(),
 
     });
-  }, [navigation, selectedBank, stage]);
+  }, [navigation, info.bankName, stage]);
   function headerTitle() {
     if (stage === 0) {
       return <YoYoText type="md" bold>은행 선택</YoYoText>;
-    } else if (stage === 1 && selectedBank) {
+    } else if (stage === 1 && info.bankName.length > 0) {
       return (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={bankImages[selectedBank]} style={{ width: 24, height: 24, marginRight: 8 }} />
+          <Image source={bankImages[info.bankName]} style={{ width: 24, height: 24, marginRight: 8 }} />
           <YoYoText type="md" bold>계좌번호 입력</YoYoText>
         </View>
       );
-    } else if (stage === 2 && accountNumber) {
+    } else if (stage === 2 && info.accountNumber.length > 0) {
       return (
         <YoYoText type="md" bold>계좌 인증</YoYoText>
       )
@@ -65,27 +74,56 @@ export default function AccountRegist({ navigation }) {
 
 
   function clickBank(bank) {
-    setSelectedBank(bank);
+    setInfo((prev) => ({
+      ...prev,
+      bankName: bank
+    }))
     setStage(1);
   }
+  async function getAuth() {
+    try {
+      const response = await sendWon({ accountNumber: info.accountNumber })
+      if (response.isSuccess)
+        Alert.alert("송금 완료", "1원 송금이 완료되었습니다.", [
+          {
+            text: "확인",
+            onPress: () => setStage(stage + 1)
+          }
+        ])
+    } catch (error) {
+      Alert.alert("계좌번호를 확인해주세요.")
+    }
+  }
   function clickAuth() {
-    if (accountNumber.length > 10) {
+    if (info.accountNumber.length > 10) {
+      getAuth()
       setStage(stage + 1)
     } else {
       alert("계좌번호를 입력하세요.")
     }
   }
   function clickRegistPasswordHandler() {
-    navigation.navigate("RegistPayPassword", { data: { title: "등록 완료", content: "결제 비밀번호 등록이 완료되었습니다." }, type: 'account' })
+    navigation.navigate("RegistPayPassword", { data: { title: "등록 완료", content: "결제 비밀번호 등록이 완료되었습니다.", info: info }, type: 'account' })
   }
   return (
     <Container>
       {stage === 0 && (
         <SelectBank onPress={clickBank} />
       )}
-      {stage === 1 && <RegistAccountNumber number={accountNumber} setNumber={setAccountNumber} onPress={clickAuth} />}
-      {stage === 2 && <RegistAuthNumber bank={selectedBank} bankImg={bankImages[selectedBank]} accountNumber={accountNumber} setAccountAuthNumber={setAccountAuthNumber} onPress={() => setStage(3)} />}
-      {stage === 3 && <CompleteRegist bank={bankImages[selectedBank]} accountNumber={accountNumber} onPress={clickRegistPasswordHandler} />}
+      {stage === 1 && <RegistAccountNumber number={info.accountNumber} setNumber={(text) => {
+        setInfo((prev) => ({
+          ...prev,
+          accountNumber: text
+        }))
+      }} onPress={clickAuth} />}
+      {stage === 2 && <RegistAuthNumber bank={info.bankName} bankImg={bankImages[info.bankName]} accountNumber={info.accountNumber} setAccountAuthNumber={setAccountAuthNumber} onPress={() => {
+        setStage(3)
+        setInfo((prev) => ({
+          ...prev,
+          isAuthenticated: true
+        }))
+      }} />}
+      {stage === 3 && <CompleteRegist bank={bankImages[info.bankName]} accountNumber={info.accountNumber} onPress={clickRegistPasswordHandler} />}
     </Container>
   );
 }

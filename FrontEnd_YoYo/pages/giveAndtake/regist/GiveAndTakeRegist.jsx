@@ -7,56 +7,35 @@ import Name from "../../../components/giveAndTake/regist/Name";
 import Detail from "../../../components/giveAndTake/regist/Detail";
 import Event from "../../../components/giveAndTake/regist/Event";
 import Money from "../../../components/giveAndTake/regist/Money";
+import { postTransaction } from "../../../apis/https/transactionApi";
 
 export default function GiveAndTakeRegist({ navigation, route }) {
+    const { type } = route.params;
     const [stage, setStage] = useState(0);
     const [isActive, setIsActive] = useState(false);
     const [person, setPerson] = useState({
+        transactionType: type === 1 ? "RECEIVE" : "SEND",
+        memberId: 0,
         name: "",
-        tag: "",
+        relationType: "",
         description: "",
+        eventId: 0,
+        eventName: "",
+        amount: 0,
+        memo: "",
     });
-    const { type } = route.params;
 
-    const detailList = [
-        {
-            id: "1",
-            title: "First Item",
-        },
-        {
-            id: "2",
-            title: "Second Item",
-        },
-    ];
-
-    const eventList = [
-        {
-            id: 1,
-            title: "결혼식",
-            name: "김현태",
-            date: "24.08.29",
-            position: "서울시 강남구",
-        },
-        {
-            id: 2,
-            title: "돌잔치",
-            name: "이찬진",
-            date: "24.09.04",
-            position: "서울시 강남구",
-        },
-    ];
-
-    function clickNextButton() {
+    function clickNextButton(person) {
         if (isActive) {
             if (stage < 3) {
                 setStage(stage + 1);
             } else {
+                postTransaction(person);
                 navigation.navigate("GiveAndTake");
             }
         }
         setIsActive(false);
     }
-
     function clickPrevButton() {
         if (stage === 0) {
             navigation.goBack();
@@ -64,12 +43,13 @@ export default function GiveAndTakeRegist({ navigation, route }) {
             setStage(stage - 1);
         }
     }
+
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
                 <Next
                     isActive={isActive}
-                    onPress={clickNextButton}
+                    onPress={() => clickNextButton(person)}
                     final={stage === 3}
                 />
             ),
@@ -81,7 +61,7 @@ export default function GiveAndTakeRegist({ navigation, route }) {
                 />
             ),
         });
-    }, [navigation, stage, isActive]);
+    }, [navigation, stage, person, isActive]);
 
     return (
         <Container>
@@ -96,7 +76,6 @@ export default function GiveAndTakeRegist({ navigation, route }) {
                         setIsActive={setIsActive}
                         person={person}
                         setPerson={setPerson}
-                        data={detailList}
                     />
                 )}
             </View>
@@ -104,7 +83,8 @@ export default function GiveAndTakeRegist({ navigation, route }) {
                 {stage === 2 && (
                     <Event
                         type={type}
-                        data={eventList}
+                        person={person}
+                        setPerson={setPerson}
                         setIsActive={setIsActive}
                     />
                 )}
@@ -113,7 +93,8 @@ export default function GiveAndTakeRegist({ navigation, route }) {
                 {stage === 3 && (
                     <Money
                         type={type}
-                        data={eventList}
+                        person={person}
+                        setPerson={setPerson}
                         setIsActive={setIsActive}
                     />
                 )}

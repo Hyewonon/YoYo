@@ -3,26 +3,31 @@ import React, { useState } from 'react'
 import Button from '../../common/Button';
 import YoYoText from '../../../constants/YoYoText';
 
-export default function EventType({ setIsActive }) {
-  const [selectedType, setSelectedType] = useState("");
+export default function EventType({ setIsActive, setEvent, event }) {
   function clickTypeHandler(type) {
-    if (selectedType === type) {
-      setSelectedType("")
+    if (event.eventType === type) {
+      setEvent((prev) => ({
+        ...prev,
+        eventType: ""
+      }))
       setIsActive(false)
     }
     else {
       setIsActive(true)
-      setSelectedType(type)
+      setEvent((prev) => ({
+        ...prev,
+        eventType: type
+      }))
     }
   }
   return (
     <View style={styles.container}>
-      <Button type={selectedType
-        === "결혼" ? "hover" : "normal"} width={96} radius={16} onPress={() => clickTypeHandler("결혼")}><YoYoText type="desc" bold>결혼</YoYoText></Button>
-      <Button type={selectedType
-        === "장례식" ? "hover" : "normal"} width={96} radius={16} onPress={() => clickTypeHandler("장례식")}><YoYoText type="desc" bold>장례식</YoYoText></Button>
-      <Button type={selectedType
-        === "기타" ? "hover" : "normal"} width={96} radius={16} onPress={() => clickTypeHandler("기타")}><YoYoText type="desc" bold>기타</YoYoText></Button>
+      <Button type={event.eventType
+        === "WEDDING" ? "hover" : "normal"} width={96} radius={16} onPress={() => clickTypeHandler("WEDDING")}><YoYoText type="desc" bold>결혼</YoYoText></Button>
+      <Button type={event.eventType
+        === "FUNERAL" ? "hover" : "normal"} width={96} radius={16} onPress={() => clickTypeHandler("FUNERAL")}><YoYoText type="desc" bold>장례식</YoYoText></Button>
+      <Button type={event.eventType
+        === "OTHERS" ? "hover" : "normal"} width={96} radius={16} onPress={() => clickTypeHandler("OTHERS")}><YoYoText type="desc" bold>기타</YoYoText></Button>
     </View >
   )
 }

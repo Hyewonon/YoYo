@@ -14,18 +14,18 @@ export default function SignUp({ navigation }) {
     const [stage, setStage] = useState(0);
     const [isActive, setIsActive] = useState(false);
     const [profile, setProfile] = useState({
-        name: '',
-        phoneNumber: '',
-        password: '',
-        birthDay: '',
-        valid: false
-    })
+        name: "",
+        phoneNumber: "",
+        password: "",
+        birthDay: "",
+        valid: false,
+    });
     function clickNextButton() {
         if (isActive) {
             if (stage < 2) {
                 setStage(stage + 1);
             } else {
-                signUp(profile)
+                signUp(profile);
                 Alert.alert("회원가입 완료", "회원가입이 완료되었습니다.", [
                     {
                         text: "확인",
@@ -71,14 +71,31 @@ export default function SignUp({ navigation }) {
                     {stage === 0
                         ? "전화번호를 입력해주세요."
                         : stage === 1
-                            ? "비밀번호를 입력해주세요."
-                            : "개인정보를 입력해주세요."}
+                        ? "비밀번호를 입력해주세요."
+                        : "개인정보를 입력해주세요."}
                 </YoYoText>
             </View>
             <View>
-                {stage === 0 && <PhoneNumber profile={profile} setProfile={setProfile} setIsActive={setIsActive} />}
-                {stage === 1 && <Password setProfile={setProfile} setIsActive={setIsActive} />}
-                {stage === 2 && <UserInfo profile={profile} setProfile={setProfile} setIsActive={setIsActive} />}
+                {stage === 0 && (
+                    <PhoneNumber
+                        profile={profile}
+                        setProfile={setProfile}
+                        setIsActive={setIsActive}
+                    />
+                )}
+                {stage === 1 && (
+                    <Password
+                        setProfile={setProfile}
+                        setIsActive={setIsActive}
+                    />
+                )}
+                {stage === 2 && (
+                    <UserInfo
+                        profile={profile}
+                        setProfile={setProfile}
+                        setIsActive={setIsActive}
+                    />
+                )}
             </View>
         </Container>
     );

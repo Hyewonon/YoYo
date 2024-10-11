@@ -1,5 +1,9 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import { View, Text, StyleSheet, FlatList, Alert } from "react-native";
+import React, {
+    useCallback,
+    useLayoutEffect,
+    useState,
+} from "react";
 import Container from "./../../../components/common/Container";
 import YoYoText from "../../../constants/YoYoText";
 import { MainStyle } from "../../../constants/style";
@@ -10,73 +14,45 @@ import EventAfterRegist from "../../../components/card/Event/EventAfterRegist";
 import IconButton from "../../../components/common/IconButton";
 import TagList from "../../../components/common/TagList";
 import Button from "./../../../components/common/Button";
+import {
+    getEventDetail,
+    getEventTransaction,
+} from "../../../apis/https/eventApi";
+import { useFocusEffect } from "@react-navigation/native";
+import Loading from "../../../components/common/Loading";
+import LoadingSpinner from "../../../components/common/LoadingSpinner";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const event = {
-    eventId: 1,
-    totalReceiver: 5,
-    totalReceivedAmount: 1000000,
-    eventTitle: "이벤트1",
-    transactions: [
-        {
-            id: 1,
-            name: "이찬진",
-            tag: "friend",
-            detail: "고등학교 친구",
-            date: "2024.09.11",
-            price: 50000,
-        },
-        {
-            id: 2,
-            name: "이찬진",
-            tag: "friend",
-            detail: "고등학교 친구",
-            date: "2024.09.11",
-            price: 50000,
-        },
-        {
-            id: 3,
-            name: "이찬진",
-            tag: "friend",
-            detail: "고등학교 친구",
-            date: "2024.09.11",
-            price: 50000,
-        },
-        {
-            id: 4,
-            name: "이찬진",
-            tag: "friend",
-            detail: "고등학교 친구",
-            date: "2024.09.11",
-            price: 50000,
-        },
-        {
-            id: 5,
-            name: "이찬진",
-            tag: "friend",
-            detail: "고등학교 친구",
-            date: "2024.09.11",
-            price: 50000,
-        },
-    ],
-};
-
-export default function EventDetail({ navigation }) {
+export default function EventDetail({ navigation, route }) {
+    const [event, setEvent] = useState();
+    const [eventList, setEventList] = useState();
+    const eventId = route.params.id;
+    const [keyword, setKeyword] = useState("");
     const [selectedTag, setSelectedTag] = useState("all");
+    const [waitCnt, setWaitCnt] = useState(0);
     const [isWait, setIsWait] = useState(true);
-
+    const [isLoading, setIsLoading] = useState(true);
     function clickWaitCard(friend) {
-        navigation.navigate("지인선택", { friend: friend });
+        navigation.navigate("지인선택", {
+            friend: friend,
+            eventId: event.eventId,
+        });
     }
     function clickTag(type) {
         setSelectedTag(type);
     }
-    function clickBottomButton() {
+    async function clickBottomButton() {
         if (isWait) {
-            navigation.navigate("SelectRegistType", { eventId: event.eventId });
+            navigation.navigate("SelectRegistType", { event: event });
         } else {
-            navigation.navigate("SelectLinkType", {
-                eventId: event.eventId,
-            });
+            const payInfo = await AsyncStorage.getItem("payInfo")
+            if (payInfo.balance >= 0) {
+                navigation.navigate("SelectLinkType", {
+                    event: event,
+                });
+            } else {
+                Alert.alert("페이 정보가 없습니다.", "YoYo페이를 등록해주세요.")
+            }
         }
     }
     const renderItem = ({ item }) => {
@@ -89,20 +65,65 @@ export default function EventDetail({ navigation }) {
             <EventAfterRegist event={item} />
         );
     };
+    useFocusEffect(
+        useCallback(() => {
+            let isActive = true;
+            setIsLoading(true);
+            const fetchData = async () => {
+                try {
+                    const [eventData, transactionResponse] = await Promise.all([
+                        getEventDetail(eventId),
+                        getEventTransaction(eventId, keyword, "", !isWait),
+                    ]);
 
+                    if (isActive) {
+                        setEvent(eventData);
+                        if (transactionResponse.status === 200) {
+                            const data = transactionResponse.data;
+                            if (isWait) setWaitCnt(data.length);
+
+                            const filteredData =
+                                selectedTag === "all"
+                                    ? data
+                                    : data.filter(
+                                        (item) =>
+                                            item.relationType ===
+                                            selectedTag.toUpperCase()
+                                    );
+                            setEventList(filteredData);
+                        } else {
+                            setEventList([]);
+                        }
+                    }
+                } catch (error) {
+                    console.log(error);
+                } finally {
+                    if (isActive) setIsLoading(false);
+                }
+            };
+
+            fetchData();
+
+            return () => {
+                isActive = false;
+            };
+        }, [keyword, selectedTag, isWait, eventId])
+    );
     useLayoutEffect(() => {
-        navigation.setOptions({
-            title: event.eventTitle,
-            headerRight: () => (
-                <IconButton
-                    icon="create-outline"
-                    size={24}
-                    onPress={() => alert("Header Button Pressed")}
-                />
-            ),
-        });
-    }, [navigation]);
-
+        if (event) {
+            navigation.setOptions({
+                title: event.title || "",
+                headerRight: () => (
+                    <IconButton
+                        icon="create-outline"
+                        size={24}
+                        onPress={() => alert("Header Button Pressed")}
+                    />
+                ),
+            });
+        }
+    }, [navigation, event]);
+    if (!event) return <Loading />;
     return (
         <>
             <Container>
@@ -122,11 +143,15 @@ export default function EventDetail({ navigation }) {
                         bold
                         color={MainStyle.colors.main}
                     >
-                        {event.totalReceivedAmount.toLocaleString()}
+                        {event.totalReceivedAmount}
                     </YoYoText>
                     <YoYoText type="md">원의 마음을 전해주었어요.</YoYoText>
                 </View>
-                <SearchBar placeholder="이름을 입력해주세요." />
+                <SearchBar
+                    placeholder="이름을 입력해주세요."
+                    keyword={keyword}
+                    setKeyword={setKeyword}
+                />
                 <TagList
                     onPress={clickTag}
                     selectedTag={selectedTag}
@@ -141,12 +166,24 @@ export default function EventDetail({ navigation }) {
                         left="등록 대기"
                         right="등록 완료"
                     />
-                    <FlatList
-                        data={event.transactions}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id.toString()}
-                    />
-                    <Text style={styles.waitText}>5</Text>
+                    {isLoading ? (
+                        <LoadingSpinner />
+                    ) : eventList && eventList.length > 0 ? (
+                        <FlatList
+                            data={eventList}
+                            renderItem={renderItem}
+                            keyExtractor={(item) =>
+                                item.transactionId.toString()
+                            }
+                        />
+                    ) : (
+                        <View style={{ paddingTop: 24 }}>
+                            <YoYoText type="md" bold center>
+                                거래 내역이 없습니다.
+                            </YoYoText>
+                        </View>
+                    )}
+                    {<Text style={styles.waitText}>{waitCnt}</Text>}
                 </View>
             </Container>
             <Button
@@ -194,5 +231,10 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 11,
         left: "40%",
+    },
+    resultContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
 });

@@ -1,6 +1,7 @@
 {
     "expo": {
-        "name": "FrontEnd_YoYo",
+        "scheme": "yoyo",
+        "name": "Yo! Yo!",
         "slug": "FrontEnd_YoYo",
         "version": "1.0.0",
         "orientation": "portrait",
@@ -18,7 +19,28 @@
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
-            }
+            },
+            "permissions": ["android.permission.RECORD_AUDIO"],
+            "package": "com.A308.YoYo",
+            "intentFilters": [
+                {
+                    "action": "VIEW",
+                    "autoVerify": true,
+                    "data": [
+                        {
+                            "scheme": "https",
+                            "host": "j11a308.p.ssafy.io",
+                            "pathPattern": "/payment/checkout/.*"
+                        },
+                        {
+                            "scheme": "yoyo",
+                            "host": "*",
+                            "pathPrefix": "/"
+                        }
+                    ],
+                    "category": ["BROWSABLE", "DEFAULT"]
+                }
+            ]
         },
         "web": {
             "favicon": "./assets/favicon.png"
@@ -39,6 +61,11 @@
                     "photosPermission": "The app accesses your photos to let you share them with your friends."
                 }
             ]
-        ]
+        ],
+        "extra": {
+            "eas": {
+                "projectId": "482a4306-c300-4ba2-8260-20a0d39eb55b"
+            }
+        }
     }
 }

@@ -29,9 +29,6 @@ import SelectLinkType from "./pages/event/select/SelectLinkType";
 import QrCode from "./pages/event/select/QrCode";
 import RegistPayPassword from "./pages/payment/password/RegistPayPassword";
 import AfterPassword from "./pages/payment/password/AfterPassword.jsx";
-import PhoneNumber from "./components/login/PhoneNumber";
-import Password from "./components/login/Password";
-import UserInfo from "./components/login/UserInfo";
 import ScheduleDetail from "./pages/schedule/detail/ScheduleDetail";
 import Private from "./pages/setting/agree/Private";
 import ManageAccount from "./pages/setting/account/ManageAccount";
@@ -40,14 +37,16 @@ import PayPage from "./pages/payment/PayPage.jsx";
 import OcrPage from "./pages/ocr/OcrPage.jsx";
 import OcrList from "./pages/ocr/list/OcrList";
 import OcrSelect from "./pages/ocr/select/OcrSelect";
-import { useContext, useEffect } from "react";
-import AuthContextProvider, { AuthContext } from "./store/auth-context.js";
+import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { axiosInterceptor } from "./apis/axiosInterceptor.js";
-
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { store } from "./store/store.js";
+import { setStoredAuth } from "./store/slices/authSlice.js";
+import EventReceiveRegist from "./pages/event/regist/EventReceiveRegist.jsx";
 const BottomTab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
+import * as Notifications from "expo-notifications";
+import { savePushToken } from "./apis/https/member.js";
 function BottomTabBar() {
     return (
         <BottomTab.Navigator
@@ -73,22 +72,20 @@ function BottomTabBar() {
                 headerShown: false,
                 tabBarIcon: ({ focused }) => {
                     let icon;
-
                     switch (route.name) {
-                        case "Home":
+                        case "HomeTab":
                             icon = "home";
                             break;
-                        case "Schedule":
+                        case "ScheduleTab":
                             icon = "calendar-number-sharp";
                             break;
-                        case "Payment":
+                        case "PaymentTab":
                             icon = "wallet";
                             break;
-                        case "Setting":
+                        case "SettingTab":
                             icon = "settings";
                             break;
                     }
-
                     return (
                         <Ionicons
                             name={icon}
@@ -104,23 +101,27 @@ function BottomTabBar() {
             })}
         >
             <BottomTab.Screen
-                name="Home"
-                component={MainPage}
+                name="HomeTab"
+                component={SharedStack} // SharedStack으로 변경
+                initialParams={{ screenName: "Home" }} // 파라미터를 추가하여 사용할 수 있음
                 options={{ tabBarLabel: "홈" }}
             />
             <BottomTab.Screen
-                name="Schedule"
-                component={ScheduleList}
+                name="ScheduleTab"
+                component={SharedStack} // SharedStack으로 변경
+                initialParams={{ screenName: "Schedule" }} // 파라미터를 추가하여 사용할 수 있음
                 options={{ tabBarLabel: "일정" }}
             />
             <BottomTab.Screen
-                name="Payment"
-                component={PayPage}
+                name="PaymentTab"
+                component={SharedStack} // SharedStack으로 변경
+                initialParams={{ screenName: "Payment" }} // 파라미터를 추가하여 사용할 수 있음
                 options={{ tabBarLabel: "페이" }}
             />
             <BottomTab.Screen
-                name="Setting"
-                component={SettingList}
+                name="SettingTab"
+                component={SharedStack} // SharedStack으로 변경
+                initialParams={{ screenName: "Setting" }} // 파라미터를 추가하여 사용할 수 있음
                 options={{ tabBarLabel: "설정" }}
             />
         </BottomTab.Navigator>
@@ -154,7 +155,8 @@ function AuthStack() {
         </Stack.Navigator>
     );
 }
-function AuthenticatedStack() {
+function SharedStack({ route }) {
+    const { screenName } = route.params;
     return (
         <Stack.Navigator
             screenOptions={{
@@ -164,20 +166,43 @@ function AuthenticatedStack() {
                 headerTitleAlign: "center",
             }}
         >
-            <Stack.Screen
-                name="BottomTabBar"
-                component={BottomTabBar}
-                options={{
-                    headerShown: false,
-                }}
-            />
-            <Stack.Screen
-                name="계좌등록"
-                component={AccountRegist}
-                options={{
-                    headerBackVisible: false,
-                }}
-            />
+            {screenName === "Home" ? (
+                <Stack.Screen
+                    name="Home"
+                    component={MainPage}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+            ) : null}
+            {screenName === "Schedule" ? (
+                <Stack.Screen
+                    name="Schedule"
+                    component={ScheduleList}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+            ) : null}
+            {screenName === "Payment" ? (
+                <Stack.Screen
+                    name="Payment"
+                    component={PayPage}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+            ) : null}
+            {screenName === "Setting" ? (
+                <Stack.Screen
+                    name="Setting"
+                    component={SettingList}
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+            ) : null}
+
             <Stack.Screen
                 name="Pay List"
                 component={PayList}
@@ -189,7 +214,7 @@ function AuthenticatedStack() {
                     ),
                 }}
             />
-            <Stack.Screen name="돈보내기" component={SendMoney} />
+
             <Stack.Screen
                 name="EventList"
                 component={EventList}
@@ -198,40 +223,20 @@ function AuthenticatedStack() {
                 }}
             />
             <Stack.Screen
-                name="EventRegist"
-                component={EventRegist}
+                name="GiveAndTake"
+                component={GiveAndTakeList}
                 options={{
                     // headerShown: false,
-                    title: "",
+                    title: "요요 목록보기",
                 }}
             />
-            <Stack.Screen name="GiveAndTake" component={GiveAndTakeList} />
             <Stack.Screen name="YoYoDetail" component={GiveAndTakeDetail} />
-            <Stack.Screen name="EventDetail" component={EventDetail} />
-            <Stack.Screen name="PhoneNumber" component={PhoneNumber} />
-            <Stack.Screen name="Password" component={Password} />
-            <Stack.Screen name="UserInfo" component={UserInfo} />
+            <Stack.Screen
+                name="EventDetail"
+                component={EventDetail}
+                options={{ title: "" }}
+            />
 
-            <Stack.Screen
-                name="GiveAndTakeRegist"
-                component={GiveAndTakeRegist}
-            />
-            <Stack.Screen name="지인선택" component={SelectCard} />
-            <Stack.Screen name="지인추가" component={RegistNewFriend} />
-            <Stack.Screen
-                name="SelectRegistType"
-                component={SelectRegistType}
-                options={{
-                    title: "",
-                }}
-            />
-            <Stack.Screen
-                name="SelectLinkType"
-                component={SelectLinkType}
-                options={{
-                    title: "",
-                }}
-            />
             <Stack.Screen
                 name="QrCode"
                 component={QrCode}
@@ -240,43 +245,16 @@ function AuthenticatedStack() {
                     presentation: "modal",
                 }}
             />
-            <Stack.Screen
-                name="RegistPayPassword"
-                component={RegistPayPassword}
-                options={{
-                    headerShown: false,
-                    presentation: "modal",
-                }}
-            />
-            <Stack.Screen
-                name="AfterPassword"
-                component={AfterPassword}
-                options={{
-                    headerShown: false,
-                    presentation: "modal",
-                }}
-            />
 
-            <Stack.Screen
-                name="SelectGiveAndTake"
-                component={SelectGiveAndTake}
-                options={{
-                    // headerShown: false,
-                    title: "",
-                }}
-            />
             <Stack.Screen
                 name="GiveAndTakeDetail"
                 component={GiveAndTakeDetail}
-            />
-            <Stack.Screen
-                name="ScheduleDetail"
-                component={ScheduleDetail}
                 options={{
                     // headerShown: false,
-                    title: "일정 상세보기",
+                    title: "요요 상세보기",
                 }}
             />
+            <Stack.Screen name="ScheduleDetail" component={ScheduleDetail} />
             <Stack.Screen
                 name="Notification"
                 component={Notification}
@@ -301,6 +279,71 @@ function AuthenticatedStack() {
                     title: "나의 계좌",
                 }}
             />
+        </Stack.Navigator>
+    );
+}
+function AuthenticatedStack() {
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: MainStyle.colors.white,
+                },
+                headerTitleAlign: "center",
+            }}
+        >
+            <Stack.Screen
+                name="BottomTabBar"
+                component={BottomTabBar}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="EventRegist"
+                component={EventRegist}
+                options={{
+                    // headerShown: false,
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="EventReceiveRegist"
+                component={EventReceiveRegist}
+                options={{
+                    title: "직접 등록",
+                }}
+            />
+            <Stack.Screen
+                name="GiveAndTakeRegist"
+                component={GiveAndTakeRegist}
+                options={{
+                    title: "거래내역추가",
+                }}
+            />
+
+            <Stack.Screen
+                name="SelectGiveAndTake"
+                component={SelectGiveAndTake}
+                options={{
+                    // headerShown: false,
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="SelectRegistType"
+                component={SelectRegistType}
+                options={{
+                    title: "",
+                }}
+            />
+            <Stack.Screen
+                name="SelectLinkType"
+                component={SelectLinkType}
+                options={{
+                    title: "",
+                }}
+            />
             <Stack.Screen
                 name="OCRPAGE"
                 component={OcrPage}
@@ -322,45 +365,92 @@ function AuthenticatedStack() {
                     title: "",
                 }}
             />
+            <Stack.Screen
+                name="계좌등록"
+                component={AccountRegist}
+                options={{
+                    headerBackVisible: false,
+                }}
+            />
+            <Stack.Screen name="돈보내기" component={SendMoney} />
+            <Stack.Screen name="지인선택" component={SelectCard} />
+            <Stack.Screen name="지인추가" component={RegistNewFriend} />
+            <Stack.Screen
+                name="RegistPayPassword"
+                component={RegistPayPassword}
+                options={{
+                    headerShown: false,
+                    presentation: "modal",
+                }}
+            />
+            <Stack.Screen
+                name="AfterPassword"
+                component={AfterPassword}
+                options={{
+                    headerShown: false,
+                    presentation: "modal",
+                }}
+            />
         </Stack.Navigator>
     );
 }
+
 function Navigation() {
-    const authCtx = useContext(AuthContext);
+    const { isAuthenticated } = useSelector((state) => state.auth);
+    const linking = {
+        prefixes: ["https://j11a308.p.ssafy.io", "yoyo://"],
+        config: {
+            screens: {
+                돈보내기: "send-money/:eventId",
+            },
+        },
+    };
     return (
-        <NavigationContainer>
-            {!authCtx.isAuthenticated && <AuthStack />}
-            {authCtx.isAuthenticated && <AuthenticatedStack />}
+        <NavigationContainer linking={linking}>
+            {!isAuthenticated && <AuthStack />}
+            {isAuthenticated && <AuthenticatedStack />}
         </NavigationContainer>
     );
 }
+
 function Root() {
-    const authCtx = useContext(AuthContext);
+    const dispatch = useDispatch();
+
     useEffect(() => {
         async function fetchToken() {
             const storedToken = await AsyncStorage.getItem("token");
-            const nowMember = await AsyncStorage.getItem("memberId");
-            if (storedToken && nowMember) {
-                authCtx.login(storedToken, nowMember);
+            const storedMemberId = await AsyncStorage.getItem("memberId");
+            const pushToken = await AsyncStorage.getItem("pushToken");
+
+            // console.log(storedToken, "\n", storedMemberId, "\n", pushToken);
+            if ((storedToken && storedMemberId, pushToken)) {
+                await savePushToken(pushToken);
+                // AsyncStorage에서 불러온 값으로 Redux 상태 업데이트
+                dispatch(
+                    setStoredAuth({
+                        token: storedToken,
+                        memberId: parseInt(storedMemberId),
+                        pushToken: pushToken,
+                    })
+                );
             }
         }
         fetchToken();
-    }, []);
-    useEffect(() => {
-        axiosInterceptor(authCtx);
-    }, [authCtx]);
+    }, [dispatch]);
+
     return <Navigation />;
 }
+
 export default function App() {
     return (
         <>
             <SafeAreaView />
             <StatusBar style="dark" />
-            <AuthContextProvider>
+            <Provider store={store}>
                 <GestureHandlerRootView style={{ flex: 1 }}>
                     <Root />
                 </GestureHandlerRootView>
-            </AuthContextProvider>
+            </Provider>
         </>
     );
 }

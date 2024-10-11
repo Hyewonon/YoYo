@@ -1,32 +1,40 @@
-import { View, StyleSheet, FlatList } from 'react-native'
+import { View, StyleSheet, FlatList, Alert } from 'react-native'
 import React from 'react'
 import Container from '../../../components/common/Container'
 import YoYoText from '../../../constants/YoYoText'
 import { MainStyle } from '../../../constants/style'
 import OcrCard from '../../../components/card/Event/OcrCard'
 import Button from '../../../components/common/Button'
-const data = [{
-  id: 1,
-  name: "이찬진",
-  money: 50000,
-  memo: "라이벌",
-  tagType: 'friend',
-  tagName: '친구',
-  isDuplicate: false
-}, {
-  id: 2,
-  name: "이찬진",
-  money: 50000,
-  memo: "라이벌",
-  tagType: 'friend',
-  tagName: '친구',
-  isDuplicate: true
-}]
+import { useSelector } from 'react-redux'
+import { confirmOcr } from '../../../apis/https/transactionApi'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 export default function OcrList({ navigation }) {
+  const ocrData = useSelector((state) => state.ocr.ocrData)
   function clickCardHandler(item) {
     navigation.navigate("OCRSELECT", {
-      data: item
+      idx: item.id
     })
+  }
+  async function handleClickOk() {
+    try {
+      const eventId = await AsyncStorage.getItem("eventId")
+      const sendData = ocrData.map((item) => ({
+        name: item.name,
+        memberId: item.oppositeId,
+        relationType: item.relationType,
+        amount: item.amount,
+        description: item.description
+      }))
+      const response = await confirmOcr(eventId, sendData)
+      Alert.alert("등록 완료!", "명단 등록이 완료되었습니다.", [{
+        text: "확인",
+        onPress: () => navigation.navigate("EventDetail", { id: eventId })
+      }])
+
+    } catch (error) {
+      console.log("OCR전송 오류", error)
+    }
   }
   return (
     <>
@@ -37,11 +45,11 @@ export default function OcrList({ navigation }) {
           <YoYoText type="md">비고</YoYoText>
           <YoYoText type="md">태그</YoYoText>
         </View>
-        <FlatList renderItem={({ item }) => <OcrCard data={item} onPress={item.isDuplicate ? () => clickCardHandler(item) : undefined} />} data={data} keyExtractor={(item) => item.id} />
+        <FlatList renderItem={({ item }) => <OcrCard data={item} onPress={() => clickCardHandler(item)} />} data={ocrData} keyExtractor={(item) => item.id + " ocr"} />
 
 
       </Container>
-      <Button type="fill" width="100%" radius={0}><YoYoText type="md" bold>명단 확정</YoYoText></Button>
+      <Button type="fill" width="100%" radius={0} onPress={handleClickOk}><YoYoText type="md" bold>명단 확정</YoYoText></Button>
     </>
   )
 }
