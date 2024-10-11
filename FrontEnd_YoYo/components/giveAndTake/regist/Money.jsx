@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import YoYoText from "../../../constants/YoYoText";
 import { MainStyle } from "../../../constants/style";
@@ -28,7 +28,7 @@ export default function Money({ setIsActive, person, setPerson }) {
     }, [person.amount, person.memo]);
 
     return (
-        <View>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.container}>
                 <View>
                     <YoYoText type="title" bold color={MainStyle.colors.main}>
@@ -67,7 +67,7 @@ export default function Money({ setIsActive, person, setPerson }) {
                     />
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 

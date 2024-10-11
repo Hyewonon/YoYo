@@ -1,0 +1,29 @@
+{
+    "project_info": {
+        "project_number": "425458816819",
+        "project_id": "yoyo-31e1a",
+        "storage_bucket": "yoyo-31e1a.appspot.com"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:425458816819:android:8abfa610ec8fc8ae88d046",
+                "android_client_info": {
+                    "package_name": "com.A308.YoYo"
+                }
+            },
+            "oauth_client": [],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyAtpNFJGpY61jg7RH12QKS5EkOs01K9kgY"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": []
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}
