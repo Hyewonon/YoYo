@@ -29,9 +29,6 @@ export default function ScheduleDetail({ route, navigation }) {
         name: "",
     });
     const { item } = route.params;
-    const storedPayInfo = async () => {
-        return await AsyncStorage.getItem("payInfo");
-    };
     useFocusEffect(
         useCallback(() => {
             async function fetchRelation(oppositeId) {
@@ -50,7 +47,7 @@ export default function ScheduleDetail({ route, navigation }) {
                         .map((item) => ({
                             transactionId: item.transactionId,
                             date: formatDate(item.time),
-                            name: item.memo,
+                            name: item.eventName,
                             tag: item.relationType,
                             amount: item.amount,
                         }))
@@ -61,7 +58,7 @@ export default function ScheduleDetail({ route, navigation }) {
                         .map((item) => ({
                             transactionId: item.transactionId,
                             date: formatDate(item.time),
-                            name: item.memo,
+                            name: item.eventName,
                             tag: item.relationType,
                             amount: item.amount,
                         }))
@@ -105,7 +102,9 @@ export default function ScheduleDetail({ route, navigation }) {
             );
         }
     };
-    function clickButton() {
+    async function clickButton() {
+        const storedPayInfo = JSON.parse(await AsyncStorage.getItem("payInfo"))
+        console.log(storedPayInfo)
         if (storedPayInfo.balance >= 0) {
             navigation.navigate("돈보내기", {
                 title: "마음 전달",

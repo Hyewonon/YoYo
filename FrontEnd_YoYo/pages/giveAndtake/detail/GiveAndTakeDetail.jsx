@@ -51,7 +51,7 @@ export default function GiveAndTakeDetail({ route }) {
                         .map((item) => ({
                             transactionId: item.transactionId.toString(),
                             date: formatDate(item.time),
-                            name: item.memo,
+                            name: item.eventName,
                             tag: item.relationType,
                             amount: item.amount,
                         }))
@@ -62,7 +62,7 @@ export default function GiveAndTakeDetail({ route }) {
                         .map((item) => ({
                             transactionId: item.transactionId.toString(),
                             date: formatDate(item.time),
-                            name: item.memo,
+                            name: item.eventName,
                             tag: item.relationType,
                             amount: item.amount,
                         }))

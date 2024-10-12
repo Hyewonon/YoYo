@@ -10,9 +10,7 @@ const prices = [5000, 10000, 50000, 100000];
 export default function SendMoney({ route, navigation }) {
     const [price, setPrice] = useState(0);
     const eventId = route.params.eventId;
-    const storedPayInfo = async () => {
-        return await AsyncStorage.getItem("payInfo")
-    }
+
     const title = route.params.title || "마음 전달";
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -23,7 +21,9 @@ export default function SendMoney({ route, navigation }) {
         const numericValue = parseInt(text.replace(/[^0-9]/g, ""), 10) || 0;
         setPrice(numericValue);
     }
-    function clickNextHandler() {
+    async function clickNextHandler() {
+        const storedPayInfo = JSON.parse(await AsyncStorage.getItem("payInfo"))
+
         if (storedPayInfo.balance >= 0) {
             navigation.navigate("RegistPayPassword", {
                 data: {

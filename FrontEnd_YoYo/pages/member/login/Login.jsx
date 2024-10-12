@@ -12,7 +12,7 @@ import { login as loginApi, savePushToken } from "../../../apis/https/member";
 import { useDispatch } from "react-redux";
 import { login } from "../../../store/slices/authSlice";
 import * as Notifications from "expo-notifications"
-
+import Constants from 'expo-constants';
 export default function Login() {
     const dispatch = useDispatch()
     const navigation = useNavigation();
@@ -24,10 +24,12 @@ export default function Login() {
 
     async function getPushToken() {
         try {
-            const token = (await Notifications.getExpoPushTokenAsync()).data;
+            const projectId = Constants.expoConfig.extra.eas.projectId;
+            const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
             return token;
         } catch (error) {
             console.error("Error getting FCM token: ", error);
+            Alert.alert("푸시 알림 토큰을 가져오는 데 실패했습니다.",);
             return null;
         }
     }
@@ -49,14 +51,6 @@ export default function Login() {
             const response = await loginApi(phoneNumber, password);
             const token = response.jwtToken
             const memberId = response.memberId
-            const pushToken = await requestPushToken();
-
-
-
-
-            dispatch(login({ token, memberId, pushToken }))
-            console.log(pushToken)
-            await savePushToken(pushToken);
             // 푸시 알림 수신 핸들러 설정
             Notifications.setNotificationHandler({
                 handleNotification: async () => ({
@@ -65,6 +59,15 @@ export default function Login() {
                     shouldSetBadge: true,
                 }),
             });
+            const pushToken = await requestPushToken();
+
+
+
+
+            dispatch(login({ token, memberId, pushToken }))
+            console.log(pushToken)
+            await savePushToken(pushToken);
+
         } catch (error) {
             Alert.alert(
                 "로그인 실패",

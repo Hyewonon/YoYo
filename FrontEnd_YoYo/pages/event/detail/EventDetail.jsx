@@ -22,7 +22,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import Loading from "../../../components/common/Loading";
 import LoadingSpinner from "../../../components/common/LoadingSpinner";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import format from "../../../util/format"
 export default function EventDetail({ navigation, route }) {
     const [event, setEvent] = useState();
     const [eventList, setEventList] = useState();
@@ -45,7 +45,7 @@ export default function EventDetail({ navigation, route }) {
         if (isWait) {
             navigation.navigate("SelectRegistType", { event: event });
         } else {
-            const payInfo = await AsyncStorage.getItem("payInfo")
+            const payInfo = JSON.parse(await AsyncStorage.getItem("payInfo"))
             if (payInfo.balance >= 0) {
                 navigation.navigate("SelectLinkType", {
                     event: event,
@@ -80,7 +80,10 @@ export default function EventDetail({ navigation, route }) {
                         setEvent(eventData);
                         if (transactionResponse.status === 200) {
                             const data = transactionResponse.data;
-                            if (isWait) setWaitCnt(data.length);
+                            if (isWait) {
+                                const count = data.length
+                                setWaitCnt(count)
+                            };
 
                             const filteredData =
                                 selectedTag === "all"
@@ -143,7 +146,7 @@ export default function EventDetail({ navigation, route }) {
                         bold
                         color={MainStyle.colors.main}
                     >
-                        {event.totalReceivedAmount}
+                        {format.formatNumber(event.totalReceivedAmount)}
                     </YoYoText>
                     <YoYoText type="md">원의 마음을 전해주었어요.</YoYoText>
                 </View>

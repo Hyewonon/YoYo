@@ -1,4 +1,4 @@
-import { View, StyleSheet, FlatList, Pressable, Modal } from "react-native";
+import { View, StyleSheet, FlatList, Pressable, Modal, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { MainStyle } from "../../../constants/style";
 import { getRelations } from "../../../apis/https/relationApi";
@@ -46,7 +46,7 @@ export default function Detail({ setIsActive, person, setPerson }) {
         }));
     }
     return (
-        <View>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.container}>
                 <View>
                     <YoYoText type="title" bold color={MainStyle.colors.main}>
@@ -115,7 +115,7 @@ export default function Detail({ setIsActive, person, setPerson }) {
                     />
                 </Modal>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
