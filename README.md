@@ -187,9 +187,11 @@ Npm 9.2.0
 <table align="center">
   <tr>
     <td align="center"><strong>OCR 인식 과정</strong></td>
+    <td align="center"><strong>OCR 결과</strong></td>
   </tr>
   <tr>
     <td><img width="330" src="upload/ocr.gif"/></td>
+    <td><img width="330" src="upload/ocr-result.jpg"/></td>
   </tr>
 </table>
 
