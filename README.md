@@ -184,9 +184,14 @@ Npm 9.2.0
 
 **📄 광학 문자 인식 (Optical Character Recognition)** 을 통해 **장부를 스캔**하여 편리하고 빠르게 기록합니다.
 
-|      **OCR 인식 과정**      |
-| :-------------------------: |
-| <img src="upload/ocr.gif"/> |
+<table align="center">
+  <tr>
+    <td align="center"><strong>OCR 인식 과정</strong></td>
+  </tr>
+  <tr>
+    <td><img src="upload/ocr.gif"/></td>
+  </tr>
+</table>
 
 ---
 
@@ -196,9 +201,16 @@ Npm 9.2.0
 YoYo 페이를 통해 경조사비를 **손쉽게 송금**하고 관리합니다.  
 비회원을 위한 **결제 시스템**을 통해 **비회원도 송금**할 수 있습니다.
 
-|                **페이 서비스**                 |                **비회원 결제**                |
-| :--------------------------------------------: | :-------------------------------------------: |
-| <img width="330" src="upload/payservice.gif"/> | <img width="330" src="upload/nonmember.gif"/> |
+<table align="center">
+  <tr>
+    <td align="center"><strong>페이 서비스</strong></td>
+    <td align="center"><strong>비회원 결제</strong></td>
+  </tr>
+  <tr>
+    <td><img width="330" src="upload/payservice.gif"/></td>
+    <td><img width="330" src="upload/nonmember.gif"/></td>
+  </tr>
+</table>
 
 ---
 
@@ -207,11 +219,16 @@ YoYo 페이를 통해 경조사비를 **손쉽게 송금**하고 관리합니다
 **📅 알림 및 일정 관리**  
 알림을 통해 참석하고자 하는 경조사를 **일정에 등록**하고 **마음 내역**을 확인합니다.
 
-|              **PUSH 알림**               |              **앱 내 알림**              |
-| :--------------------------------------: | :--------------------------------------: |
-| <img width="330" src="upload/push.jpg"/> | <img width="330" src="upload/maum.jpg"/> |
-
----
+<table align="center">
+  <tr>
+    <td align="center"><strong>PUSH 알림</strong></td>
+    <td align="center"><strong>앱 내 알림</strong></td>
+  </tr>
+  <tr>
+    <td><img width="330" src="upload/push.jpg"/></td>
+    <td><img width="330" src="upload/maum.jpg"/></td>
+  </tr>
+</table>
 
 </div>
 
