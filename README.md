@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 🪀 Yo!Yo! 🪀
 
 <div align="center">
@@ -190,7 +189,7 @@ Npm 9.2.0
     <td align="center"><strong>OCR 인식 과정</strong></td>
   </tr>
   <tr>
-    <td><img src="upload/ocr.gif"/></td>
+    <td><img width="330" src="upload/ocr.gif"/></td>
   </tr>
 </table>
 
@@ -285,8 +284,3 @@ YoYo 페이를 통해 경조사비를 **손쉽게 송금**하고 관리합니다
     </td>
   </tr>
 </table>
-=======
-# 🪀 YoYo 🪀
-
-YoYo를 통해 경조사비를 간편하게 관리하세요!
->>>>>>> a47ebb6f5f80469e5f93794ba289a9a3a7b45c24
